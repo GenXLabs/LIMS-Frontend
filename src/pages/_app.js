@@ -2,9 +2,9 @@
 import Head from 'next/head'
 import { Router } from 'next/router'
 
-
-
-
+// ** Store Imports
+import { store } from 'src/store'
+import { Provider } from 'react-redux'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -96,7 +96,7 @@ const App = props => {
   const aclAbilities = Component.acl ?? defaultACLObj
 
   return (
-    
+    <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
           <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
@@ -129,7 +129,7 @@ const App = props => {
           </SettingsProvider>
         </AuthProvider>
       </CacheProvider>
-   
+    </Provider>
   )
 }
 
