@@ -99,10 +99,10 @@ const Register = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <RegisterIllustration
+          {/* <RegisterIllustration
             alt='register-illustration'
             src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-          />
+          /> */}
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -117,7 +117,7 @@ const Register = () => {
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
                 fillRule='evenodd'
                 clipRule='evenodd'
@@ -144,13 +144,13 @@ const Register = () => {
                 fill={theme.palette.primary.main}
                 d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
               />
-            </svg>
-            <Box sx={{ my: 6 }}>
+            </svg> */}
+            {/* <Box sx={{ my: 6 }}>
               <Typography variant='h3' sx={{ mb: 1.5 }}>
                 Adventure starts here 🚀
               </Typography>
               <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography>
-            </Box>
+            </Box> */}
             <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
               <CustomTextField autoFocus fullWidth sx={{ mb: 4 }} label='Username' placeholder='johndoe' />
               <CustomTextField fullWidth label='Email' sx={{ mb: 4 }} placeholder='user@email.com' />
@@ -194,7 +194,7 @@ const Register = () => {
                   Sign in instead
                 </Typography>
               </Box>
-              <Divider
+              {/* <Divider
                 sx={{
                   color: 'text.disabled',
                   '& .MuiDivider-wrapper': { px: 6 },
@@ -203,8 +203,8 @@ const Register = () => {
                 }}
               >
                 or
-              </Divider>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              </Divider> */}
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton href='/' component={Link} sx={{ color: '#497ce2' }} onClick={e => e.preventDefault()}>
                   <Icon icon='mdi:facebook' />
                 </IconButton>
@@ -222,7 +222,7 @@ const Register = () => {
                 <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
                   <Icon icon='mdi:google' />
                 </IconButton>
-              </Box>
+              </Box> */}
             </form>
           </Box>
         </Box>
