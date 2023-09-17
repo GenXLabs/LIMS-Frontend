@@ -122,18 +122,18 @@ function userProfile() {
       <AvatarDetailContainer>
         <AvatarContainer>
           {/* profile image */}
-          <img src='/images/avatars/1.png' />
+          <img src='/images/avatars/1.png' alt='avatar' />
           {/* name  */}
           <Typography variant='h5' style={{ marginLeft: '10px' }}>
             Name
           </Typography>
         </AvatarContainer>
         <ButtonContainer>
-          <Button variant='tonal' color='info'>
-            Update new photo
+          <Button variant='outlined' color='info'>
+            Update photo
           </Button>
-          <Button variant='tonal' color='error'>
-            Delete
+          <Button variant='contained' color='error'>
+            Delete photo
           </Button>
         </ButtonContainer>
       </AvatarDetailContainer>
@@ -166,15 +166,15 @@ function userProfile() {
       {/* save changes butten container */}
       <SaveChangesContainer>
         <LeftButtons>
-          <Button variant='tonal' color='info'>
+          <Button variant='outlined' color='info'>
             Edit
           </Button>
         </LeftButtons>
         <RightButtons>
-          <Button variant='tonal' color='warning'>
+          <Button variant='outlined' color='warning'>
             Cancle
           </Button>
-          <Button variant='tonal' color='success'>
+          <Button variant='contained' color='success'>
             Save changes
           </Button>
         </RightButtons>
