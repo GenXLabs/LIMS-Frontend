@@ -141,7 +141,7 @@ const LoginPage = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          {/* <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} /> */}
+          {/* <LoginIllustration alt='login-illustration' src={`/images/pages/login.jpg`} /> */}
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
