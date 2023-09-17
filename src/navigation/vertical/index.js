@@ -10,7 +10,6 @@ const navigation = () => {
       path: '/user-profile',
       icon: 'clarity:avatar-line'
     },
-
     {
       sectionTitle: 'Laboratory Reservation'
     },
