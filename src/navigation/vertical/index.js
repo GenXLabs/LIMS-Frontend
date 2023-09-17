@@ -6,26 +6,28 @@ const navigation = () => {
       icon: 'tabler:smart-home'
     },
     {
-      title: 'Second Page',
-      path: '/second-page',
-      icon: 'tabler:mail'
-    },
-    {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'tabler:shield'
-    },
-    {
       title: 'User Profile',
       path: '/user-profile',
       icon: 'clarity:avatar-line'
     },
+
     {
-      title: 'User accounts',
-      path: '/user-accounts',
-      icon: 'tabler:users'
+      sectionTitle: 'Laboratory Reservation'
+    },
+    {
+      path: '/student/lab-reservation/create-request',
+      title: 'Request Reservation',
+      icon: 'tabler:calendar-event'
+    },
+    {
+      path: '/student/lab-reservation/view-requests',
+      title: 'View Reservations',
+      icon: 'ion:calendar-outline'
+    },
+    {
+      path: '/staff/lab-reservation/admin-reservations',
+      title: 'View Reservation Requests',
+      icon: 'mdi:table-cog'
     }
   ]
 }
