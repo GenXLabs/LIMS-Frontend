@@ -78,10 +78,10 @@ const ForgotPassword = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <ForgotPasswordIllustration
+          {/* <ForgotPasswordIllustration
             alt='forgot-password-illustration'
             src={`/images/pages/auth-v2-forgot-password-illustration-${theme.palette.mode}.png`}
-          />
+          /> */}
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -96,7 +96,7 @@ const ForgotPassword = () => {
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
                 fillRule='evenodd'
                 clipRule='evenodd'
@@ -123,7 +123,7 @@ const ForgotPassword = () => {
                 fill={theme.palette.primary.main}
                 d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
               />
-            </svg>
+            </svg> */}
             <Box sx={{ my: 6 }}>
               <Typography sx={{ mb: 1.5, fontWeight: 500, fontSize: '1.625rem', lineHeight: 1.385 }}>
                 Forgot Password? 🔒

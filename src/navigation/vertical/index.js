@@ -6,12 +6,11 @@ const navigation = () => {
       icon: 'tabler:smart-home'
     },
     {
-      path: '/acl',
-      action: 'read',
-      subject: 'acl-page',
-      title: 'Access Control',
-      icon: 'tabler:shield'
+      title: 'User Profile',
+      path: '/user-profile',
+      icon: 'clarity:avatar-line'
     },
+
     {
       sectionTitle: 'Laboratory Reservation'
     },
