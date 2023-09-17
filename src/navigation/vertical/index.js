@@ -40,6 +40,14 @@ const navigation = () => {
       path: '/student/practical-timetable',
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
+    },
+    {
+      sectionTitle: 'Practical mannual'
+    },
+    {
+      path: '/staff/practical-mannual',
+      title: 'practical mannual',
+      icon: 'tabler:file-text'
     }
   ]
 }
