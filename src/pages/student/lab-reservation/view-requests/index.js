@@ -67,7 +67,8 @@ const statusObj = {
   1: { title: 'Pending Admin Approval', color: 'warning' },
   2: { title: 'Approved', color: 'success' },
   3: { title: 'Completed', color: 'info' },
-  4: { title: 'User Canceled', color: 'error' }
+  4: { title: 'User Canceled', color: 'error' },
+  5: { title: 'Admin Declined', color: 'error' }
 }
 
 const escapeRegExp = value => {
