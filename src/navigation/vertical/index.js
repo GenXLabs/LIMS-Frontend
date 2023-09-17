@@ -21,6 +21,11 @@ const navigation = () => {
       title: 'User Profile',
       path: '/user-profile',
       icon: 'clarity:avatar-line'
+    },
+    {
+      title: 'User accounts',
+      path: '/user-accounts',
+      icon: 'tabler:users'
     }
   ]
 }
