@@ -28,6 +28,11 @@ const navigation = () => {
       path: '/staff/lab-reservation/admin-reservations',
       title: 'View Reservation Requests',
       icon: 'mdi:table-cog'
+    },
+    {
+      path: '/user-accounts',
+      title: 'User Accounts',
+      icon: 'tabler:users'
     }
   ]
 }
