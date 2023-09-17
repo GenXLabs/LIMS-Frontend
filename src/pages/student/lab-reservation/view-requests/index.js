@@ -13,35 +13,61 @@ import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import QuickSearchToolbar from './QuickSearchToolbar'
 
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
-
 // ** Data Import
-import { rows } from 'src/@fake-db/table/static-data'
+// import { rows } from 'src/@fake-db/table/static-data'
+import { IconButton } from '@mui/material'
 
-// ** renders client column
-const renderClient = params => {
-  const { row } = params
-  const stateNum = Math.floor(Math.random() * 6)
-  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
-  const color = states[stateNum]
-  if (row.avatar.length) {
-    return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
-  } else {
-    return (
-      <CustomAvatar skin='light' color={color} sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}>
-        {getInitials(row.full_name ? row.full_name : 'John Doe')}
-      </CustomAvatar>
-    )
+import Icon from 'src/@core/components/icon'
+
+//10 mock data for below table
+const rows = [
+  {
+    id: 1,
+    venue: 'LAB-01',
+    date: '2021-10-01',
+    start_time: '08:00 AM',
+    end_time: '12:00 PM',
+    status: 1
+  },
+  {
+    id: 2,
+    venue: 'LAB-02',
+    date: '2021-10-02',
+    start_time: '08:00 AM',
+    end_time: '12:00 PM',
+    status: 2
+  },
+  {
+    id: 3,
+    venue: 'LAB-02',
+    date: '2021-10-03',
+    start_time: '08:00 AM',
+    end_time: '12:00 PM',
+    status: 3
+  },
+  {
+    id: 4,
+    venue: 'LAB-01',
+    date: '2021-10-04',
+    start_time: '08:00 AM',
+    end_time: '12:00 PM',
+    status: 3
+  },
+  {
+    id: 5,
+    venue: 'LAB-02',
+    date: '2021-10-05',
+    start_time: '08:00 AM',
+    end_time: '12:00 PM',
+    status: 4
   }
-}
+]
 
 const statusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
+  1: { title: 'Pending Admin Approval', color: 'warning' },
+  2: { title: 'Approved', color: 'success' },
+  3: { title: 'Completed', color: 'info' },
+  4: { title: 'User Canceled', color: 'error' }
 }
 
 const escapeRegExp = value => {
@@ -50,68 +76,62 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    flex: 0.275,
-    minWidth: 290,
-    field: 'full_name',
-    headerName: 'Name',
-    renderCell: params => {
-      const { row } = params
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.full_name}
-            </Typography>
-            <Typography noWrap variant='caption'>
-              {row.email}
-            </Typography>
-          </Box>
-        </Box>
-      )
-    }
+    flex: 0.2,
+    type: 'venue',
+    minWidth: 120,
+    headerName: 'Venue',
+    field: 'venue', // Add the 'field' property for sorting
+    sortable: true, // Enable sorting
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.venue}
+      </Typography>
+    )
   },
   {
-    flex: 0.2,
+    flex: 0.15,
     type: 'date',
     minWidth: 120,
     headerName: 'Date',
-    field: 'start_date',
+    field: 'date',
     valueGetter: params => new Date(params.value),
+    sortable: true,
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_date}
+        {params.row.date}
       </Typography>
     )
   },
   {
-    flex: 0.2,
+    flex: 0.15,
     minWidth: 110,
-    field: 'salary',
-    headerName: 'Salary',
+    field: 'start_time',
+    headerName: 'Start Time',
+    sortable: true,
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.salary}
+        {params.row.start_time}
       </Typography>
     )
   },
   {
-    flex: 0.125,
-    field: 'age',
-    minWidth: 80,
-    headerName: 'Age',
+    flex: 0.15,
+    minWidth: 110,
+    field: 'end_time',
+    headerName: 'End Time',
+    sortable: true,
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.end_time}
       </Typography>
     )
   },
   {
-    flex: 0.2,
+    flex: 0.25,
     minWidth: 140,
     field: 'status',
     headerName: 'Status',
+    sortable: false,
     renderCell: params => {
       const status = statusObj[params.row.status]
 
@@ -126,12 +146,33 @@ const columns = [
         />
       )
     }
+  },
+  {
+    flex: 0.15,
+    minWidth: 140,
+    field: 'actions',
+    headerName: 'Actions',
+    sortable: false, // No sorting for this column
+    renderCell: params => {
+      return (
+        <Box className='d-flex align-items-center'>
+          <IconButton color='primary' disabled={params.row.status !== 1}>
+            <Icon icon='fluent:edit-16-regular' />
+          </IconButton>
+          <IconButton color='primary' disabled={params.row.status !== 1}>
+            <Icon icon='lucide:trash-2' />
+          </IconButton>
+        </Box>
+      )
+    }
   }
 ]
 
 const TableColumns = () => {
-  // ** States
+  // ** Table data
   const [data] = useState(rows)
+
+  // ** States
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
@@ -141,11 +182,19 @@ const TableColumns = () => {
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
+      // Check if the search value matches the "Status" title
+      const statusTitle = statusObj[row.status].title.toLowerCase()
+      if (statusTitle.includes(searchValue.toLowerCase())) {
+        return true
+      }
+
+      // Check if the search value matches any other field
       return Object.keys(row).some(field => {
         // @ts-ignore
         return searchRegex.test(row[field].toString())
       })
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -155,7 +204,7 @@ const TableColumns = () => {
 
   return (
     <Card>
-      <CardHeader title='Quick Filter' />
+      <CardHeader title='My Reservations' />
       <DataGrid
         autoHeight
         columns={columns}

@@ -74,8 +74,13 @@ const VerticalNavHeader = props => {
       {userNavMenuBranding ? (
         userNavMenuBranding(props)
       ) : (
-        <LinkStyled href='/'>
-          <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+        <LinkStyled href='/' sx={{ display: 'flex', justifyContent: 'center' }}>
+          <img
+            src='/images/KIU-LOGO.png'
+            alt='brandLogo'
+            style={{ width: '75%', height: 'auto', margin: '10px 15px 10px 0px' }}
+          />
+          {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
             <path
               fillRule='evenodd'
               clipRule='evenodd'
@@ -104,12 +109,12 @@ const VerticalNavHeader = props => {
             />
           </svg>
           <HeaderTitle variant='h4' sx={{ ...menuCollapsedStyles, ...(navCollapsed && !navHover ? {} : { ml: 2.5 }) }}>
-            {themeConfig.templateName}
-          </HeaderTitle>
+            {themeConfig.templateName}ddddddddddd
+          </HeaderTitle> */}
         </LinkStyled>
       )}
 
-      {hidden ? (
+      {/* {hidden ? (
         <IconButton
           disableRipple
           disableFocusRipple
@@ -136,7 +141,7 @@ const VerticalNavHeader = props => {
         >
           {navCollapsed ? MenuUnlockedIcon() : MenuLockedIcon()}
         </IconButton>
-      )}
+      )} */}
     </MenuHeaderWrapper>
   )
 }

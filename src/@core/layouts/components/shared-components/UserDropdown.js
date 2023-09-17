@@ -36,6 +36,8 @@ const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
 }))
 
 const UserDropdown = props => {
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
   // ** Props
   const { settings } = props
 
@@ -94,7 +96,7 @@ const UserDropdown = props => {
       >
         <Avatar
           alt='John Doe'
-          src='/images/avatars/1.png'
+          src='/images/avatars/user1.jpg'
           onClick={handleDropdownOpen}
           sx={{ width: 38, height: 38 }}
         />
@@ -103,7 +105,7 @@ const UserDropdown = props => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={() => handleDropdownClose()}
-        sx={{ '& .MuiMenu-paper': { width: 230, mt: 4.75 } }}
+        sx={{ '& .MuiMenu-paper': { minWidth: 100, mt: 4.75 } }}
         anchorOrigin={{ vertical: 'bottom', horizontal: direction === 'ltr' ? 'right' : 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: direction === 'ltr' ? 'right' : 'left' }}
       >
@@ -117,11 +119,15 @@ const UserDropdown = props => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt='John Doe' src='/images/avatars/user1.jpg' sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>John Doe</Typography>
-              <Typography variant='body2'>Admin</Typography>
+              <Typography sx={{ fontWeight: 500 }}>
+                {/* {userData.username} - {userData.role.toUpperCase()} */}
+                Avishka Chandrakumara
+              </Typography>
+              {/* <Typography variant='body2'>{userData.email}</Typography> */}
+              <Typography variant='body2'>avishka@onlyfans.com</Typography>
             </Box>
           </Box>
         </Box>
@@ -132,7 +138,7 @@ const UserDropdown = props => {
             My Profile
           </Box>
         </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        {/* <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
           <Box sx={styles}>
             <Icon icon='tabler:settings' />
             Settings
@@ -163,7 +169,7 @@ const UserDropdown = props => {
             Pricing
           </Box>
         </MenuItemStyled>
-        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
+        <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} /> */}
         <MenuItemStyled sx={{ p: 0 }} onClick={handleLogout}>
           <Box sx={styles}>
             <Icon icon='tabler:logout' />

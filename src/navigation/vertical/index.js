@@ -20,12 +20,12 @@ const navigation = () => {
     },
     {
       path: '/student/lab-reservation/view-requests',
-      title: 'View Reservations',
-      icon: 'ion:calendar-outline'
+      title: 'My Reservations',
+      icon: 'mdi:calendar-user-outline'
     },
     {
       path: '/staff/lab-reservation/admin-reservations',
-      title: 'View Reservation Requests',
+      title: 'Reservation Requests',
       icon: 'mdi:table-cog'
     },
     {
