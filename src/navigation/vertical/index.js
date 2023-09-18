@@ -41,6 +41,15 @@ const navigation = () => {
       icon: 'simple-line-icons:calender'
     },
     {
+
+      sectionTitle: 'Practical mannual'
+    },
+    {
+      path: '/staff/practical-mannual/Module-category',
+      title: 'Add module',
+      icon: 'tabler:add-category'
+    },
+    {
       sectionTitle:'inventory management'
     },
     {
