@@ -40,6 +40,15 @@ const navigation = () => {
       path: '/student/practical-timetable',
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
+    },
+    {
+      sectionTitle:'inventory management'
+
+    },
+    {
+      path:'/staff/inventory-management',
+      title:'Inventory Management',
+      icon:'simple-line-icons:calender'
     }
   ]
 }
