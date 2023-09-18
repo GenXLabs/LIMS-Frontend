@@ -7,7 +7,7 @@ const navigation = () => {
     },
     {
       title: 'User Profile',
-      path: '/user-profile',
+      path: '/users/user-profile',
       icon: 'clarity:avatar-line'
     },
     {
@@ -29,7 +29,10 @@ const navigation = () => {
       icon: 'mdi:table-cog'
     },
     {
-      path: '/user-accounts',
+      sectionTitle: 'User Management'
+    },
+    {
+      path: '/users/user-accounts',
       title: 'User Accounts',
       icon: 'tabler:users'
     },
