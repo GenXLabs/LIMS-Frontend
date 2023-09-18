@@ -5,11 +5,7 @@ const navigation = () => {
       path: '/home',
       icon: 'tabler:smart-home'
     },
-    {
-      title: 'User Profile',
-      path: '/users/user-profile',
-      icon: 'clarity:avatar-line'
-    },
+
     {
       sectionTitle: 'Laboratory Reservation'
     },
