@@ -43,7 +43,6 @@ const navigation = () => {
     },
     {
       sectionTitle:'inventory management'
-
     },
     {
       path:'/staff/inventory-management',
