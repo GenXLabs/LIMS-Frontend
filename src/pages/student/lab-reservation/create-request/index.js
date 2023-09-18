@@ -30,11 +30,8 @@ import {
 
 // ** CalendarColors
 const calendarsColor = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
+  'LAB-01': 'info',
+  'LAB-02': 'warning'
 }
 
 const AppCalendar = () => {
@@ -42,6 +39,8 @@ const AppCalendar = () => {
   const [calendarApi, setCalendarApi] = useState(null)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
+
+  const [values, setValues] = useState({})
 
   // ** Hooks
   const { settings } = useSettings()
@@ -103,6 +102,7 @@ const AppCalendar = () => {
           handleSelectEvent={handleSelectEvent}
           handleLeftSidebarToggle={handleLeftSidebarToggle}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          setValues={setValues}
         />
       </Box>
       <AddEventSidebar

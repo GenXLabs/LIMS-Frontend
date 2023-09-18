@@ -5,11 +5,7 @@ const navigation = () => {
       path: '/home',
       icon: 'tabler:smart-home'
     },
-    {
-      title: 'User Profile',
-      path: '/user-profile',
-      icon: 'clarity:avatar-line'
-    },
+
     {
       sectionTitle: 'Laboratory Reservation'
     },
@@ -29,7 +25,10 @@ const navigation = () => {
       icon: 'mdi:table-cog'
     },
     {
-      path: '/user-accounts',
+      sectionTitle: 'User Management'
+    },
+    {
+      path: '/users/user-accounts',
       title: 'User Accounts',
       icon: 'tabler:users'
     },
@@ -42,12 +41,21 @@ const navigation = () => {
       icon: 'simple-line-icons:calender'
     },
     {
+
       sectionTitle: 'Practical mannual'
     },
     {
       path: '/staff/practical-mannual/Module-category',
       title: 'Add module',
       icon: 'tabler:add-category'
+    },
+    {
+      sectionTitle:'inventory management'
+    },
+    {
+      path:'/staff/inventory-management',
+      title:'Inventory Management',
+      icon:'simple-line-icons:calender'
     }
   ]
 }
