@@ -126,18 +126,6 @@ const columns = [
     )
   },
 
-  // {
-  //   flex: 0.1,
-  //   minWidth: 110,
-  //   field: 'type',
-  //   headerName: 'Type',
-  //   renderCell: params => (
-  //     <Typography variant='body2' sx={{ color: 'text.primary' }}>
-  //       {params.row.type}
-  //     </Typography>
-  //   )
-  // },
-
   {
     flex: 0.1,
     minWidth: 140,
