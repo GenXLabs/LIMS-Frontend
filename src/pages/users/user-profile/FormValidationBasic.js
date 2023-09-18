@@ -38,7 +38,9 @@ const defaultValues = {
   password: '',
   textarea: '',
   firstName: '',
-  checkbox: false
+  checkbox: false,
+  newPassword: '', // Add a newPassword field
+  confirmPassword: '' // Add a confirmPassword field
 }
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -57,24 +59,43 @@ const FormValidationBasic = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    getValues, // Get the form values
+    setValue // Set form field values
   } = useForm({ defaultValues })
 
   const handleClickShowPassword = () => {
     setState({ ...state, showPassword: !state.showPassword })
   }
 
-  const onSubmit = () => {
+  const handleSaveChange = () => {
     // Disable editing mode when the form is submitted
     setState({ ...state, isEditing: false })
+
+    // Check if newPassword and confirmPassword match
+    const newPassword = getValues('newPassword')
+    const confirmPassword = getValues('confirmPassword')
+
+    if (newPassword !== confirmPassword) {
+      toast.error('New Password and Confirm Password must match')
+
+      return
+    }
+
     toast.success('Form Submitted')
+
+    setValue('newPassword', '')
+    setValue('confirmPassword', '')
   }
 
   const handleEditinfo = () => {
-    setState({ ...state, isEditing: !state.isEditing })
+    setState({ ...state, isEditing: true })
   }
 
   const handleCancel = () => {
+    // Disable editing mode and reset form fields when canceled
+    setValue('newPassword', '')
+    setValue('confirmPassword', '')
     setState({ ...state, isEditing: false })
   }
 
@@ -82,7 +103,7 @@ const FormValidationBasic = () => {
     <Card>
       <CardHeader title='Personal Info' />
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleSaveChange)}>
           <Grid container spacing={5}>
             <Grid item xs={12} sm={6}>
               <Controller
@@ -179,18 +200,23 @@ const FormValidationBasic = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name='new-password'
+                name='newPassword' // Use unique names for each field
                 control={control}
+                rules={{
+                  validate: value => {
+                    return value === getValues('confirmPassword')
+                  }
+                }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
                     label='New-password'
                     onChange={onChange}
-                    id='validation-basic-password'
-                    error={Boolean(errors.password)}
+                    id='validation-basic-new-password' // Use a unique ID
+                    error={Boolean(errors.newPassword)} // Use errors.newPassword
                     type={state.showPassword ? 'text' : 'password'}
-                    {...(errors.password && { helperText: 'This field is required' })}
+                    {...(errors.newPassword && { helperText: 'New Password and Confirm Password must match' })}
                     InputProps={{
                       readOnly: !state.isEditing,
                       endAdornment: (
@@ -212,18 +238,24 @@ const FormValidationBasic = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name='comfirm-password'
+                name='confirmPassword' // Use unique names for each field
                 control={control}
+                rules={{
+                  required: true,
+                  validate: value => {
+                    return value === getValues('newPassword')
+                  }
+                }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
-                    label='Comfirm-password'
+                    label='Confirm-password'
                     onChange={onChange}
-                    id='validation-basic-password'
-                    error={Boolean(errors.password)}
+                    id='validation-basic-confirm-password' // Use a unique ID
+                    error={Boolean(errors.confirmPassword)} // Use errors.confirmPassword
                     type={state.showPassword ? 'text' : 'password'}
-                    {...(errors.password && { helperText: 'This field is required' })}
+                    {...(errors.confirmPassword && { helperText: 'New Password and Confirm Password must match' })}
                     InputProps={{
                       readOnly: !state.isEditing,
                       endAdornment: (
@@ -251,12 +283,18 @@ const FormValidationBasic = () => {
             </Grid>
             <Grid item xs={6} container justifyContent='flex-end' alignItems='center' spacing={2}>
               <Grid item>
-                <Button type='submit' variant='contained' color='success'>
+                <Button
+                  type='submit'
+                  variant='contained'
+                  color='success'
+                  onClick={handleSaveChange}
+                  disabled={!state.isEditing}
+                >
                   Save changes
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant='contained' color='secondary' onClick={handleCancel}>
+                <Button variant='contained' color='secondary' onClick={handleCancel} disabled={!state.isEditing}>
                   Cancel
                 </Button>
               </Grid>
