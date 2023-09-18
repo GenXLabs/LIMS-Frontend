@@ -66,7 +66,7 @@ const FormValidationBasic = () => {
 
   return (
     <Card>
-      <CardHeader title='Basic' />
+      <CardHeader title='Personal Info' />
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
@@ -131,14 +131,14 @@ const FormValidationBasic = () => {
 
             <Grid item xs={12} sm={6}>
               <Controller
-                name='password'
+                name='current-password'
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
-                    label='Password'
+                    label='Current-password'
                     onChange={onChange}
                     id='validation-basic-password'
                     error={Boolean(errors.password)}
@@ -228,12 +228,24 @@ const FormValidationBasic = () => {
                 )}
               />
             </Grid>
-            {/* 
-            <Grid item xs={12}>
+
+            <Grid item xs={6}>
               <Button type='submit' variant='contained'>
                 Edit
               </Button>
-            </Grid> */}
+            </Grid>
+            <Grid item xs={6} container justifyContent='flex-end' alignItems='center' spacing={2}>
+              <Grid item>
+                <Button type='submit' variant='contained'>
+                  Save changes
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button type='submit' variant='contained' color='secondary'>
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </form>
       </CardContent>
