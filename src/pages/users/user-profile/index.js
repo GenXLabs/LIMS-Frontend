@@ -30,17 +30,17 @@ function UserProfile() {
           <CardContent>
             <Grid container spacing={6}>
               <Grid item xs={8}>
-                <Box>
+                <Grid item>
                   <AvatarGroup max={4}>
                     <Avatar src='/images/avatars/user1.jpg' alt='Olivia Sparks' sx={{ width: 56, height: 56 }} />
                   </AvatarGroup>
-                </Box>
+                </Grid>
               </Grid>
             </Grid>
           </CardContent>
         </Card>
 
-        <Box sx={{ height: '20px' }}></Box>
+        <Box sx={{ height: '30px' }}></Box>
 
         <FormValidationBasic />
       </Grid>
