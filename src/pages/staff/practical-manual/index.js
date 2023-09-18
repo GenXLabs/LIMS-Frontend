@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -43,7 +43,6 @@ const ModuleCategory = () => {
         </Box>
       </UserAdd>
       <Divider />
-      <ModuleTable />
     </Container>
   )
 }
