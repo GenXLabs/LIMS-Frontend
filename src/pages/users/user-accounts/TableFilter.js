@@ -40,11 +40,9 @@ const renderClient = params => {
 }
 
 const statusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
+  student: { color: 'success' },
+  admin: { color: 'warning' },
+  staff: { color: 'info' }
 }
 
 const escapeRegExp = value => {
@@ -53,39 +51,44 @@ const escapeRegExp = value => {
 
 const rows = [
   {
-    id: 'LIMS001',
+    id: '1',
     first_name: 'Dilshan',
     last_name: 'Fronando',
     email: 'dilshan@gmail.com',
-    avatar: 'avatar-1.png'
+    avatar: 'avatar-1.png',
+    type: 'staff'
   },
   {
-    id: 'LIMS002',
+    id: '2',
     first_name: 'Avishka',
     last_name: 'Nuwan',
     email: 'avishka@gmail.com',
-    avatar: 'avatar-1.png'
+    avatar: 'avatar-1.png',
+    type: 'admin'
   },
   {
-    id: 'LIMS003',
+    id: '3',
     first_name: 'Isum',
     last_name: 'Sandupa',
     email: 'isum@gmail.com',
-    avatar: 'avatar-1.png'
+    avatar: 'avatar-1.png',
+    type: 'staff'
   },
   {
-    id: 'LIMS004',
+    id: '4',
     first_name: 'Kaveeja',
     last_name: 'Perera',
     email: 'kaveeja@gmail.com',
-    avatar: 'avatar-1.png'
+    avatar: 'avatar-1.png',
+    type: 'student'
   },
   {
-    id: 'LIMS005',
+    id: '5',
     first_name: 'Sehana',
     last_name: 'Senanayaka',
     email: 'sehana@gmail.com',
-    avatar: 'avatar-1.png'
+    avatar: 'avatar-1.png',
+    type: 'student'
   }
 ]
 
@@ -113,25 +116,47 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 120,
-    headerName: 'First Name',
-    field: 'fistName',
+    headerName: 'Name',
+    field: 'name',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.first_name}
+        {params.row.first_name} {params.row.last_name}
       </Typography>
     )
   },
+
+  // {
+  //   flex: 0.1,
+  //   minWidth: 110,
+  //   field: 'type',
+  //   headerName: 'Type',
+  //   renderCell: params => (
+  //     <Typography variant='body2' sx={{ color: 'text.primary' }}>
+  //       {params.row.type}
+  //     </Typography>
+  //   )
+  // },
+
   {
     flex: 0.1,
-    minWidth: 110,
-    field: 'lastName',
-    headerName: 'Last Name',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.last_name}
-      </Typography>
-    )
+    minWidth: 140,
+    field: 'type',
+    headerName: 'Type',
+    renderCell: params => {
+      const status = statusObj[params.row.type]
+
+      return (
+        <CustomChip
+          rounded
+          size='small'
+          skin='light'
+          color={status.color}
+          label={params.row.type}
+          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+        />
+      )
+    }
   },
 
   {
