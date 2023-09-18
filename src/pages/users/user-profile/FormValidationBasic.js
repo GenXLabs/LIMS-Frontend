@@ -49,7 +49,8 @@ const FormValidationBasic = () => {
   // ** States
   const [state, setState] = useState({
     password: '',
-    showPassword: false
+    showPassword: false,
+    isEditing: false
   })
 
   // ** Hooks
@@ -62,7 +63,20 @@ const FormValidationBasic = () => {
   const handleClickShowPassword = () => {
     setState({ ...state, showPassword: !state.showPassword })
   }
-  const onSubmit = () => toast.success('Form Submitted')
+
+  const onSubmit = () => {
+    // Disable editing mode when the form is submitted
+    setState({ ...state, isEditing: false })
+    toast.success('Form Submitted')
+  }
+
+  const handleEditinfo = () => {
+    setState({ ...state, isEditing: !state.isEditing })
+  }
+
+  const handleCancel = () => {
+    setState({ ...state, isEditing: false })
+  }
 
   return (
     <Card>
@@ -74,14 +88,14 @@ const FormValidationBasic = () => {
               <Controller
                 name='firstName'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
                     label='First Name'
                     onChange={onChange}
-                    placeholder='Leonard'
+                    placeholder='Avishka'
+                    InputProps={{ readOnly: !state.isEditing }}
                     error={Boolean(errors.firstName)}
                     aria-describedby='validation-basic-first-name'
                     {...(errors.firstName && { helperText: 'This field is required' })}
@@ -93,14 +107,14 @@ const FormValidationBasic = () => {
               <Controller
                 name='lastName'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     value={value}
                     label='Last Name'
                     onChange={onChange}
-                    placeholder='Carter'
+                    InputProps={{ readOnly: !state.isEditing }}
+                    placeholder='Nuwan'
                     error={Boolean(errors.lastName)}
                     aria-describedby='validation-basic-last-name'
                     {...(errors.lastName && { helperText: 'This field is required' })}
@@ -112,16 +126,16 @@ const FormValidationBasic = () => {
               <Controller
                 name='email'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
                     type='email'
                     value={value}
                     label='Email'
+                    InputProps={{ readOnly: !state.isEditing }}
                     onChange={onChange}
                     error={Boolean(errors.email)}
-                    placeholder='carterleonard@gmail.com'
+                    placeholder='avishka@gmail.com'
                     aria-describedby='validation-basic-email'
                     {...(errors.email && { helperText: 'This field is required' })}
                   />
@@ -133,7 +147,6 @@ const FormValidationBasic = () => {
               <Controller
                 name='current-password'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -142,9 +155,11 @@ const FormValidationBasic = () => {
                     onChange={onChange}
                     id='validation-basic-password'
                     error={Boolean(errors.password)}
+                    placeholder='********'
                     type={state.showPassword ? 'text' : 'password'}
                     {...(errors.password && { helperText: 'This field is required' })}
                     InputProps={{
+                      readOnly: !state.isEditing,
                       endAdornment: (
                         <InputAdornment position='end'>
                           <IconButton
@@ -166,7 +181,6 @@ const FormValidationBasic = () => {
               <Controller
                 name='new-password'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -178,6 +192,7 @@ const FormValidationBasic = () => {
                     type={state.showPassword ? 'text' : 'password'}
                     {...(errors.password && { helperText: 'This field is required' })}
                     InputProps={{
+                      readOnly: !state.isEditing,
                       endAdornment: (
                         <InputAdornment position='end'>
                           <IconButton
@@ -199,7 +214,6 @@ const FormValidationBasic = () => {
               <Controller
                 name='comfirm-password'
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -211,6 +225,7 @@ const FormValidationBasic = () => {
                     type={state.showPassword ? 'text' : 'password'}
                     {...(errors.password && { helperText: 'This field is required' })}
                     InputProps={{
+                      readOnly: !state.isEditing,
                       endAdornment: (
                         <InputAdornment position='end'>
                           <IconButton
@@ -230,18 +245,18 @@ const FormValidationBasic = () => {
             </Grid>
 
             <Grid item xs={6}>
-              <Button type='submit' variant='contained'>
+              <Button variant='contained' type='button' onClick={handleEditinfo}>
                 Edit
               </Button>
             </Grid>
             <Grid item xs={6} container justifyContent='flex-end' alignItems='center' spacing={2}>
               <Grid item>
-                <Button type='submit' variant='contained'>
+                <Button type='submit' variant='contained' color='success'>
                   Save changes
                 </Button>
               </Grid>
               <Grid item>
-                <Button type='submit' variant='contained' color='secondary'>
+                <Button variant='contained' color='secondary' onClick={handleCancel}>
                   Cancel
                 </Button>
               </Grid>
