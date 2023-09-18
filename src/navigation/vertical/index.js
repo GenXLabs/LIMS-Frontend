@@ -41,21 +41,20 @@ const navigation = () => {
       icon: 'simple-line-icons:calender'
     },
     {
-
-      sectionTitle: 'Practical mannual'
+      sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-mannual/Module-category',
-      title: 'Add module',
-      icon: 'tabler:add-category'
+      path: '/staff/practical-manual',
+      title: 'Practical Manual',
+      icon: 'tabler:file-text'
     },
     {
-      sectionTitle:'inventory management'
+      sectionTitle: 'Inventory Management'
     },
     {
-      path:'/staff/inventory-management',
-      title:'Inventory Management',
-      icon:'simple-line-icons:calender'
+      path: '/staff/inventory-management',
+      title: 'Inventory Management',
+      icon: 'simple-line-icons:calender'
     }
   ]
 }
