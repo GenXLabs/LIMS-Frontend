@@ -82,6 +82,11 @@ const UserDropdown = props => {
     handleDropdownClose()
   }
 
+  const handleUserProfile = () => {
+    router.push('/users/user-profile')
+    handleDropdownClose()
+  }
+
   return (
     <Fragment>
       <Badge
@@ -132,7 +137,7 @@ const UserDropdown = props => {
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleUserProfile()}>
           <Box sx={styles}>
             <Icon icon='tabler:user-check' />
             My Profile

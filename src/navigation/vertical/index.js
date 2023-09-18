@@ -5,11 +5,7 @@ const navigation = () => {
       path: '/home',
       icon: 'tabler:smart-home'
     },
-    {
-      title: 'User Profile',
-      path: '/user-profile',
-      icon: 'clarity:avatar-line'
-    },
+
     {
       sectionTitle: 'Laboratory Reservation'
     },
@@ -29,7 +25,10 @@ const navigation = () => {
       icon: 'mdi:table-cog'
     },
     {
-      path: '/user-accounts',
+      sectionTitle: 'User Management'
+    },
+    {
+      path: '/users/user-accounts',
       title: 'User Accounts',
       icon: 'tabler:users'
     },
