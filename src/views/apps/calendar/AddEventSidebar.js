@@ -74,17 +74,13 @@ const AddEventSidebar = props => {
 
   const onSubmit = data => {
     const modifiedEvent = {
-      url: values.url,
-      display: 'block',
       title: data.title,
-      end: values.endDate,
-      allDay: values.allDay,
-      start: values.startDate,
-      extendedProps: {
-        calendar: capitalize(values.calendar),
-        guests: values.guests && values.guests.length ? values.guests : undefined,
-        description: values.description.length ? values.description : undefined
-      }
+      batch: data.batch,
+      venue: data.venue,
+      date: values.date,
+      startTime: values.startTime,
+      endTime: values.endTime,
+      description: data.description
     }
     if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
       dispatch(addEvent(modifiedEvent))
@@ -114,9 +110,11 @@ const AddEventSidebar = props => {
     if (store.selectedEvent !== null) {
       const event = store.selectedEvent
       setValue('title', event.title || '')
+
+      const extendedProps = event.extendedProps || {} // Check if extendedProps exists
       setValues({
-        description: event.extendedProps.description || '',
-        calendar: event.extendedProps.calendar || 'LAB-01',
+        description: extendedProps.description || '', // Access description inside extendedProps if it exists
+        calendar: extendedProps.calendar || 'LAB-01',
         startDate: event.start !== null ? event.start : new Date()
       })
     }
@@ -263,18 +261,7 @@ const AddEventSidebar = props => {
                 onSelect={handleStartDate}
               />
             </Box>
-            <Box sx={{ mb: 4 }}>
-              <DatePicker
-                showTimeSelect
-                selected={endTime}
-                timeIntervals={15}
-                showTimeSelectOnly
-                dateFormat='h:mm aa'
-                id='time-only-picker'
-                onChange={date => setEndTime(date)}
-                customInput={<CustomInput label='End Time' />}
-              />
-            </Box>
+
             <Box sx={{ mb: 4 }}>
               <DatePicker
                 showTimeSelect
@@ -285,6 +272,19 @@ const AddEventSidebar = props => {
                 id='time-only-picker'
                 onChange={date => setStartTime(date)}
                 customInput={<CustomInput label='Start Time' />}
+              />
+            </Box>
+
+            <Box sx={{ mb: 4 }}>
+              <DatePicker
+                showTimeSelect
+                selected={endTime}
+                timeIntervals={15}
+                showTimeSelectOnly
+                dateFormat='h:mm aa'
+                id='time-only-picker'
+                onChange={date => setEndTime(date)}
+                customInput={<CustomInput label='End Time' />}
               />
             </Box>
 

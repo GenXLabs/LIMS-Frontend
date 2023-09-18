@@ -14,16 +14,12 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 const blankEvent = {
   title: '',
-  start: '',
-  end: '',
-  allDay: false,
-  url: '',
-  extendedProps: {
-    calendar: '',
-    guests: [],
-    location: '',
-    description: ''
-  }
+  batch: '',
+  venue: '',
+  date: '',
+  startTime: '',
+  endTime: '',
+  description: ''
 }
 
 const Calendar = props => {
@@ -38,7 +34,8 @@ const Calendar = props => {
     setCalendarApi,
     handleSelectEvent,
     handleLeftSidebarToggle,
-    handleAddEventSidebarToggle
+    handleAddEventSidebarToggle,
+    setValues
   } = props
 
   // ** Refs
@@ -105,13 +102,29 @@ const Calendar = props => {
       },
       eventClick({ event: clickedEvent }) {
         dispatch(handleSelectEvent(clickedEvent))
-        handleAddEventSidebarToggle()
 
-        // * Only grab required field otherwise it goes in infinity loop
-        // ! Always grab all fields rendered by form (even if it get `undefined`) otherwise due to Vue3/Composition API you might get: "object is not extensible"
-        // event.value = grabEventDataFromEventApi(clickedEvent)
-        // isAddNewEventSidebarActive.value = true
+        // Update the AddEventSidebar with the selected event's data
+        setValues({
+          title: clickedEvent.title,
+          batch: clickedEvent.batch,
+          venue: clickedEvent.venue,
+          date: clickedEvent.date,
+          startTime: clickedEvent.startTime,
+          endTime: clickedEvent.endTime,
+          description: clickedEvent.description
+        })
+        handleAddEventSidebarToggle()
       },
+
+      // eventClick({ event: clickedEvent }) {
+      //   dispatch(handleSelectEvent(clickedEvent))
+      //   handleAddEventSidebarToggle()
+
+      //   // * Only grab required field otherwise it goes in infinity loop
+      //   // ! Always grab all fields rendered by form (even if it get `undefined`) otherwise due to Vue3/Composition API you might get: "object is not extensible"
+      //   // event.value = grabEventDataFromEventApi(clickedEvent)
+      //   // isAddNewEventSidebarActive.value = true
+      // },
       customButtons: {
         sidebarToggle: {
           icon: 'bi bi-list',
