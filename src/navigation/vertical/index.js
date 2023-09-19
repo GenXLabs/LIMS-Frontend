@@ -41,21 +41,52 @@ const navigation = () => {
       icon: 'simple-line-icons:calender'
     },
     {
+      sectionTitle: 'Practical Manual'
+    },
+    {
+      path: '/staff/practical-manual',
+      title: 'Practical Manual',
+      icon: 'tabler:file-text'
+    },
+    {
+      sectionTitle: 'Inventory Management'
+    },
+    {
+      path: '/staff/inventory-management',
+      title: 'Inventory Management',
+      icon: 'simple-line-icons:calender'
+    },
+    {
+      sectionTitle: 'Quality assurance'
+    },
+    {
+      path: '/staff/internal-quality-assurance/laboratory-audit-report',
+      title: 'Laboratory Audit Report',
+      icon: 'carbon:report'
+    },
+    {
+      path: '/staff/internal-quality-assurance/instrument-calibration',
+      title: 'Instrument Calibration',
+      icon: 'carbon:report'
+    },
+    {
+      path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
+      title: 'Temperature Monitoring Chart',
+      icon: 'carbon:report'
+    },
 
-      sectionTitle: 'Practical mannual'
+    {
+      sectionTitle: 'SOP Management'
     },
     {
-      path: '/staff/practical-mannual/Module-category',
-      title: 'Add module',
-      icon: 'tabler:add-category'
+      title: 'Instruments',
+      icon: 'arcticons:pslab',
+      path: '/staff/sop-management/instruments'
     },
     {
-      sectionTitle:'inventory management'
-    },
-    {
-      path:'/staff/inventory-management',
-      title:'Inventory Management',
-      icon:'simple-line-icons:calender'
+      title: 'Biohazard Dispose',
+      icon: 'fluent-emoji-high-contrast:biohazard',
+      path: '/staff/sop-management/biohazard-dispose'
     }
   ]
 }
