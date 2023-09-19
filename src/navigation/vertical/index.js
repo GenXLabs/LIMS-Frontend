@@ -44,8 +44,8 @@ const navigation = () => {
       sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-manual',
-      title: 'Practical Manual',
+      path: '/staff/practical-manual/Module-category',
+      title: 'Module-category',
       icon: 'tabler:file-text'
     },
     {
