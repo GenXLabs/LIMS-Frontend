@@ -169,6 +169,8 @@ const columns = [
     minWidth: 140,
     field: 'actions',
     headerName: 'Actions',
+    sortable: false,
+    filterable: false,
     renderCell: params => {
       return (
         <Grid container columnSpacing={5} rowSpacing={2} sx={{ mt: 2, mb: 2 }}>
