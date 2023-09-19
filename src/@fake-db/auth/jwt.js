@@ -19,7 +19,7 @@ const users = [
   },
   {
     id: 2,
-    role: 'staff',
+    role: 'admin',
     password: 'staff',
     fullName: 'Jane Doe',
     username: 'janedoe',
@@ -28,7 +28,7 @@ const users = [
   },
   {
     id: 3,
-    role: 'student',
+    role: 'admin',
     password: 'student',
     fullName: 'George Bush',
     username: 'georgebush',
