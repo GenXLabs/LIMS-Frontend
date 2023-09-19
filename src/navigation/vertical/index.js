@@ -55,6 +55,24 @@ const navigation = () => {
       path: '/staff/inventory-management',
       title: 'Inventory Management',
       icon: 'simple-line-icons:calender'
+    },
+    {
+      sectionTitle: 'Quality assurance'
+    },
+    {
+      path: '/staff/internal-quality-assurance/laboratory-audit-report',
+      title: 'Laboratory Audit Report',
+      icon: 'carbon:report'
+    },
+    {
+      path: '/staff/internal-quality-assurance/instrument-calibration',
+      title: 'Instrument Calibration',
+      icon: 'carbon:report'
+    },
+    {
+      path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
+      title: 'Temperature Monitoring Chart',
+      icon: 'carbon:report'
     }
   ]
 }
