@@ -10,6 +10,7 @@ import defaultAuthConfig from 'src/configs/auth'
 const users = [
   {
     id: 1,
+    type: 'Admin',
     role: 'admin',
     password: 'admin',
     fullName: 'John Doe',
@@ -19,6 +20,7 @@ const users = [
   },
   {
     id: 2,
+    type: 'Staff',
     role: 'admin',
     password: 'staff',
     fullName: 'Jane Doe',
@@ -28,6 +30,7 @@ const users = [
   },
   {
     id: 3,
+    type: 'Student',
     role: 'admin',
     password: 'student',
     fullName: 'George Bush',
