@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** FullCalendar & App Components Imports
-import Calendar from 'src/views/apps/calendar/Calendar'
+import Calendar from './calendar/Calendar'
 import CalendarWrapper from 'src/@core/styles/libs/fullcalendar'
-import AddEventSidebar from 'src/views/apps/calendar/AddEventSidebar'
+import AddEventSidebar from './calendar/AddEventSidebar'
 
 // ** Actions
 import {
@@ -25,7 +25,7 @@ import {
   handleSelectEvent,
   handleAllCalendars,
   handleCalendarsUpdate
-} from 'src/store/apps/calendar'
+} from './calendar/calendar/index'
 
 // ** CalendarColors
 const calendarsColor = {
@@ -58,19 +58,13 @@ const AppCalendar = () => {
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
 
   return (
-    <CalendarWrapper
-      className='app-calendar'
-      sx={{
-        boxShadow: skin === 'bordered' ? 0 : 6,
-        ...(skin === 'bordered' && { border: theme => `1px solid ${theme.palette.divider}` })
-      }}
-    >
+    <CalendarWrapper className='app-calendar' width='100%'>
       <Box
         sx={{
           p: 6,
           pb: 0,
           flexGrow: 1,
-          borderRadius: 1,
+          borderRadius: 3,
           boxShadow: 'none',
           backgroundColor: 'background.paper',
           ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
