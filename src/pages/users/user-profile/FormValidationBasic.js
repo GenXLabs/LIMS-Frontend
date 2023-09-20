@@ -17,6 +17,7 @@ import CardContent from '@mui/material/CardContent'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Divider from '@mui/material/Divider'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -101,179 +102,190 @@ const FormValidationBasic = () => {
 
   return (
     <Card>
-      <CardHeader title='Personal Info' />
+      <CardHeader title='My Profile' />
       <CardContent>
         <form onSubmit={handleSubmit(handleSaveChange)}>
-          <Grid container spacing={5}>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='firstName'
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label='First Name'
-                    onChange={onChange}
-                    placeholder='Avishka'
-                    InputProps={{ readOnly: !state.isEditing }}
-                    error={Boolean(errors.firstName)}
-                    aria-describedby='validation-basic-first-name'
-                    {...(errors.firstName && { helperText: 'This field is required' })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='lastName'
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label='Last Name'
-                    onChange={onChange}
-                    InputProps={{ readOnly: !state.isEditing }}
-                    placeholder='Nuwan'
-                    error={Boolean(errors.lastName)}
-                    aria-describedby='validation-basic-last-name'
-                    {...(errors.lastName && { helperText: 'This field is required' })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='email'
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    type='email'
-                    value={value}
-                    label='Email'
-                    InputProps={{ readOnly: !state.isEditing }}
-                    onChange={onChange}
-                    error={Boolean(errors.email)}
-                    placeholder='avishka@gmail.com'
-                    aria-describedby='validation-basic-email'
-                    {...(errors.email && { helperText: 'This field is required' })}
-                  />
-                )}
-              />
+          <Grid container spacing={6}>
+            <Grid container item xs={12} sm={12} spacing={4}>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='firstName'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label='First Name'
+                      onChange={onChange}
+                      placeholder='Avishka'
+                      InputProps={{ readOnly: !state.isEditing }}
+                      error={Boolean(errors.firstName)}
+                      aria-describedby='validation-basic-first-name'
+                      {...(errors.firstName && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='lastName'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label='Last Name'
+                      onChange={onChange}
+                      InputProps={{ readOnly: !state.isEditing }}
+                      placeholder='Nuwan'
+                      error={Boolean(errors.lastName)}
+                      aria-describedby='validation-basic-last-name'
+                      {...(errors.lastName && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='email'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      type='email'
+                      value={value}
+                      label='Email'
+                      InputProps={{ readOnly: !state.isEditing }}
+                      onChange={onChange}
+                      error={Boolean(errors.email)}
+                      placeholder='avishka@gmail.com'
+                      aria-describedby='validation-basic-email'
+                      {...(errors.email && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='current-password'
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label='Current-password'
-                    onChange={onChange}
-                    id='validation-basic-password'
-                    error={Boolean(errors.password)}
-                    placeholder='********'
-                    type={state.showPassword ? 'text' : 'password'}
-                    {...(errors.password && { helperText: 'This field is required' })}
-                    InputProps={{
-                      readOnly: !state.isEditing,
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            onClick={handleClickShowPassword}
-                            onMouseDown={e => e.preventDefault()}
-                            aria-label='toggle password visibility'
-                          >
-                            <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              />
+            <Grid item xs={12}>
+              <Divider />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='newPassword' // Use unique names for each field
-                control={control}
-                rules={{
-                  validate: value => {
-                    return value === getValues('confirmPassword')
-                  }
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label='New-password'
-                    onChange={onChange}
-                    id='validation-basic-new-password' // Use a unique ID
-                    error={Boolean(errors.newPassword)} // Use errors.newPassword
-                    type={state.showPassword ? 'text' : 'password'}
-                    {...(errors.newPassword && { helperText: 'New Password and Confirm Password must match' })}
-                    InputProps={{
-                      readOnly: !state.isEditing,
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            onClick={handleClickShowPassword}
-                            onMouseDown={e => e.preventDefault()}
-                            aria-label='toggle password visibility'
-                          >
-                            <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name='confirmPassword' // Use unique names for each field
-                control={control}
-                rules={{
-                  required: true,
-                  validate: value => {
-                    return value === getValues('newPassword')
-                  }
-                }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label='Confirm-password'
-                    onChange={onChange}
-                    id='validation-basic-confirm-password' // Use a unique ID
-                    error={Boolean(errors.confirmPassword)} // Use errors.confirmPassword
-                    type={state.showPassword ? 'text' : 'password'}
-                    {...(errors.confirmPassword && { helperText: 'New Password and Confirm Password must match' })}
-                    InputProps={{
-                      readOnly: !state.isEditing,
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            onClick={handleClickShowPassword}
-                            onMouseDown={e => e.preventDefault()}
-                            aria-label='toggle password visibility'
-                          >
-                            <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                )}
-              />
+
+            <Grid container item xs={12} sm={12} spacing={4}>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='current-password'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label='Current-password'
+                      onChange={onChange}
+                      id='validation-basic-password'
+                      error={Boolean(errors.password)}
+                      placeholder='********'
+                      type={state.showPassword ? 'text' : 'password'}
+                      {...(errors.password && { helperText: 'This field is required' })}
+                      InputProps={{
+                        readOnly: !state.isEditing,
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton
+                              edge='end'
+                              onClick={handleClickShowPassword}
+                              onMouseDown={e => e.preventDefault()}
+                              aria-label='toggle password visibility'
+                            >
+                              <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='newPassword' // Use unique names for each field
+                  control={control}
+                  rules={{
+                    validate: value => {
+                      return value === getValues('confirmPassword')
+                    }
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label='New-password'
+                      onChange={onChange}
+                      id='validation-basic-new-password' // Use a unique ID
+                      error={Boolean(errors.newPassword)} // Use errors.newPassword
+                      type={state.showPassword ? 'text' : 'password'}
+                      {...(errors.newPassword && { helperText: 'New Password and Confirm Password must match' })}
+                      InputProps={{
+                        readOnly: !state.isEditing,
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton
+                              edge='end'
+                              onClick={handleClickShowPassword}
+                              onMouseDown={e => e.preventDefault()}
+                              aria-label='toggle password visibility'
+                            >
+                              <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name='confirmPassword' // Use unique names for each field
+                  control={control}
+                  rules={{
+                    required: true,
+                    validate: value => {
+                      return value === getValues('newPassword')
+                    }
+                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label='Confirm-password'
+                      onChange={onChange}
+                      id='validation-basic-confirm-password' // Use a unique ID
+                      error={Boolean(errors.confirmPassword)} // Use errors.confirmPassword
+                      type={state.showPassword ? 'text' : 'password'}
+                      {...(errors.confirmPassword && { helperText: 'New Password and Confirm Password must match' })}
+                      InputProps={{
+                        readOnly: !state.isEditing,
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton
+                              edge='end'
+                              onClick={handleClickShowPassword}
+                              onMouseDown={e => e.preventDefault()}
+                              aria-label='toggle password visibility'
+                            >
+                              <Icon fontSize='1.25rem' icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
 
             <Grid item xs={6}>

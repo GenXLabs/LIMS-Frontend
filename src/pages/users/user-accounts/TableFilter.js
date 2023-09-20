@@ -170,7 +170,7 @@ const columns = [
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='primary'>
+          <IconButton color='error'>
             <Icon icon='lucide:trash-2' />
           </IconButton>
         </Box>
