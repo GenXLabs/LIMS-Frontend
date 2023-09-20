@@ -12,7 +12,7 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import TableFilter from './TableFilter'
 
-function UserAccounts() {
+const UserAccounts = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
