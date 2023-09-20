@@ -135,7 +135,7 @@ const columns = [
             <Icon icon='lucide:trash-2' />
           </IconButton>
           <IconButton color='primary'>
-            <Icon icon='fluent:add-16-regular' />
+            <Icon icon='material-symbols:download' />
           </IconButton>
 
         </Box>
@@ -170,8 +170,7 @@ const TableColumns = () => {
   }
 
   return (
-    <Card>
-      <CardHeader title='Instruments' />
+
       <DataGrid
         autoHeight
         columns={columns}
@@ -197,7 +196,7 @@ const TableColumns = () => {
           }
         }}
       />
-    </Card>
+  
   )
 }
 
