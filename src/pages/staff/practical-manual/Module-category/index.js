@@ -10,16 +10,16 @@ import Icon from 'src/@core/components/icon'
 import UsersTable from 'src/views/table/usersTable'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import TableFilter from './TableFilter'
+import TableStickyHeader from './TableStickyHeader'
 
-const UserAccounts = () => {
+function ModuleCategory() {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='User Accounts' action={<Button variant='contained'>Add user</Button>}></CardHeader>
+          <CardHeader title='Module Category' action={<Button variant='contained'>Add Module</Button>}></CardHeader>
           <CardContent>
-            <TableFilter />
+            <TableStickyHeader />
           </CardContent>
         </Card>
       </Grid>
@@ -27,4 +27,4 @@ const UserAccounts = () => {
   )
 }
 
-export default UserAccounts
+export default ModuleCategory

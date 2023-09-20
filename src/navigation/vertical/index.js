@@ -44,8 +44,8 @@ const navigation = () => {
       sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-manual',
-      title: 'Practical Manual',
+      path: '/staff/practical-manual/Module-category',
+      title: 'Module-category',
       icon: 'tabler:file-text'
     },
     {
@@ -72,7 +72,7 @@ const navigation = () => {
     {
       path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
       title: 'Temperature Monitoring Chart',
-      icon: 'carbon:report'
+      icon: 'game-icons:chart'
     },
 
     {
