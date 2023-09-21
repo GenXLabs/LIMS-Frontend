@@ -279,7 +279,7 @@ const LoginPage = () => {
               <Button fullWidth type='submit' variant='contained' sx={{ my: 0 }}>
                 Login
               </Button>
-               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center',marginTop:'20px' }}>
                 <Typography sx={{ color: 'text.secondary', mr: 2 }}>New on our platform?</Typography>
                 <Typography href='/register' component={LinkStyled}>
                   Create an account

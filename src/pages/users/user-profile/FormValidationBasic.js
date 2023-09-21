@@ -43,12 +43,12 @@ const FormValidationBasic = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [number, setNumber] = useState('')
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-
 
   useEffect(() => {
     const name = userDetails.fullName.split(' ')
@@ -56,6 +56,7 @@ const FormValidationBasic = () => {
     setFirstName(name[0])
     setLastName(name[1])
     setEmail(userDetails.email)
+    setNumber(userDetails.phoneNumber)
   }, [])
 
   // ** Hooks
@@ -79,7 +80,7 @@ const FormValidationBasic = () => {
     if (password !== 'admin') {
       toast.error('Current password is incorrect')
 
-      return 
+      return
     }
 
     // if new password and confirm password are not the same
@@ -88,7 +89,6 @@ const FormValidationBasic = () => {
 
       return
     }
-
 
     toast.success('Form Submitted')
 
@@ -103,14 +103,14 @@ const FormValidationBasic = () => {
 
   const handleCancel = () => {
     // Disable editing mode and reset form fields when canceled
-   setFirstName(userDetails.fullName.split(' ')[0])
+    setFirstName(userDetails.fullName.split(' ')[0])
     setLastName(userDetails.fullName.split(' ')[1])
     setEmail(userDetails.email)
+    setNumber(userDetails.phoneNumber)
     setPassword('')
     setNewPassword('')
     setConfirmPassword('')
     setIsEditing(false)
-
   }
 
   return (
@@ -150,6 +150,17 @@ const FormValidationBasic = () => {
                   InputProps={{ readOnly: !isEditing }}
                   onChange={e => setEmail(e.target.value)}
                   error={Boolean(errors.email)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomTextField
+                  fullWidth
+                  value={number}
+                  type='tel'
+                  label='Phone Number'
+                  InputProps={{ readOnly: !isEditing }}
+                  onChange={e => setNumber(e.target.value)}
+                  error={Boolean(errors.number)}
                 />
               </Grid>
             </Grid>

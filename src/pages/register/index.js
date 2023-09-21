@@ -33,6 +33,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { set } from 'nprogress'
+import { use } from 'i18next'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -80,6 +81,7 @@ const Register = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
@@ -92,57 +94,67 @@ const Register = () => {
   const { skin } = settings
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
+  const[firstNameErrorText, setFirstNameErrorText] = useState('')
+  const[lastNameErrorText, setLastNameErrorText] = useState('')
+  const[emailErrorText, setEmailErrorText] = useState('')
+  const[phoneNumberErrorText, setPhoneNumberErrorText] = useState('')
+  const[passwordErrorText, setPasswordErrorText] = useState('')
+  const[confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('')
+
   // sign up handling
   const handleSignUp = () => {
     console.log('sign up')
 
+    let errorCount = 0
+
     // validate the form fields
     if (firstName === '') {
-      toast.error('Please enter your first name')
+      setFirstNameErrorText('First name is required')
+      errorCount++
 
-      return
     }
-
     if (lastName === '') {
-      toast.error('Please enter your last name')
-
-      return
+      setLastNameErrorText('Last name is required')
+      errorCount++
     }
-
-    if (email === '' || !email.includes('@')) {
-      toast.error('Please enter your email')
-
-      return
+    if (email === '') {
+      setEmailErrorText('Email is required')
+      errorCount++
     }
-
     if (password === '') {
-      toast.error('Please enter your password')
-
-      return
+      setPasswordErrorText('Password is required')
+      errorCount++
     }
-
     if (confirmPassword === '') {
-      toast.error('Please confirm your password')
-
-      return
+      setConfirmPasswordErrorText('Confirm password is required')
+      errorCount++
+    }
+    if(password !== confirmPassword) {
+      setConfirmPasswordErrorText('Passwords do not match')
+      errorCount++
+    }
+    if (phoneNumber === '') {
+      setPhoneNumberErrorText('Phone number is required')
+      errorCount++
     }
 
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match')
 
-      return
+    if(errorCount = 0) {
+      // if all fields are valid, sign up the user
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        password
+      }
+      console.log(userData)
+
+      // localStorage.setItem('userData', JSON.stringify(userData))
+      toast.success('Sign up successful please login to continue')
+
     }
 
-    // if all fields are valid, sign up the user
-    const userData = {
-      firstName,
-      lastName,
-      email,
-      password
-    }
-
-    // localStorage.setItem('userData', JSON.stringify(userData))
-    toast.success('Sign up successful please login to continue')
+   
   }
 
   return (
@@ -216,6 +228,9 @@ const Register = () => {
               <CustomTextField
                 autoFocus
                 fullWidth
+                required
+                helperText={firstNameErrorText}
+                error={firstNameErrorText !== ''}
                 sx={{ mb: 4 }}
                 label='First Name'
                 placeholder='john'
@@ -225,6 +240,9 @@ const Register = () => {
               <CustomTextField
                 autoFocus
                 fullWidth
+                required
+                helperText={lastNameErrorText}
+                error={lastNameErrorText !== ''}
                 sx={{ mb: 4 }}
                 label='Last Name'
                 placeholder='doe'
@@ -235,6 +253,9 @@ const Register = () => {
                 fullWidth
                 label='Email'
                 type='email'
+                required
+                helperText={emailErrorText}
+                error={emailErrorText !== ''}
                 sx={{ mb: 4 }}
                 placeholder='user@email.com'
                 value={email}
@@ -242,8 +263,25 @@ const Register = () => {
               />
               <CustomTextField
                 fullWidth
+                label='Phone Number'
+                id='auth-login-v2-password'
+                required
+                helperText={phoneNumberErrorText}
+                error={phoneNumberErrorText !== ''}
+                type='tel'
+                placeholder='0774567890'
+                sx={{ mb: 4 }}
+                value={phoneNumber}
+                onChange={e => setPhoneNumber(e.target.value)}
+              
+              />
+              <CustomTextField
+                fullWidth
                 label='Password'
                 id='auth-login-v2-password'
+                required
+                helperText={passwordErrorText}
+                error={passwordErrorText !== ''}
                 type={showPassword ? 'text' : 'password'}
                 placeholder='**********'
                 sx={{ mb: 4 }}
@@ -267,6 +305,9 @@ const Register = () => {
                 fullWidth
                 label='Confirm Password'
                 id='auth-login-v2-password'
+                required
+                helperText={confirmPasswordErrorText}
+                error={confirmPasswordErrorText !== ''}
                 type={showPassword ? 'text' : 'password'}
                 placeholder='**********'
                 sx={{ mb: 4 }}
