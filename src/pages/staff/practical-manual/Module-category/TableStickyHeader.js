@@ -51,21 +51,16 @@ const columns = [
       </Typography>
     )
   },
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
+
   {
     flex: 0.1,
     minWidth: 170,
     field: 'actions',
     headerName: 'Actions',
+    headerAlign: 'right',
+    align:'right',
+
+
     renderCell: params => {
       return (
         <Box className='d-flex align-items-center'>

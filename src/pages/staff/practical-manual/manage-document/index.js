@@ -49,22 +49,14 @@ const columns = [
     )
   },
 
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-  {},
-
+  
   {
     flex: 0.1,
     minWidth: 170,
     field: 'actions',
     headerName: 'Actions',
+    headerAlign: 'right',
+    align: 'right',
     renderCell: params => {
       return (
         <div className='d-flex align-items-center'>
