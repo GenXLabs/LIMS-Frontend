@@ -17,7 +17,7 @@ const IntrumentCalibration = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader action={<Button variant='contained'>+Upload Audit Report</Button>}></CardHeader>
+          <CardHeader action={<Button variant='contained'>+Upload instrument calibration report</Button>}></CardHeader>
           <CardContent>
             <TableFilter />
           </CardContent>
