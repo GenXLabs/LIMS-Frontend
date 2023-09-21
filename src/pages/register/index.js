@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
+import router from 'next/router'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -15,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
+import { toast } from 'react-hot-toast'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -30,6 +32,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import { set } from 'nprogress'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -74,6 +77,11 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
 const Register = () => {
   // ** States
   const [showPassword, setShowPassword] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   // ** Hooks
   const theme = useTheme()
@@ -83,6 +91,59 @@ const Register = () => {
   // ** Vars
   const { skin } = settings
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
+
+  // sign up handling
+  const handleSignUp = () => {
+    console.log('sign up')
+
+    // validate the form fields
+    if (firstName === '') {
+      toast.error('Please enter your first name')
+
+      return
+    }
+
+    if (lastName === '') {
+      toast.error('Please enter your last name')
+
+      return
+    }
+
+    if (email === '' || !email.includes('@')) {
+      toast.error('Please enter your email')
+
+      return
+    }
+
+    if (password === '') {
+      toast.error('Please enter your password')
+
+      return
+    }
+
+    if (confirmPassword === '') {
+      toast.error('Please confirm your password')
+
+      return
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match')
+
+      return
+    }
+
+    // if all fields are valid, sign up the user
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      password
+    }
+
+    // localStorage.setItem('userData', JSON.stringify(userData))
+    toast.success('Sign up successful please login to continue')
+  }
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
@@ -152,13 +213,65 @@ const Register = () => {
               <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography>
             </Box> */}
             <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-              <CustomTextField autoFocus fullWidth sx={{ mb: 4 }} label='Username' placeholder='johndoe' />
-              <CustomTextField fullWidth label='Email' sx={{ mb: 4 }} placeholder='user@email.com' />
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='First Name'
+                placeholder='john'
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+              />
+              <CustomTextField
+                autoFocus
+                fullWidth
+                sx={{ mb: 4 }}
+                label='Last Name'
+                placeholder='doe'
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+              />
+              <CustomTextField
+                fullWidth
+                label='Email'
+                type='email'
+                sx={{ mb: 4 }}
+                placeholder='user@email.com'
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
               <CustomTextField
                 fullWidth
                 label='Password'
                 id='auth-login-v2-password'
                 type={showPassword ? 'text' : 'password'}
+                placeholder='**********'
+                sx={{ mb: 4 }}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <Icon fontSize='1.25rem' icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+              <CustomTextField
+                fullWidth
+                label='Confirm Password'
+                id='auth-login-v2-password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='**********'
+                sx={{ mb: 4 }}
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -185,7 +298,7 @@ const Register = () => {
                   </Box>
                 }
               />
-              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
+              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleSignUp}>
                 Sign up
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
