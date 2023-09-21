@@ -197,8 +197,8 @@ const columns = [
 
         // Define the login payload
         const loginPayload = {
-          username: 'antpixelcore',
-          password: 'Pixelcore@1133'
+          username: '',
+          password: ''
         }
 
         // Make a POST request to the login API
@@ -282,8 +282,8 @@ const columns = [
 
         // Define the login payload
         const loginPayload = {
-          username: 'antpixelcore',
-          password: 'Pixelcore@1133'
+          username: '',
+          password: ''
         }
 
         // Make a POST request to the login API
