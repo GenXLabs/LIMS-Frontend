@@ -59,6 +59,11 @@ const navigation = () => {
       icon: 'tabler:file-text'
     },
     {
+      path: '/student/document-file',
+      title: 'Document File',
+      icon: 'tabler:file-text'
+    },
+    {
       sectionTitle: 'Inventory Management'
     },
     {
