@@ -10,7 +10,9 @@ import defaultAuthConfig from 'src/configs/auth'
 const users = [
   {
     id: 1,
+    type: 'Admin',
     role: 'admin',
+    phoneNumber: '1234567890',
     password: 'admin',
     fullName: 'John Doe',
     username: 'johndoe',
@@ -19,7 +21,9 @@ const users = [
   },
   {
     id: 2,
+    type: 'Staff',
     role: 'admin',
+    phoneNumber: '1234567890',
     password: 'staff',
     fullName: 'Jane Doe',
     username: 'janedoe',
@@ -28,7 +32,9 @@ const users = [
   },
   {
     id: 3,
+    type: 'Student',
     role: 'admin',
+    phoneNumber: '1234567890',
     password: 'student',
     fullName: 'George Bush',
     username: 'georgebush',
