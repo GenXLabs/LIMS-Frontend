@@ -58,36 +58,7 @@ const columns = [
     headerAlign: 'right',
     align: 'right',
     renderCell: (params) => {
-      const [showDownloadAlert, setShowDownloadAlert] = UseState(false);
-
-      const toggleDownloadAlert = () => {
-        setShowDownloadAlert(true);
-
-        // Hide the alert after a delay (e.g., 3 seconds)
-        setTimeout(() => {
-          setShowDownloadAlert(false);
-        }, 3000); // 3000 milliseconds = 3 seconds
-
-        // Add your download logic here
-        // You can trigger the actual download process here
-      };
-
-      return (
-        <div className='d-flex align-items-center'>
-          <Button
-            variant='contained'
-            endIcon={<Icon icon='material-symbols:Download' />}
-            onClick={toggleDownloadAlert} // Call the function when the button is clicked
-          >
-            Download
-          </Button>
-
-          {/* Show the download alert when showDownloadAlert is true */}
-          {showDownloadAlert && (
-            <Alert severity='success'>Successfully Downloaded — check it out!</Alert>
-          )}
-        </div>
-      );
+      return <DownloadButton />;
     },
   },
 ];
@@ -145,6 +116,40 @@ const TableStickyHeaderColumns = () => {
         />
       </CardContent>
     </Card>
+  );
+};
+
+// Create a separate component for the Download button and alert logic
+const DownloadButton = () => {
+  const [showDownloadAlert, setShowDownloadAlert] = useState(false);
+
+  const toggleDownloadAlert = () => {
+    setShowDownloadAlert(true);
+
+    // Hide the alert after a delay (e.g., 3 seconds)
+    setTimeout(() => {
+      setShowDownloadAlert(false);
+    }, 3000); // 3000 milliseconds = 3 seconds
+
+    // Add your download logic here
+    // You can trigger the actual download process here
+  };
+
+  return (
+    <div className='d-flex align-items-center'>
+      <Button
+        variant='contained'
+        endIcon={<Icon icon='material-symbols:Download' />}
+        onClick={toggleDownloadAlert} // Call the function when the button is clicked
+      >
+        Download
+      </Button>
+
+      {/* Show the download alert when showDownloadAlert is true */}
+      {showDownloadAlert && (
+        <Alert severity='success'>Successfully Downloaded — check it out!</Alert>
+      )}
+    </div>
   );
 };
 
