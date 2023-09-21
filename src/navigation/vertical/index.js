@@ -82,7 +82,21 @@ const navigation = () => {
     {
       path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
       title: 'Temperature Monitoring Chart',
-      icon: 'carbon:report'
+      icon: 'game-icons:chart'
+    },
+
+    {
+      sectionTitle: 'SOP Management'
+    },
+    {
+      title: 'Instruments',
+      icon: 'arcticons:pslab',
+      path: '/staff/sop-management/instruments'
+    },
+    {
+      title: 'Biohazard Dispose',
+      icon: 'fluent-emoji-high-contrast:biohazard',
+      path: '/staff/sop-management/biohazard-dispose'
     }
   ]
 }

@@ -51,44 +51,29 @@ const escapeRegExp = value => {
 
 const rows = [
   {
-    id: '1',
-    first_name: 'Dilshan',
-    last_name: 'Fronando',
-    email: 'dilshan@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'staff'
+    id: 'firstreport.pdf',
+    date: '1/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '2',
-    first_name: 'Avishka',
-    last_name: 'Nuwan',
-    email: 'avishka@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'admin'
+    id: 'secondreport.pdf',
+    date: '2/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '3',
-    first_name: 'Isum',
-    last_name: 'Sandupa',
-    email: 'isum@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'staff'
+    id: 'thirdreport.pdf',
+    date: '3/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '4',
-    first_name: 'Kaveeja',
-    last_name: 'Perera',
-    email: 'kaveeja@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'student'
+    id: 'fourthreport.pdf',
+    date: '4/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '5',
-    first_name: 'Sehana',
-    last_name: 'Senanayaka',
-    email: 'sehana@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'student'
+    id: 'fifethreport.pdf',
+    date: '5/1/2023',
+    avatar: 'avatar-1.png'
   }
 ]
 
@@ -116,51 +101,17 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 120,
-    headerName: 'Name',
-    field: 'name',
+    headerName: 'date',
+    field: 'Date',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.first_name} {params.row.last_name}
-      </Typography>
-    )
-  },
-
-  {
-    flex: 0.1,
-    minWidth: 140,
-    field: 'type',
-    headerName: 'Type',
-    renderCell: params => {
-      const status = statusObj[params.row.type]
-
-      return (
-        <CustomChip
-          rounded
-          size='small'
-          skin='light'
-          color={status.color}
-          label={params.row.type}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
-    }
-  },
-
-  {
-    flex: 0.125,
-    field: 'email',
-    type: 'email',
-    minWidth: 80,
-    headerName: 'Email',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.email}
+        {params.row.date}
       </Typography>
     )
   },
   {
-    flex: 0.1,
+    flex: 0.0,
     minWidth: 120,
     field: 'actions',
     headerName: 'Actions',
@@ -170,7 +121,7 @@ const columns = [
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='error'>
+          <IconButton color='primary'>
             <Icon icon='lucide:trash-2' />
           </IconButton>
         </Box>

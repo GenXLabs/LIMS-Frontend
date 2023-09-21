@@ -7,7 +7,6 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid } from '@mui/x-data-grid'
-import Button from '@mui/material/Button'
 import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 
@@ -19,8 +18,6 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-// ** Data Import
-// import { rows } from 'src/@fake-db/table/static-data'
 
 // ** renders client column
 const renderClient = params => {
@@ -39,11 +36,6 @@ const renderClient = params => {
   }
 }
 
-const statusObj = {
-  student: { color: 'success' },
-  admin: { color: 'warning' },
-  staff: { color: 'info' }
-}
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
@@ -52,52 +44,41 @@ const escapeRegExp = value => {
 const rows = [
   {
     id: '1',
-    first_name: 'Dilshan',
-    last_name: 'Fronando',
-    email: 'dilshan@gmail.com',
+    name: 'PDF1',
     avatar: 'avatar-1.png',
-    type: 'staff'
+    date: '02/01/2022',
+    description: 'Microbiological ',
+
   },
   {
     id: '2',
-    first_name: 'Avishka',
-    last_name: 'Nuwan',
-    email: 'avishka@gmail.com',
+    name: 'PDF2',
     avatar: 'avatar-1.png',
-    type: 'admin'
+    date: '04/11/2022',
+    description: 'Pathological waste',
   },
   {
     id: '3',
-    first_name: 'Isum',
-    last_name: 'Sandupa',
-    email: 'isum@gmail.com',
+    name: 'PDF3',
     avatar: 'avatar-1.png',
-    type: 'staff'
+    date: '22/01/2023',
+    description: 'Human body fluids',
   },
   {
-    id: '4',
-    first_name: 'Kaveeja',
-    last_name: 'Perera',
-    email: 'kaveeja@gmail.com',
+    id: '34',
+    name: 'PDF4',
     avatar: 'avatar-1.png',
-    type: 'student'
+    date: '22/12/2023',
+    description: 'Sharps waste',
   },
-  {
-    id: '5',
-    first_name: 'Sehana',
-    last_name: 'Senanayaka',
-    email: 'sehana@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'student'
-  }
 ]
 
 const columns = [
   {
-    flex: 0.1,
+    flex: 0.275,
     minWidth: 290,
-    field: 'id',
-    headerName: 'ID',
+    field: 'name',
+    headerName: 'Name',
     renderCell: params => {
       const { row } = params
 
@@ -106,7 +87,7 @@ const columns = [
           {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.id}
+              {params.row.name}
             </Typography>
           </Box>
         </Box>
@@ -114,48 +95,28 @@ const columns = [
     }
   },
   {
-    flex: 0.1,
+    flex: 0.2,
+    type: 'description',
     minWidth: 120,
-    headerName: 'Name',
-    field: 'name',
+    headerName: 'description',
+    field: 'description',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.first_name} {params.row.last_name}
+        {params.row.description}
       </Typography>
     )
   },
-
   {
-    flex: 0.1,
-    minWidth: 140,
-    field: 'type',
-    headerName: 'Type',
-    renderCell: params => {
-      const status = statusObj[params.row.type]
-
-      return (
-        <CustomChip
-          rounded
-          size='small'
-          skin='light'
-          color={status.color}
-          label={params.row.type}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
-    }
-  },
-
-  {
-    flex: 0.125,
-    field: 'email',
-    type: 'email',
-    minWidth: 80,
-    headerName: 'Email',
+    flex: 0.2,
+    type: 'date',
+    minWidth: 120,
+    headerName: 'Date',
+    field: 'start_date',
+    valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.email}
+        {params.row.date}
       </Typography>
     )
   },
@@ -170,13 +131,18 @@ const columns = [
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='error'>
+          <IconButton color='primary'>
             <Icon icon='lucide:trash-2' />
           </IconButton>
+          <IconButton color='primary'>
+            <Icon icon='material-symbols:download' />
+          </IconButton>
+
         </Box>
       )
     }
   }
+
 ]
 
 const TableColumns = () => {
@@ -204,31 +170,33 @@ const TableColumns = () => {
   }
 
   return (
-    <DataGrid
-      autoHeight
-      columns={columns}
-      pageSizeOptions={[7, 10, 25, 50]}
-      paginationModel={paginationModel}
-      slots={{ toolbar: QuickSearchToolbar }}
-      onPaginationModelChange={setPaginationModel}
-      rows={filteredData.length ? filteredData : data}
-      sx={{
-        '& .MuiSvgIcon-root': {
-          fontSize: '1.125rem'
-        }
-      }}
-      slotProps={{
-        baseButton: {
-          size: 'medium',
-          variant: 'outlined'
-        },
-        toolbar: {
-          value: searchText,
-          clearSearch: () => handleSearch(''),
-          onChange: event => handleSearch(event.target.value)
-        }
-      }}
-    />
+
+      <DataGrid
+        autoHeight
+        columns={columns}
+        pageSizeOptions={[7, 10, 25, 50]}
+        paginationModel={paginationModel}
+        slots={{ toolbar: QuickSearchToolbar }}
+        onPaginationModelChange={setPaginationModel}
+        rows={filteredData.length ? filteredData : data}
+        sx={{
+          '& .MuiSvgIcon-root': {
+            fontSize: '1.125rem'
+          }
+        }}
+        slotProps={{
+          baseButton: {
+            size: 'medium',
+            variant: 'outlined'
+          },
+          toolbar: {
+            value: searchText,
+            clearSearch: () => handleSearch(''),
+            onChange: event => handleSearch(event.target.value)
+          }
+        }}
+      />
+
   )
 }
 
