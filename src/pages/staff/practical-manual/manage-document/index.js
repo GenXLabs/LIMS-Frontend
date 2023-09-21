@@ -1,14 +1,12 @@
-// ** React Imports
-import { useState } from 'react'
-
-// ** MUI Imports
-import Box from '@mui/material/Box'
+import React, { useState } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
-import { IconButton } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
 import Icon from 'src/@core/components/icon'
-
-// ** Custom Components
 import QuickSearchToolbar from './QuickSearchToolbar'
 
 const escapeRegExp = value => {
@@ -43,14 +41,14 @@ const columns = [
     flex: 0.1,
     minWidth: 170,
     headerName: 'Name',
-    field: 'name',
-    valueGetter: params => new Date(params.value),
+    field: 'module_name', // Use 'module_name' here to match your data
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.module_name} {params.row.last_name}
+        {params.value}
       </Typography>
     )
   },
+
   {},
   {},
   {},
@@ -61,6 +59,7 @@ const columns = [
   {},
   {},
   {},
+
   {
     flex: 0.1,
     minWidth: 170,
@@ -68,21 +67,23 @@ const columns = [
     headerName: 'Actions',
     renderCell: params => {
       return (
-        <Box className='d-flex align-items-center'>
-          <IconButton color='primary'>
-            <Icon icon='fluent:edit-16-regular' />
+        <div className='d-flex align-items-center'>
+          <IconButton color='Success'>
+            <Icon icon='material-symbols:download' />
           </IconButton>
-          <IconButton color='primary'>
+          <IconButton color='error'>
             <Icon icon='lucide:trash-2' />
           </IconButton>
-        </Box>
+          <Button variant='contained' endIcon={<Icon icon='tabler:Edit' />}>
+            Edit
+          </Button>
+        </div>
       )
     }
   }
 ]
 
 const TableStickyHeaderColumns = () => {
-  // ** States
   const [data] = useState(rows)
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
@@ -94,10 +95,10 @@ const TableStickyHeaderColumns = () => {
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        // @ts-ignore
         return searchRegex.test(row[field].toString())
       })
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -106,31 +107,35 @@ const TableStickyHeaderColumns = () => {
   }
 
   return (
-    <DataGrid
-      autoHeight
-      columns={columns}
-      pageSizeOptions={[1, 2, 3, 4, 5]}
-      paginationModel={paginationModel}
-      slots={{ toolbar: QuickSearchToolbar }}
-      onPaginationModelChange={setPaginationModel}
-      rows={filteredData.length ? filteredData : data}
-      sx={{
-        '& .MuiSvgIcon-root': {
-          fontSize: '1.125rem'
-        }
-      }}
-      slotProps={{
-        baseButton: {
-          size: 'medium',
-          variant: 'outlined'
-        },
-        toolbar: {
-          value: searchText,
-          clearSearch: () => handleSearch(''),
-          onChange: event => handleSearch(event.target.value)
-        }
-      }}
-    />
+    <Card>
+      <CardHeader title='Manage Document' action={<Button variant='contained'>View Module</Button>} />
+      <CardContent>
+        <DataGrid
+          autoHeight
+          columns={columns}
+          pageSizeOptions={[1, 2, 3, 4, 5]}
+          paginationModel={paginationModel}
+          rows={filteredData.length ? filteredData : data}
+          onPaginationModelChange={setPaginationModel}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: '1.125rem'
+            }
+          }}
+          slotProps={{
+            baseButton: {
+              size: 'medium',
+              variant: 'outlined'
+            },
+            toolbar: {
+              value: searchText,
+              clearSearch: () => handleSearch(''),
+              onChange: event => handleSearch(event.target.value)
+            }
+          }}
+        />
+      </CardContent>
+    </Card>
   )
 }
 
