@@ -132,7 +132,6 @@ const columns = [
     minWidth: 140,
     field: 'status',
     headerName: 'Status',
-    sortable: false,
     renderCell: params => {
       const status = statusObj[params.row.status]
 
@@ -154,6 +153,7 @@ const columns = [
     field: 'actions',
     headerName: 'Actions',
     sortable: false, // No sorting for this column
+    filterable: false, // No filtering for this column
     renderCell: params => {
       return (
         <Box className='d-flex align-items-center'>
