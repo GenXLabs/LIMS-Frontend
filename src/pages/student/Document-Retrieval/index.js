@@ -58,7 +58,7 @@ const columns = [
     headerAlign: 'right',
     align: 'right',
     renderCell: (params) => {
-      const [showDownloadAlert, setShowDownloadAlert] = useState(false);
+      const [showDownloadAlert, setShowDownloadAlert] = UseState(false);
 
       const toggleDownloadAlert = () => {
         setShowDownloadAlert(true);
