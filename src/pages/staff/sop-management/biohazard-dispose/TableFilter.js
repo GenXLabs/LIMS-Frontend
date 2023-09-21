@@ -47,7 +47,7 @@ const rows = [
     name: 'PDF1',
     avatar: 'avatar-1.png',
     date: '02/01/2022',
-    description: 'About the microscope',
+    description: 'Microbiological ',
 
   },
   {
@@ -55,21 +55,21 @@ const rows = [
     name: 'PDF2',
     avatar: 'avatar-1.png',
     date: '04/11/2022',
-    description: 'About the Test tubes',
+    description: 'Pathological waste',
   },
   {
     id: '3',
     name: 'PDF3',
     avatar: 'avatar-1.png',
     date: '22/01/2023',
-    description: 'About the Dropper',
+    description: 'Human body fluids',
   },
   {
     id: '34',
     name: 'PDF4',
     avatar: 'avatar-1.png',
     date: '22/12/2023',
-    description: 'About the Bunsen burner',
+    description: 'Sharps waste',
   },
 ]
 
