@@ -44,6 +44,7 @@ const rows = [
     avatar: '',
     email: 'john@example.com',
     batch: 'BSCS-3A',
+    venue: 'Lab 01',
     date: '2021-10-01',
     start_time: '08:00 AM',
     end_time: '12:00 PM',
@@ -55,6 +56,7 @@ const rows = [
     avatar: '',
     email: 'jdoe@example.com',
     batch: 'BSCS-3A',
+    venue: 'Lab 02',
     date: '2021-10-02',
     start_time: '08:00 AM',
     end_time: '12:00 PM',
@@ -66,6 +68,7 @@ const rows = [
     avatar: '',
     email: 'george@example.com',
     batch: 'BSCS-3A',
+    venue: 'Lab 01',
     date: '2021-10-03',
     start_time: '08:00 AM',
     end_time: '12:00 PM',
@@ -87,8 +90,8 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    flex: 0.3,
-    minWidth: 290,
+    flex: 0.2,
+    minWidth: 180,
     field: 'full_name',
     headerName: 'Requested By',
     renderCell: params => {
@@ -117,6 +120,17 @@ const columns = [
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.batch}
+      </Typography>
+    )
+  },
+  {
+    flex: 0.1,
+    minWidth: 110,
+    field: 'venue',
+    headerName: 'Venue',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.venue}
       </Typography>
     )
   },
@@ -169,17 +183,199 @@ const columns = [
     minWidth: 140,
     field: 'actions',
     headerName: 'Actions',
+    sortable: false,
+    filterable: false,
     renderCell: params => {
+      const handleRequestApprove = () => {
+        console.log('approve')
+
+        // Define the API endpoint for login
+        const loginUrl = 'https://e-sms.dialog.lk/api/v1/login'
+
+        // Define the API endpoint for sending approval SMS
+        const apiUrl = 'https://e-sms.dialog.lk/api/v1/sms'
+
+        // Define the login payload
+        const loginPayload = {
+          username: '',
+          password: ''
+        }
+
+        // Make a POST request to the login API
+        fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginPayload)
+        })
+          .then(response => response.json())
+          .then(loginData => {
+            console.log(loginData)
+
+            // Check if the login response contains a refresh token
+            if (loginData.token) {
+              console.log('Login Successful. Refresh Token:', loginData.token)
+
+              // Create the SMS body for approval
+              const approvalMessage = `Your reservation request for ${params.row.venue} has been approved.\nDate: ${params.row.date}\nTime: ${params.row.start_time} - ${params.row.end_time}`
+
+              function generateRandomString(length) {
+                const characters = '0123456789'
+                let randomString = ''
+                for (let i = 0; i < length; i++) {
+                  const randomIndex = Math.floor(Math.random() * characters.length)
+                  randomString += characters.charAt(randomIndex)
+                }
+
+                return randomString
+              }
+
+              // Generate a random transaction_id
+              const transactionId = generateRandomString(8)
+
+              // Create the payload for sending SMS
+              const payload = {
+                msisdn: [{ mobile: '767912651' }],
+                sourceAddress: 'Pixelcore',
+                message: approvalMessage,
+                transaction_id: transactionId
+              }
+
+              // Make a POST request to send the approval SMS using the obtained refresh token
+              fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${loginData.token}`
+                },
+                body: JSON.stringify(payload)
+              })
+                .then(response => response.json())
+                .then(smsData => {
+                  if (smsData.status) {
+                    console.log('Approval SMS Sent', smsData)
+                  } else {
+                    console.log('Approval SMS Not Sent', smsData)
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error)
+                })
+            } else {
+              console.log('Login failed. Refresh token not found in the response')
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error)
+          })
+      }
+
+      const handleRequestDecline = () => {
+        console.log('decline')
+
+        // Define the API endpoint for login
+        const loginUrl = 'https://e-sms.dialog.lk/api/v1/login'
+
+        // Define the API endpoint for sending decline SMS
+        const apiUrl = 'https://e-sms.dialog.lk/api/v1/sms'
+
+        // Define the login payload
+        const loginPayload = {
+          username: '',
+          password: ''
+        }
+
+        // Make a POST request to the login API
+        fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginPayload)
+        })
+          .then(response => response.json())
+          .then(loginData => {
+            console.log(loginData)
+
+            // Check if the login response contains a refresh token
+            if (loginData.token) {
+              console.log('Login Successful. Refresh Token:', loginData.token)
+
+              // Create the SMS body for decline
+              const declineMessage = `Your reservation request for ${params.row.venue} has been declined.\nDate: ${params.row.date}\nTime: ${params.row.start_time} - ${params.row.end_time}`
+
+              function generateRandomString(length) {
+                const characters = '0123456789'
+                let randomString = ''
+                for (let i = 0; i < length; i++) {
+                  const randomIndex = Math.floor(Math.random() * characters.length)
+                  randomString += characters.charAt(randomIndex)
+                }
+
+                return randomString
+              }
+
+              // Generate a random transaction_id
+              const transactionId = generateRandomString(8)
+
+              // Create the payload for sending SMS
+              const payload = {
+                msisdn: [{ mobile: '767912651' }],
+                sourceAddress: 'Pixelcore',
+                message: declineMessage,
+                transaction_id: transactionId
+              }
+
+              // Make a POST request to send the decline SMS using the obtained refresh token
+              fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${loginData.token}`
+                },
+                body: JSON.stringify(payload)
+              })
+                .then(response => response.json())
+                .then(smsData => {
+                  if (smsData.status) {
+                    console.log('Decline SMS Sent', smsData)
+                  } else {
+                    console.log('Decline SMS Not Sent', smsData)
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error)
+                })
+            } else {
+              console.log('Login failed. Refresh token not found in the response')
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error)
+          })
+      }
+
       return (
         <Grid container columnSpacing={5} rowSpacing={2} sx={{ mt: 2, mb: 2 }}>
           <Grid item>
-            <Button variant='contained' color='success' disabled={params.row.status != 1 ? true : false}>
+            <Button
+              variant='contained'
+              color='success'
+              disabled={params.row.status != 1 ? true : false}
+              onClick={handleRequestApprove}
+            >
               Approve
             </Button>
           </Grid>
 
           <Grid item>
-            <Button variant='contained' color='error' disabled={params.row.status != 1 ? true : false}>
+            <Button
+              variant='contained'
+              color='error'
+              disabled={params.row.status != 1 ? true : false}
+              onClick={handleRequestDecline}
+            >
               Decline
             </Button>
           </Grid>

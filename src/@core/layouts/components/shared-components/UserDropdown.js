@@ -124,15 +124,12 @@ const UserDropdown = props => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/user1.jpg' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar alt='John Doe' src='/images/avatars/user1.jpg' sx={{ width: '3rem', height: '3rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>
-                {/* {userData.username} - {userData.role.toUpperCase()} */}
-                Avishka Chandrakumara
-              </Typography>
-              {/* <Typography variant='body2'>{userData.email}</Typography> */}
-              <Typography variant='body2'>avishka@onlyfans.com</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{userData.fullName}</Typography>
+              <Typography variant='body2'>{userData.email}</Typography>
+              <Typography variant='body2'>{userData.type}</Typography>
             </Box>
           </Box>
         </Box>

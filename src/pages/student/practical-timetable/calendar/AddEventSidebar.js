@@ -153,7 +153,9 @@ const AddEventSidebar = props => {
             Add
           </Button>
           <Button variant='tonal' color='secondary' onClick={resetToEmptyValues}>
+          
             Reset
+            
           </Button>
         </Fragment>
       )
@@ -194,6 +196,7 @@ const AddEventSidebar = props => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {store.selectedEvent !== null && store.selectedEvent.title.length ? (
             <IconButton
+            disabled={userAccessLevel != 1 ? true : false}
               size='small'
               onClick={handleDeleteEvent}
               sx={{ color: 'text.primary', mr: store.selectedEvent !== null ? 1 : 0 }}
@@ -202,6 +205,7 @@ const AddEventSidebar = props => {
             </IconButton>
           ) : null}
           <IconButton
+          
             size='small'
             onClick={handleSidebarClose}
             sx={{
@@ -240,6 +244,8 @@ const AddEventSidebar = props => {
               )}
             />
             <CustomTextField
+            // disabled for students
+            disabled={userAccessLevel != 1 ? true : false}
               select
               fullWidth
               sx={{ mb: 4 }}
@@ -254,6 +260,7 @@ const AddEventSidebar = props => {
             </CustomTextField>
             <Box sx={{ mb: 4 }}>
               <DatePicker
+              disabled={userAccessLevel != 1 ? true : false}
                 selectsStart
                 id='event-start-date'
                 selected={values.startDate}
@@ -266,6 +273,7 @@ const AddEventSidebar = props => {
 
             <Box sx={{ mb: 4 }}>
               <DatePicker
+              disabled={userAccessLevel != 1 ? true : false}
                 showTimeSelect
                 selected={startTime}
                 timeIntervals={15}
@@ -279,6 +287,7 @@ const AddEventSidebar = props => {
 
             <Box sx={{ mb: 4 }}>
               <DatePicker
+              disabled={userAccessLevel != 1 ? true : false}
                 showTimeSelect
                 selected={endTime}
                 timeIntervals={15}
@@ -291,6 +300,7 @@ const AddEventSidebar = props => {
             </Box>
 
             <CustomTextField
+            disabled={userAccessLevel != 1 ? true : false}
               rows={4}
               multiline
               fullWidth
