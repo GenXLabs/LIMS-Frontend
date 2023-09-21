@@ -45,7 +45,17 @@ const navigation = () => {
     },
     {
       path: '/staff/practical-manual/Module-category',
-      title: 'Module-category',
+      title: 'Module category',
+      icon: 'tabler:file-text'
+    },
+    {
+      path: '/student/Document-Retrieval',
+      title: 'Document Retrieval',
+      icon: 'tabler:file-text'
+    },
+    {
+      path: '/staff/practical-manual/manage-document',
+      title: 'Manage Document',
       icon: 'tabler:file-text'
     },
     {
