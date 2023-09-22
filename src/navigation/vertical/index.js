@@ -40,6 +40,16 @@ const navigation = () => {
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
+    //new timetable
+    {
+      sectionTitle: 'Timetable'
+    },
+    {
+      path: '/student/timetable',
+      title: 'Timetable',
+      icon: 'simple-line-icons:calender'
+    },
+    //end timetable nav
     {
       sectionTitle: 'Practical Manual'
     },
