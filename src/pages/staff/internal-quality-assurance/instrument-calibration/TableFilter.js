@@ -51,27 +51,32 @@ const escapeRegExp = value => {
 
 const rows = [
   {
-    id: 'firstreport.pdf',
+    id: 1,
+    name: 'firstreport.pdf',
     date: '1/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'secondreport.pdf',
+    id: 2,
+    name: 'secondreport.pdf',
     date: '2/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'thirdreport.pdf',
+    id: 3,
+    name: 'thirdreport.pdf',
     date: '3/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'fourthreport.pdf',
+    id: 4,
+    name: 'fourthreport.pdf',
     date: '4/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'fifethreport.pdf',
+    id: 5,
+    name: 'fifethreport.pdf',
     date: '5/1/2023',
     avatar: 'avatar-1.png'
   }
@@ -81,8 +86,8 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 290,
-    field: 'id',
-    headerName: 'ID',
+    field: 'name',
+    headerName: 'NAME',
     renderCell: params => {
       const { row } = params
 
@@ -91,7 +96,7 @@ const columns = [
           {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.id}
+              {row.name}
             </Typography>
           </Box>
         </Box>
