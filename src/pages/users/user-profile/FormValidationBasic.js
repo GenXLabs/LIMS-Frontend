@@ -22,6 +22,7 @@ import { useForm, Controller } from 'react-hook-form'
 import Icon from 'src/@core/components/icon'
 import { fi } from 'date-fns/locale'
 import { set } from 'nprogress'
+import { t } from 'i18next'
 
 const defaultValues = {
   email: '',
@@ -50,6 +51,11 @@ const FormValidationBasic = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  const [firstNameErrorText, setFirstNameErrorText] = useState('')
+  const [lastNameErrorText, setLastNameErrorText] = useState('')
+  const [emailErrorText, setEmailErrorText] = useState('')
+  const [numberErrorText, setNumberErrorText] = useState('')
+
   useEffect(() => {
     const name = userDetails.fullName.split(' ')
 
@@ -75,25 +81,98 @@ const FormValidationBasic = () => {
   const handleSaveChange = () => {
     // Disable editing mode when the form is submitted
     setIsEditing(false)
+    console.log('clicked')
 
-    // if current password is not correct
-    if (password !== 'admin') {
-      toast.error('Current password is incorrect')
+    // validate the form fields
+    if (firstName === '') {
+      setFirstNameErrorText('First name is required')
+    }
+    if (lastName === '') {
+      setLastNameErrorText('Last name is required')
+    }
+    if (email === '') {
+      setEmailErrorText('Email is required')
+    }
+    if (number === '') {
+      setNumberErrorText('Phone number is required')
+    }
+
+    // phone number must be 10 digits
+    if (number.length !== 10) {
+      setNumberErrorText('Phone number must be 10 digits')
+    }
+
+    // phone number only contains digits
+    if (number !== '') {
+      const regex = /^[0-9]*$/
+
+      if (!regex.test(number)) {
+        setNumberErrorText('Phone number must contain only digits')
+      }
+    }
+
+    // email must be valid
+    if (email !== '') {
+      const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
+
+      if (!regex.test(email)) {
+        setEmailErrorText('Email is not valid')
+      }
+    }
+
+    // check if password,newPassword and confirmPassword are not null
+
+    if (password !== '' || newPassword !== '' || confirmPassword !== '') {
+      // check current password is correct or not
+      if (password !== 'avi') {
+        toast.error('Current password is incorrect')
+
+        return
+      }
+
+      // check if newPassword and confirmPassword are same or not
+      if (newPassword !== confirmPassword) {
+        toast.error('New password and confirm password are not same')
+
+        return
+      }
+
+      // 3 fields must be filled
+      if (password !== '' && newPassword !== '' && confirmPassword !== '') {
+        // send data payload
+        const data = {
+          fullName: `${firstName} ${lastName}`,
+          email: email,
+          phoneNumber: number,
+          password: newPassword
+        }
+
+        toast.success('Password changed successfully')
+        console.log(data)
+
+        // clear password,newPassword and confirmPassword fields
+        setPassword('')
+        setNewPassword('')
+        setConfirmPassword('')
+
+        return
+      }
+
+      toast.error('New password and confirm password are required')
 
       return
     }
 
-    // if new password and confirm password are not the same
-    if (newPassword !== confirmPassword) {
-      toast.error('New password and confirm password are not the same')
-
-      return
+    // send data payload
+    const data = {
+      fullName: `${firstName} ${lastName}`,
+      email: email,
+      phoneNumber: number
     }
 
-    toast.success('Form Submitted')
+    toast.success('Profile updated successfully')
 
-    setValue('newPassword', '')
-    setValue('confirmPassword', '')
+    console.log(data)
   }
 
   const handleEditinfo = () => {
@@ -111,6 +190,12 @@ const FormValidationBasic = () => {
     setNewPassword('')
     setConfirmPassword('')
     setIsEditing(false)
+
+    // clear error texts
+    setFirstNameErrorText('')
+    setLastNameErrorText('')
+    setEmailErrorText('')
+    setNumberErrorText('')
   }
 
   return (
@@ -125,9 +210,11 @@ const FormValidationBasic = () => {
                   fullWidth
                   value={firstName}
                   label='First Name'
+                  helperText={firstNameErrorText}
+                  error={firstNameErrorText !== ''}
+                  required
                   onChange={e => setFirstName(e.target.value)}
                   InputProps={{ readOnly: !isEditing }}
-                  error={Boolean(errors.firstName)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -135,9 +222,11 @@ const FormValidationBasic = () => {
                   fullWidth
                   value={lastName}
                   label='Last Name'
+                  helperText={lastNameErrorText}
+                  error={lastNameErrorText !== ''}
                   onChange={e => setLastName(e.target.value)}
                   InputProps={{ readOnly: !isEditing }}
-                  error={Boolean(errors.lastName)}
+                  required
                 />
               </Grid>
 
@@ -147,9 +236,11 @@ const FormValidationBasic = () => {
                   type='email'
                   value={email}
                   label='Email'
+                  helperText={emailErrorText}
+                  error={emailErrorText !== ''}
                   InputProps={{ readOnly: !isEditing }}
                   onChange={e => setEmail(e.target.value)}
-                  error={Boolean(errors.email)}
+                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -158,9 +249,11 @@ const FormValidationBasic = () => {
                   value={number}
                   type='tel'
                   label='Phone Number'
+                  helperText={numberErrorText}
+                  error={numberErrorText !== ''}
                   InputProps={{ readOnly: !isEditing }}
                   onChange={e => setNumber(e.target.value)}
-                  error={Boolean(errors.number)}
+                  required
                 />
               </Grid>
             </Grid>
@@ -270,7 +363,7 @@ const FormValidationBasic = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant='contained' color='secondary' onClick={handleCancel} disabled={!isEditing}>
+                <Button variant='contained' color='secondary' onClick={handleCancel}>
                   Cancel
                 </Button>
               </Grid>

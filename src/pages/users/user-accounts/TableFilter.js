@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -52,6 +53,7 @@ const escapeRegExp = value => {
 const rows = [
   {
     id: '1',
+    user_id:'1',
     first_name: 'Dilshan',
     last_name: 'Fronando',
     email: 'dilshan@gmail.com',
@@ -60,6 +62,7 @@ const rows = [
   },
   {
     id: '2',
+    user_id:'2',
     first_name: 'Avishka',
     last_name: 'Nuwan',
     email: 'avishka@gmail.com',
@@ -68,6 +71,7 @@ const rows = [
   },
   {
     id: '3',
+    user_id:'3',
     first_name: 'Isum',
     last_name: 'Sandupa',
     email: 'isum@gmail.com',
@@ -76,6 +80,7 @@ const rows = [
   },
   {
     id: '4',
+    user_id:'4',
     first_name: 'Kaveeja',
     last_name: 'Perera',
     email: 'kaveeja@gmail.com',
@@ -84,6 +89,7 @@ const rows = [
   },
   {
     id: '5',
+    user_id:'5',
     first_name: 'Sehana',
     last_name: 'Senanayaka',
     email: 'sehana@gmail.com',
@@ -92,94 +98,106 @@ const rows = [
   }
 ]
 
-const columns = [
-  {
-    flex: 0.1,
-    minWidth: 290,
-    field: 'id',
-    headerName: 'ID',
-    renderCell: params => {
-      const { row } = params
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.id}
-            </Typography>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 120,
-    headerName: 'Name',
-    field: 'name',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.first_name} {params.row.last_name}
-      </Typography>
-    )
-  },
-
-  {
-    flex: 0.1,
-    minWidth: 140,
-    field: 'type',
-    headerName: 'Type',
-    renderCell: params => {
-      const status = statusObj[params.row.type]
-
-      return (
-        <CustomChip
-          rounded
-          size='small'
-          skin='light'
-          color={status.color}
-          label={params.row.type}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
-    }
-  },
-
-  {
-    flex: 0.125,
-    field: 'email',
-    type: 'email',
-    minWidth: 80,
-    headerName: 'Email',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.email}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.1,
-    minWidth: 120,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: params => {
-      return (
-        <Box className='d-flex align-items-center'>
-          <IconButton color='primary'>
-            <Icon icon='fluent:edit-16-regular' />
-          </IconButton>
-          <IconButton color='error'>
-            <Icon icon='lucide:trash-2' />
-          </IconButton>
-        </Box>
-      )
-    }
-  }
-]
 
 const TableColumns = () => {
+const router = useRouter()
+
+  const columns = [
+    {
+      flex: 0.1,
+      minWidth: 290,
+      field: 'id',
+      headerName: 'ID',
+      renderCell: params => {
+        const { row } = params
+  
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(params)}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+                {row.id}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 120,
+      headerName: 'Name',
+      field: 'name',
+      valueGetter: params => new Date(params.value),
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.first_name} {params.row.last_name}
+        </Typography>
+      )
+    },
+  
+    {
+      flex: 0.1,
+      minWidth: 140,
+      field: 'type',
+      headerName: 'Type',
+      renderCell: params => {
+        const status = statusObj[params.row.type]
+  
+        return (
+          <CustomChip
+            rounded
+            size='small'
+            skin='light'
+            color={status.color}
+            label={params.row.type}
+            sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+          />
+        )
+      }
+    },
+  
+    {
+      flex: 0.125,
+      field: 'email',
+      type: 'email',
+      minWidth: 80,
+      headerName: 'Email',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.email}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 120,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: params => {
+        const handleEditUser = () => {
+          console.log('edit user')
+          router.push({
+            pathname: '/admin/edit-user-profile',
+            query: { userId: params.row.user_id }
+
+          })
+        }
+        
+        return (
+          <Box className='d-flex align-items-center'>
+            <IconButton color='primary' onClick={handleEditUser}>
+              <Icon icon='fluent:edit-16-regular' />
+            </IconButton>
+            <IconButton color='error'>
+              <Icon icon='lucide:trash-2' />
+            </IconButton>
+          </Box>
+        )
+      }
+    }
+  ]
+
   // ** States
   const [data] = useState(rows)
   const [searchText, setSearchText] = useState('')
