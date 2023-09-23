@@ -32,8 +32,11 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
-import { set } from 'nprogress'
-import { use } from 'i18next'
+
+import axios from 'axios'
+
+
+
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -117,14 +120,16 @@ const Register = () => {
       setLastNameErrorText('Last name is required')
       errorCount++
     }
-    if (email === '') {
-      setEmailErrorText('Email is required')
+    if (email === '' || !email.includes('@') || !email.includes('.') || email.endsWith('.') || email.endsWith('@') ) {
+      setEmailErrorText('Valid email is required')
       errorCount++
     }
-    if (password === '') {
-      setPasswordErrorText('Password is required')
+    if (password === '' || password.length < 6) {
+      setPasswordErrorText('Password must be at least 6 characters')
       errorCount++
     }
+    
+
     if (confirmPassword === '') {
       setConfirmPasswordErrorText('Confirm password is required')
       errorCount++
@@ -133,26 +138,61 @@ const Register = () => {
       setConfirmPasswordErrorText('Passwords do not match')
       errorCount++
     }
-    if (phoneNumber === '') {
-      setPhoneNumberErrorText('Phone number is required')
+    if (phoneNumber === '' || phoneNumber.length !== 10 || !phoneNumber.startsWith('07') || isNaN(phoneNumber) ) {
+      setPhoneNumberErrorText('Valid phone number is required')
       errorCount++
     }
 
 
-    if(errorCount = 0) {
+    if(errorCount === 0) {
+
+
       // if all fields are valid, sign up the user
       const userData = {
-        firstName,
-        lastName,
-        email,
-        password
+        fullName: firstName + ' ' + lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        password: password
+
       }
       console.log(userData)
 
       // localStorage.setItem('userData', JSON.stringify(userData))
-      toast.success('Sign up successful please login to continue')
+      
+      // user can register only if email is unique
+     // Check if the email already exists
+axios.get(`http://localhost:8080/user/getEmail?email=${email}`)
+.then((res) => {
+  console.log(res.data)
+  if (res.data !== null) {
+    toast.error('Email already exists')
+  } else {
+    // If email is unique, proceed to create the user
+    axios.post('http://localhost:8080/user/add', userData)
+      .then((res) => {
+        console.log(res)
+        toast.success('Sign up successful please login to continue')
 
+        // Redirect to login page
+        router.push('/login')
+      })
+      .catch((error) => {
+        console.error(error)
+
+        // Handle error if user creation fails
+      })
+  }
+})
+.catch((error) => {
+  console.error(error)
+
+  // Handle error if email check fails
+})
+
+      
     }
+
+    
 
    
   }
