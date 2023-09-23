@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 // ** MUI Imports
@@ -20,33 +20,33 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
+import axios from 'axios'
+import { set } from 'nprogress'
+
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
 
 // ** renders client column
 const renderClient = params => {
-  const { row } = params;
-  const stateNum = Math.floor(Math.random() * 6);
-  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary'];
-  const color = states[stateNum];
+  const { row } = params
+  const stateNum = Math.floor(Math.random() * 6)
+  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
+  const color = states[stateNum]
 
   // Check if row.avatar exists and has a length property
   if (row.avatar && row.avatar.length) {
-    return (
-      <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
-    );
+    return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
   } else {
     // If no avatar is available, display initials or a default avatar
-    const initials = getInitials(row.fullName ? row.fullName : 'John Doe');
+    const initials = getInitials(row.fullName ? row.fullName : 'John Doe')
 
     return (
       <CustomAvatar skin='light' color={color} sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}>
         {initials}
       </CustomAvatar>
-    );
+    )
   }
-};
-
+}
 
 const statusObj = {
   student: { color: 'success' },
@@ -106,33 +106,34 @@ const escapeRegExp = value => {
 //   }
 // ]
 
-
 const TableColumns = () => {
-const router = useRouter()
- // ** States
- const [data,setData] = useState([])
- const [searchText, setSearchText] = useState('')
- const [filteredData, setFilteredData] = useState([])
- const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const router = useRouter()
+  
 
- useEffect(() => {
-  // Fetch data from your API endpoint here
-  async function fetchData() {
-    try {
-      const response = await fetch('http://localhost:8080/user'); // Replace with your API endpoint
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  // ** States
+  const [data, setData] = useState([])
+  const [searchText, setSearchText] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://localhost:8082/api/v1/lims/user')
+        const data = response.data
+        setData(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
-      const data = await response.json();
-      setData(data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
     }
-  }
 
-  fetchData();
-}, []);
+    fetchData()
+  }, [])
 
+  useEffect(() => {
+    // This effect will run whenever `data` changes
+    console.log('Data has changed:', data);
+  }, [data]);
 
   const columns = [
     {
@@ -142,7 +143,7 @@ const router = useRouter()
       headerName: 'ID',
       renderCell: params => {
         const { row } = params
-  
+
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(params)}
@@ -167,7 +168,7 @@ const router = useRouter()
         </Typography>
       )
     },
-  
+
     // {
     //   flex: 0.1,
     //   minWidth: 140,
@@ -175,7 +176,7 @@ const router = useRouter()
     //   headerName: 'Type',
     //   renderCell: params => {
     //     const status = statusObj[params.row.type]
-  
+
     //     return (
     //       <CustomChip
     //         rounded
@@ -188,7 +189,7 @@ const router = useRouter()
     //     )
     //   }
     // },
-  
+
     {
       flex: 0.125,
       field: 'email',
@@ -212,16 +213,27 @@ const router = useRouter()
           router.push({
             pathname: '/admin/edit-user-profile',
             query: { userId: params.row.id }
-
           })
         }
-        
+
+        const handleDelete = () => {
+          console.log('delete user')
+          axios.delete(`http://localhost:8082/api/v1/lims/user/delete/${params.row.id}`)
+          .then(res => {
+            console.log(res)
+            setData(data.filter(item => item.id !== params.row.id))
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
+
         return (
           <Box className='d-flex align-items-center'>
             <IconButton color='primary' onClick={handleEditUser}>
               <Icon icon='fluent:edit-16-regular' />
             </IconButton>
-            <IconButton color='error'>
+            <IconButton color='error' onClick={handleDelete}>
               <Icon icon='lucide:trash-2' />
             </IconButton>
           </Box>
@@ -230,7 +242,6 @@ const router = useRouter()
     }
   ]
 
- 
   const handleSearch = searchValue => {
     setSearchText(searchValue)
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')

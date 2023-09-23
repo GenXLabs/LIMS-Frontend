@@ -26,6 +26,10 @@ import Icon from 'src/@core/components/icon'
 import { fi } from 'date-fns/locale'
 import { set } from 'nprogress'
 
+// import axios
+import axios from 'axios'
+import { use } from 'i18next'
+
 const defaultValues = {
   email: '',
   lastName: '',
@@ -42,9 +46,10 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 const FormValidationBasic = () => {
   // ** Router
   const router = useRouter()
+  
 
  // Access the 'id' query parameter from the URL
- const { id } = router.query;
+
   
   // ** States
   const [firstName, setFirstName] = useState('')
@@ -69,19 +74,34 @@ const FormValidationBasic = () => {
 
   
     // Fetch user details based on the 'id' parameter from the URL
+    // const fetchUserDetails = async () => {
+    //   const response = await fetch(`http://localhost:8080/user/get?id=${userId}`)
+    //   const data = await response.json()
+    //   console.log(data)
+    //   setFirstName(data.fullName.split(' ')[0])
+    //   setLastName(data.fullName.split(' ')[1])
+    //   setEmail(data.email)
+    //   setNumber(data.phoneNumber)
+    // }
+
     const fetchUserDetails = async () => {
-      const response = await fetch(`http://localhost:8080/user/get?id=${userId}`)
-      const data = await response.json()
-      console.log(data)
-      setFirstName(data.fullName.split(' ')[0])
-      setLastName(data.fullName.split(' ')[1])
-      setEmail(data.email)
-      setNumber(data.phoneNumber)
-    }
+      try {
+        const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`); 
+        const data = response.data;
+      
+        console.log(data);
+        setFirstName(data.fullName.split(' ')[0]);
+        setLastName(data.fullName.split(' ')[1]);
+        setEmail(data.email);
+        setNumber(data.phoneNumber);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
 
     fetchUserDetails()
    
-  }, [id])
+  }, [])
 
   // ** Hooks
   const {
@@ -96,10 +116,14 @@ const FormValidationBasic = () => {
     setShowPassword(!showPassword)
   }
 
-  const handleSaveChange = () => {
+  const handleSaveChange =   () => {
     // Disable editing mode when the form is submitted
     setIsEditing(false)
     console.log('clicked')
+
+    const { userId } = router.query;
+
+
 
     // validate the form fields
     if (firstName === '') {
@@ -158,15 +182,16 @@ const FormValidationBasic = () => {
       // 3 fields must be filled
       if (password !== '' && newPassword !== '' && confirmPassword !== '') {
         // send data payload
-        const data = {
+        const newData = {
           fullName: `${firstName} ${lastName}`,
           email: email,
           phoneNumber: number,
           password: newPassword
         }
 
+
         toast.success('Password changed successfully')
-        console.log(data)
+        console.log(newData)
 
         // clear password,newPassword and confirmPassword fields
         setPassword('')
@@ -182,15 +207,27 @@ const FormValidationBasic = () => {
     }
 
     // send data payload
-    const data = {
+    const newData = {
       fullName: `${firstName} ${lastName}`,
       email: email,
       phoneNumber: number
+
     }
 
-    toast.success('Profile updated successfully')
+    // update user details in the database
+    axios.put(`http://localhost:8082/api/v1/lims/user/update/${userId}`, newData)
+    .then(response => {
+      console.log(response)
+      toast.success('Profile updated successfully')
+    
+    })
+    .catch(error => {
+      console.log(error)
+    })
+   
+    
 
-    console.log(data)
+
   }
 
   const handleEditinfo = () => {
@@ -198,12 +235,24 @@ const FormValidationBasic = () => {
     setIsEditing(true)
   }
 
-  const handleCancel = () => {
+  const handleCancel =  () => {
+    const { userId } = router.query;
+
     // Disable editing mode and reset form fields when canceled
-    setFirstName(userDetails.fullName.split(' ')[0])
-    setLastName(userDetails.fullName.split(' ')[1])
-    setEmail(userDetails.email)
-    setNumber(userDetails.phoneNumber)
+    
+
+    const fetchUserDetails = async () => {
+      const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`)
+      const data = response.data
+      console.log(data)
+      setFirstName(data.fullName.split(' ')[0])
+      setLastName(data.fullName.split(' ')[1])
+      setEmail(data.email)
+      setNumber(data.phoneNumber)
+    }
+
+    fetchUserDetails()
+
     setPassword('')
     setNewPassword('')
     setConfirmPassword('')

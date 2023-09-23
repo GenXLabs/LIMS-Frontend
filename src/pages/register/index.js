@@ -35,9 +35,6 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
 import axios from 'axios'
 
-
-
-
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -87,6 +84,7 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const[isUniquEmail, setIsUniqueEmail] = useState(true)
 
   // ** Hooks
   const theme = useTheme()
@@ -97,15 +95,15 @@ const Register = () => {
   const { skin } = settings
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
 
-  const[firstNameErrorText, setFirstNameErrorText] = useState('')
-  const[lastNameErrorText, setLastNameErrorText] = useState('')
-  const[emailErrorText, setEmailErrorText] = useState('')
-  const[phoneNumberErrorText, setPhoneNumberErrorText] = useState('')
-  const[passwordErrorText, setPasswordErrorText] = useState('')
-  const[confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('')
+  const [firstNameErrorText, setFirstNameErrorText] = useState('')
+  const [lastNameErrorText, setLastNameErrorText] = useState('')
+  const [emailErrorText, setEmailErrorText] = useState('')
+  const [phoneNumberErrorText, setPhoneNumberErrorText] = useState('')
+  const [passwordErrorText, setPasswordErrorText] = useState('')
+  const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('')
 
   // sign up handling
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     console.log('sign up')
 
     let errorCount = 0
@@ -114,13 +112,12 @@ const Register = () => {
     if (firstName === '') {
       setFirstNameErrorText('First name is required')
       errorCount++
-
     }
     if (lastName === '') {
       setLastNameErrorText('Last name is required')
       errorCount++
     }
-    if (email === '' || !email.includes('@') || !email.includes('.') || email.endsWith('.') || email.endsWith('@') ) {
+    if (email === '' || !email.includes('@') || !email.includes('.') || email.endsWith('.') || email.endsWith('@')) {
       setEmailErrorText('Valid email is required')
       errorCount++
     }
@@ -128,73 +125,72 @@ const Register = () => {
       setPasswordErrorText('Password must be at least 6 characters')
       errorCount++
     }
-    
 
     if (confirmPassword === '') {
       setConfirmPasswordErrorText('Confirm password is required')
       errorCount++
     }
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setConfirmPasswordErrorText('Passwords do not match')
       errorCount++
     }
-    if (phoneNumber === '' || phoneNumber.length !== 10 || !phoneNumber.startsWith('07') || isNaN(phoneNumber) ) {
+    if (phoneNumber === '' || phoneNumber.length !== 10 || !phoneNumber.startsWith('07') || isNaN(phoneNumber)) {
       setPhoneNumberErrorText('Valid phone number is required')
       errorCount++
     }
 
-
-    if(errorCount === 0) {
-
-
+    if (errorCount === 0) {
       // if all fields are valid, sign up the user
       const userData = {
         fullName: firstName + ' ' + lastName,
         email: email,
         phoneNumber: phoneNumber,
         password: password
-
       }
       console.log(userData)
 
       // localStorage.setItem('userData', JSON.stringify(userData))
-      
+
       // user can register only if email is unique
-     // Check if the email already exists
-axios.get(`http://localhost:8080/user/getEmail?email=${email}`)
-.then((res) => {
-  console.log(res.data)
-  if (res.data !== null) {
-    toast.error('Email already exists')
-  } else {
-    // If email is unique, proceed to create the user
-    axios.post('http://localhost:8080/user/add', userData)
-      .then((res) => {
-        console.log(res)
-        toast.success('Sign up successful please login to continue')
+      // Check if the email already exists
+      // axios
+      //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
+      //   .then(res => {
+      //     console.log(res.data)
+  
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+      try {
+      const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
+      console.log(res.data)
+      if (res.data !== null) {
+        setIsUniqueEmail(false)
+        toast.error('Email already exists')
+        console.log('Email already exists')
 
-        // Redirect to login page
-        router.push('/login')
-      })
-      .catch((error) => {
-        console.error(error)
-
-        // Handle error if user creation fails
-      })
-  }
-})
-.catch((error) => {
-  console.error(error)
-
-  // Handle error if email check fails
-})
-
+        return
+      }
       
+      } catch (err) {
+        console.log("email not found ",err)
+      }
+
+      // if email is unique, register the user
+      try {
+        const res = await axios.post('http://localhost:8082/api/v1/lims/user/add', userData)
+        console.log(res.data)
+        toast.success('Registration successful')
+        router.push('/login')
+      } catch (err) {
+        console.log(err)
+        toast.error('Registration failed')
+      }
+        
+
+          
     }
-
-    
-
-   
   }
 
   return (
@@ -313,7 +309,6 @@ axios.get(`http://localhost:8080/user/getEmail?email=${email}`)
                 sx={{ mb: 4 }}
                 value={phoneNumber}
                 onChange={e => setPhoneNumber(e.target.value)}
-              
               />
               <CustomTextField
                 fullWidth
