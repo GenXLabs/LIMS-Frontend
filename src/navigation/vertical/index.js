@@ -63,7 +63,7 @@ const navigation = () => {
        sectionTitle: 'Inventory Management'
     },
     {
-      path: '',
+      path: '/staff/inventory-management',
       title: 'Inventory Management',
       icon: 'tabler:file-text'
     },
