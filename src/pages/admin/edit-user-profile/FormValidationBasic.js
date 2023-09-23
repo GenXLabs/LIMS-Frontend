@@ -63,19 +63,23 @@ const FormValidationBasic = () => {
   const [numberErrorText, setNumberErrorText] = useState('')
 
   useEffect(() => {
+
+    // get user id from the URL
+     const { userId } = router.query;
+
   
     // Fetch user details based on the 'id' parameter from the URL
     const fetchUserDetails = async () => {
-      const response = await fetch(``)
+      const response = await fetch(`http://localhost:8080/user/get?id=${userId}`)
       const data = await response.json()
       console.log(data)
-      setFirstName(data.name.split(' ')[0])
-      setLastName(data.name.split(' ')[1])
+      setFirstName(data.fullName.split(' ')[0])
+      setLastName(data.fullName.split(' ')[1])
       setEmail(data.email)
-      setNumber(data.phone)
+      setNumber(data.phoneNumber)
     }
 
-    
+    fetchUserDetails()
    
   }, [id])
 
