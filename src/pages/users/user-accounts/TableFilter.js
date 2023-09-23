@@ -248,10 +248,11 @@ const TableColumns = () => {
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
-      })
-    })
+        // Check if the field value is null or undefined before calling toString
+        return row[field] != null && searchRegex.test(row[field].toString());
+      });
+    });
+    
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
