@@ -7,6 +7,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid } from '@mui/x-data-grid'
+import Button from '@mui/material/Button'
 import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 
@@ -18,6 +19,8 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
+// ** Data Import
+// import { rows } from 'src/@fake-db/table/static-data'
 
 // ** renders client column
 const renderClient = params => {
@@ -36,6 +39,11 @@ const renderClient = params => {
   }
 }
 
+const statusObj = {
+  student: { color: 'success' },
+  admin: { color: 'warning' },
+  staff: { color: 'info' }
+}
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
@@ -43,42 +51,38 @@ const escapeRegExp = value => {
 
 const rows = [
   {
-    id: '1',
-    name: 'PDF1',
-    avatar: 'avatar-1.png',
-    date: '02/01/2022',
-    description: 'About the microscope',
-
+    id: 'firstreport.pdf',
+    date: '1/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '2',
-    name: 'PDF2',
-    avatar: 'avatar-1.png',
-    date: '04/11/2022',
-    description: 'About the Test tubes',
+    id: 'secondreport.pdf',
+    date: '2/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '3',
-    name: 'PDF3',
-    avatar: 'avatar-1.png',
-    date: '22/01/2023',
-    description: 'About the Dropper',
+    id: 'thirdreport.pdf',
+    date: '3/1/2023',
+    avatar: 'avatar-1.png'
   },
   {
-    id: '34',
-    name: 'PDF4',
-    avatar: 'avatar-1.png',
-    date: '22/12/2023',
-    description: 'About the Bunsen burner',
+    id: 'fourthreport.pdf',
+    date: '4/1/2023',
+    avatar: 'avatar-1.png'
   },
+  {
+    id: 'fifethreport.pdf',
+    date: '5/1/2023',
+    avatar: 'avatar-1.png'
+  }
 ]
 
 const columns = [
   {
-    flex: 0.275,
+    flex: 0.1,
     minWidth: 290,
-    field: 'name',
-    headerName: 'Name',
+    field: 'id',
+    headerName: 'ID',
     renderCell: params => {
       const { row } = params
 
@@ -87,7 +91,7 @@ const columns = [
           {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params.row.name}
+              {row.id}
             </Typography>
           </Box>
         </Box>
@@ -95,24 +99,10 @@ const columns = [
     }
   },
   {
-    flex: 0.2,
-    type: 'description',
+    flex: 0.1,
     minWidth: 120,
-    headerName: 'description',
-    field: 'description',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.description}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.2,
-    type: 'date',
-    minWidth: 120,
-    headerName: 'Date',
-    field: 'start_date',
+    headerName: 'date',
+    field: 'Date',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
@@ -121,7 +111,7 @@ const columns = [
     )
   },
   {
-    flex: 0.1,
+    flex: 0.0,
     minWidth: 120,
     field: 'actions',
     headerName: 'Actions',
@@ -134,15 +124,10 @@ const columns = [
           <IconButton color='primary'>
             <Icon icon='lucide:trash-2' />
           </IconButton>
-          <IconButton color='primary'>
-            <Icon icon='material-symbols:download' />
-          </IconButton>
-
         </Box>
       )
     }
   }
-
 ]
 
 const TableColumns = () => {
@@ -170,33 +155,31 @@ const TableColumns = () => {
   }
 
   return (
-
-      <DataGrid
-        autoHeight
-        columns={columns}
-        pageSizeOptions={[7, 10, 25, 50]}
-        paginationModel={paginationModel}
-        slots={{ toolbar: QuickSearchToolbar }}
-        onPaginationModelChange={setPaginationModel}
-        rows={filteredData.length ? filteredData : data}
-        sx={{
-          '& .MuiSvgIcon-root': {
-            fontSize: '1.125rem'
-          }
-        }}
-        slotProps={{
-          baseButton: {
-            size: 'medium',
-            variant: 'outlined'
-          },
-          toolbar: {
-            value: searchText,
-            clearSearch: () => handleSearch(''),
-            onChange: event => handleSearch(event.target.value)
-          }
-        }}
-      />
-
+    <DataGrid
+      autoHeight
+      columns={columns}
+      pageSizeOptions={[7, 10, 25, 50]}
+      paginationModel={paginationModel}
+      slots={{ toolbar: QuickSearchToolbar }}
+      onPaginationModelChange={setPaginationModel}
+      rows={filteredData.length ? filteredData : data}
+      sx={{
+        '& .MuiSvgIcon-root': {
+          fontSize: '1.125rem'
+        }
+      }}
+      slotProps={{
+        baseButton: {
+          size: 'medium',
+          variant: 'outlined'
+        },
+        toolbar: {
+          value: searchText,
+          clearSearch: () => handleSearch(''),
+          onChange: event => handleSearch(event.target.value)
+        }
+      }}
+    />
   )
 }
 

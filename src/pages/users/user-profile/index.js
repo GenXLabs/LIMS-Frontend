@@ -22,18 +22,27 @@ import FormValidationBasic from './FormValidationBasic'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 
-function UserProfile() {
+const UserProfile = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardContent>
             <Grid container spacing={6}>
-              <Grid item xs={8}>
-                <Grid item>
+              <Grid item container alignItems='center' xs={12}>
+                <Grid item xs={6}>
                   <AvatarGroup max={4}>
                     <Avatar src='/images/avatars/user1.jpg' alt='Olivia Sparks' sx={{ width: 56, height: 56 }} />
                   </AvatarGroup>
+                </Grid>
+                <Grid item container justifyContent='flex-end' xs={6}>
+                  {/* two btns for update image and delete */}
+                  <Button variant='contained' color='primary' sx={{ mr: 2 }}>
+                    Update
+                  </Button>
+                  <Button variant='contained' color='error'>
+                    Delete
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>

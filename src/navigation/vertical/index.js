@@ -44,8 +44,18 @@ const navigation = () => {
       sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-manual',
-      title: 'Practical Manual',
+      path: '/staff/practical-manual/Module-category',
+      title: 'Module category',
+      icon: 'tabler:file-text'
+    },
+    {
+      path: '/student/Document-Retrieval',
+      title: 'Document Retrieval',
+      icon: 'tabler:file-text'
+    },
+    {
+      path: '/staff/practical-manual/manage-document',
+      title: 'Manage Document',
       icon: 'tabler:file-text'
     },
  //inventory
@@ -73,7 +83,7 @@ const navigation = () => {
     {
       path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
       title: 'Temperature Monitoring Chart',
-      icon: 'carbon:report'
+      icon: 'game-icons:chart'
     },
 
     {
