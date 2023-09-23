@@ -211,7 +211,7 @@ const router = useRouter()
           console.log('edit user')
           router.push({
             pathname: '/admin/edit-user-profile',
-            query: { userId: params.row.user_id }
+            query: { userId: params.row.id }
 
           })
         }
