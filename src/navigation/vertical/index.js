@@ -48,13 +48,14 @@ const navigation = () => {
       title: 'Practical Manual',
       icon: 'tabler:file-text'
     },
+ //inventory
     {
-      sectionTitle: 'Inventory Management'
+       sectionTitle: 'Inventory Management'
     },
     {
-      path: '/staff/inventory-management',
+      path: '',
       title: 'Inventory Management',
-      icon: 'simple-line-icons:calender'
+      icon: 'tabler:file-text'
     },
     {
       sectionTitle: 'Quality assurance'
