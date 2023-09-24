@@ -33,7 +33,7 @@ const navigation = () => {
       icon: 'tabler:users'
     },
    
-    //new timetable
+   
     {
       sectionTitle: 'Practical Timetable'
     },
@@ -42,17 +42,17 @@ const navigation = () => {
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
-    //end timetable nav
+ 
     {
       sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-manual/Module-category',
+      path: '/staff/practical-manual/module-category',
       title: 'Module category',
       icon: 'tabler:file-text'
     },
     {
-      path: '/student/Document-Retrieval',
+      path: '/student/document-retrieval',
       title: 'Document Retrieval',
       icon: 'tabler:file-text'
     },
@@ -61,7 +61,7 @@ const navigation = () => {
       title: 'Manage Document',
       icon: 'tabler:file-text'
     },
- //inventory
+ 
     {
 
       path: '/student/document-file',
@@ -110,7 +110,16 @@ const navigation = () => {
       title: 'Biohazard Dispose',
       icon: 'fluent-emoji-high-contrast:biohazard',
       path: '/staff/sop-management/biohazard-dispose'
+    },
+    {
+      sectionTitle: 'Research Management'
+    },
+    {
+      title: 'Research Management',
+      icon: ' ',
+      path: '/staff/sop-management/instruments'
     }
+
   ]
 }
 
