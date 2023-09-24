@@ -52,6 +52,7 @@
     "jsonwebtoken": "8.5.1",
     "keen-slider": "6.8.5",
     "next": "13.3.2",
+    "node-mailjet": "^6.0.4",
     "nprogress": "0.2.0",
     "payment": "2.4.6",
     "prismjs": "1.29.0",

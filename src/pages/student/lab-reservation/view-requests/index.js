@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,49 +19,51 @@ import { IconButton } from '@mui/material'
 
 import Icon from 'src/@core/components/icon'
 
+import ApiDefinitions from 'src/api/apiDefinitions'
+
 //10 mock data for below table
-const rows = [
-  {
-    id: 1,
-    venue: 'LAB-01',
-    date: '2021-10-01',
-    start_time: '08:00 AM',
-    end_time: '12:00 PM',
-    status: 1
-  },
-  {
-    id: 2,
-    venue: 'LAB-02',
-    date: '2021-10-02',
-    start_time: '08:00 AM',
-    end_time: '12:00 PM',
-    status: 2
-  },
-  {
-    id: 3,
-    venue: 'LAB-02',
-    date: '2021-10-03',
-    start_time: '08:00 AM',
-    end_time: '12:00 PM',
-    status: 3
-  },
-  {
-    id: 4,
-    venue: 'LAB-01',
-    date: '2021-10-04',
-    start_time: '08:00 AM',
-    end_time: '12:00 PM',
-    status: 3
-  },
-  {
-    id: 5,
-    venue: 'LAB-02',
-    date: '2021-10-05',
-    start_time: '08:00 AM',
-    end_time: '12:00 PM',
-    status: 4
-  }
-]
+// const rows = [
+//   {
+//     id: 1,
+//     venue: 'LAB-01',
+//     date: '2021-10-01',
+//     start_time: '08:00 AM',
+//     end_time: '12:00 PM',
+//     status: 1
+//   },
+//   {
+//     id: 2,
+//     venue: 'LAB-02',
+//     date: '2021-10-02',
+//     start_time: '08:00 AM',
+//     end_time: '12:00 PM',
+//     status: 2
+//   },
+//   {
+//     id: 3,
+//     venue: 'LAB-02',
+//     date: '2021-10-03',
+//     start_time: '08:00 AM',
+//     end_time: '12:00 PM',
+//     status: 3
+//   },
+//   {
+//     id: 4,
+//     venue: 'LAB-01',
+//     date: '2021-10-04',
+//     start_time: '08:00 AM',
+//     end_time: '12:00 PM',
+//     status: 3
+//   },
+//   {
+//     id: 5,
+//     venue: 'LAB-02',
+//     date: '2021-10-05',
+//     start_time: '08:00 AM',
+//     end_time: '12:00 PM',
+//     status: 4
+//   }
+// ]
 
 const statusObj = {
   1: { title: 'Pending Admin Approval', color: 'warning' },
@@ -77,7 +79,19 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    flex: 0.2,
+    flex: 0.1,
+    minWidth: 80,
+    field: 'id',
+    headerName: 'ID',
+    sortable: true,
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.id}
+      </Typography>
+    )
+  },
+  {
+    flex: 0.1,
     type: 'venue',
     minWidth: 120,
     headerName: 'Venue',
@@ -171,7 +185,27 @@ const columns = [
 
 const TableColumns = () => {
   // ** Table data
-  const [data] = useState(rows)
+  const [data, setData] = useState([])
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
+  useEffect(() => {
+    ApiDefinitions.getAllLabReservations().then(res => {
+      if (res.data.data) {
+        // Filter the data based on requester_id matching userData.id
+        const filteredData = res.data.data.filter(item => item.requester_id === userData.id)
+
+        // Assign a unique ID based on the index (you can adjust this logic as needed)
+        const formattedData = filteredData.map((item, index) => ({
+          ...item,
+          id: index + 1
+        }))
+
+        setData(formattedData)
+        console.log(formattedData)
+      }
+    })
+  }, [userData.id]) // Make sure to include userData.id in the dependency array
 
   // ** States
   const [searchText, setSearchText] = useState('')
