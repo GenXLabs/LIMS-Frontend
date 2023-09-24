@@ -1,9 +1,11 @@
+import { Tab, Table } from '@mui/material'
 import React from 'react'
+import TableFilter from './TableFilter'
 
 const StaffResearch = () => {
   return (
     <div>
-      Staff hello
+      <TableFilter />
     </div>
   )
 }
