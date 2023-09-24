@@ -18,6 +18,7 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { useRouter } from 'next/router'
 
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
@@ -121,12 +122,16 @@ const columns = [
     field: 'actions',
     headerName: 'Actions',
     renderCell: params => {
+      const router = useRouter()
+      const handleUploadRedirect = () => {
+      router.push('/staff/internal-quality-assurance/laboratory-audit-report/AlertsBasic')
+  }
       return (
         <Box className='d-flex align-items-center'>
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='primary'>
+          <IconButton color='primary' onClick={handleUploadRedirect}>
             <Icon icon='lucide:trash-2' />
           </IconButton>
         </Box>

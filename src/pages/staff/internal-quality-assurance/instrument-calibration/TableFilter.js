@@ -10,6 +10,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
 import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
+import Alert from './AlertsBasic'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -18,6 +19,7 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { useRouter } from 'next/router'
 
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
@@ -90,7 +92,6 @@ const columns = [
     headerName: 'NAME',
     renderCell: params => {
       const { row } = params
-
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(params)}
@@ -121,12 +122,16 @@ const columns = [
     field: 'actions',
     headerName: 'Actions',
     renderCell: params => {
+      const router = useRouter()
+      const handleUploadRedirect = () => {
+      router.push('/staff/internal-quality-assurance/instrument-calibration/AlertsBasic')
+  }
       return (
         <Box className='d-flex align-items-center'>
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='primary'>
+          <IconButton color='primary' onClick={handleUploadRedirect}>
             <Icon icon='lucide:trash-2' />
           </IconButton>
         </Box>
