@@ -32,14 +32,17 @@ const navigation = () => {
       title: 'User Accounts',
       icon: 'tabler:users'
     },
+   
+    //new timetable
     {
-      sectionTitle: 'Practical timetable'
+      sectionTitle: 'Practical Timetable'
     },
     {
-      path: '/student/practical-timetable',
+      path: '/student/timetable',
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
+    //end timetable nav
     {
       sectionTitle: 'Practical Manual'
     },
@@ -58,7 +61,9 @@ const navigation = () => {
       title: 'Manage Document',
       icon: 'tabler:file-text'
     },
+ //inventory
     {
+
       path: '/student/document-file',
       title: 'Document File',
       icon: 'tabler:file-text'
@@ -67,11 +72,12 @@ const navigation = () => {
     
     {
       sectionTitle: 'Inventory Management'
+
     },
     {
       path: '/staff/inventory-management',
       title: 'Inventory Management',
-      icon: 'simple-line-icons:calender'
+      icon: 'material-symbols:lab-research-outline-sharp'
     },
     {
       sectionTitle: 'Quality assurance'
