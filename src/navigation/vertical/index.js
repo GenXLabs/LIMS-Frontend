@@ -61,18 +61,21 @@ const navigation = () => {
       title: 'Manage Document',
       icon: 'tabler:file-text'
     },
+ //inventory
     {
+
       path: '/student/document-file',
       title: 'Document File',
       icon: 'tabler:file-text'
     },
     {
       sectionTitle: 'Inventory Management'
+
     },
     {
       path: '/staff/inventory-management',
       title: 'Inventory Management',
-      icon: 'simple-line-icons:calender'
+      icon: 'material-symbols:lab-research-outline-sharp'
     },
     {
       sectionTitle: 'Quality assurance'
