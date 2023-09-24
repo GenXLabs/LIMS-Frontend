@@ -69,9 +69,12 @@
     "react-perfect-scrollbar": "1.5.8",
     "react-popper": "2.3.0",
     "react-redux": "8.0.5",
+    "react-router-dom": "^6.16.0",
     "recharts": "2.5.0",
+    "sass": "^1.68.0",
     "stylis": "4.1.4",
     "stylis-plugin-rtl": "2.1.1",
+    "sweetalert2": "^11.7.28",
     "yup": "1.1.1"
   },
   "devDependencies": {
