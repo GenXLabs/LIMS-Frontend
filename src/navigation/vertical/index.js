@@ -32,8 +32,7 @@ const navigation = () => {
       title: 'User Accounts',
       icon: 'tabler:users'
     },
-   
-   
+
     {
       sectionTitle: 'Practical Timetable'
     },
@@ -42,13 +41,13 @@ const navigation = () => {
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
- 
+
     {
       sectionTitle: 'Practical Manual'
     },
     {
       path: '/staff/practical-manual/module-category',
-      title: 'Module category',
+      title: 'Module Category',
       icon: 'tabler:file-text'
     },
     {
@@ -61,18 +60,15 @@ const navigation = () => {
       title: 'Manage Document',
       icon: 'tabler:file-text'
     },
- 
-    {
 
+    {
       path: '/student/document-file',
       title: 'Document File',
       icon: 'tabler:file-text'
     },
 
-    
     {
       sectionTitle: 'Inventory Management'
-
     },
     {
       path: '/staff/inventory-management',
@@ -119,7 +115,6 @@ const navigation = () => {
       icon: ' ',
       path: '/staff/sop-management/instruments'
     }
-
   ]
 }
 

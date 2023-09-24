@@ -1,54 +1,53 @@
+import React from 'react'
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContentText from '@mui/material/DialogContentText'
 
-
-
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
-import FormLayoutsAlignment from './FormLayoutsAlignment'; // Import your ModuleForm component
-import { useRouter } from 'next/router';
-import TableStickyHeader from './TableStickyHeader';
+// ** Custom Component Import
+import CustomTextField from 'src/@core/components/mui/text-field'
+import { useState } from 'react'
+import TableStickyHeader from './TableStickyHeader.js'
 
 const ModuleCategory = () => {
-  const router = useRouter();
-  const [isFormVisible, setIsFormVisible] = useState(false);
 
-  const handleUploadRedirect = () => {
-    router.push('staff/practical-manual/Module-category/FileUploaderMultiple');
-  };
+  const [modalOpen, setModalOpen] = useState(false)
 
-  const handleAddModuleClick = () => {
-    setIsFormVisible(true);
-  };
+  const handleModalOpen= () => {
+    setModalOpen(true)
+  }
 
-  const handleCloseForm = () => {
-    setIsFormVisible(false);
-  };
+  const handleModalClose =() =>{
+    setModalOpen(false)
+  }
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader
-            title='Module Category'
-            action={
-              <Button
-                variant='contained'
-                onClick={isFormVisible ? handleCloseForm : handleAddModuleClick}
-              >
-                {isFormVisible ? 'Close Form' : 'Add Module'}
-              </Button>
-            }
-          />
+          <CardHeader title='Module Category' action={<Button  onClick={handleModalOpen} variant='contained'>Add Module</Button>} />
           <CardContent>
-            {isFormVisible ? (
-              <FormLayoutsAlignment onClose={handleCloseForm} />
-            ) : (
-              <TableStickyHeader />
-            )}
+            <TableStickyHeader />
           </CardContent>
         </Card>
       </Grid>
+      <Dialog open={modalOpen} onClose={handleModalClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 3 }}>
+            To subscribe to this website, please enter your email address here. We will send updates occasionally.
+          </DialogContentText>
+          <CustomTextField id='name' autoFocus fullWidth type='email' label='Email Address' />
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={handleModalClose}>Disagree</Button>
+          <Button onClick={handleModalClose}>Agree</Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
-  );
-};
+  )
+}
 
-export default ModuleCategory;
+export default ModuleCategory
