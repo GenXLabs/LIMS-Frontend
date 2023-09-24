@@ -22,7 +22,6 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 import { styled } from '@mui/material/styles'
 
 import Swal from 'sweetalert2'
-import 'sweetalert2/src/sweetalert2.scss'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')

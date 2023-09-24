@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import Icon from 'src/@core/components/icon';
 import QuickSearchToolbar from './QuickSearchToolbar';
 import Swal from 'sweetalert2'
-import 'sweetalert2/src/sweetalert2.scss'
 import Alert from '@mui/material/Alert'; // Import the Alert component
 
 const escapeRegExp = (value) => {

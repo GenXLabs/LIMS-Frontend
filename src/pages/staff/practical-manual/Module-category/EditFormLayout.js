@@ -20,7 +20,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import CustomTextField from 'src/@core/components/mui/text-field'
 
 import Swal from 'sweetalert2'
-import 'sweetalert2/src/sweetalert2.scss'
 
 // Styled component for the form
 const Form = styled('form')(({ theme }) => ({
@@ -31,16 +30,14 @@ const Form = styled('form')(({ theme }) => ({
 }))
 
 const EditFormLayout = () => {
-
-
-  const editSuccess = () =>{
+  const editSuccess = () => {
     Swal.fire({
       title: 'Do you want to save the changes?',
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: 'Save',
-      denyButtonText: `Don't save`,
-    }).then((result) => {
+      denyButtonText: `Don't save`
+    }).then(result => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         Swal.fire('Saved!', '', 'success')
@@ -62,7 +59,6 @@ const EditFormLayout = () => {
             <Grid item xs={12}>
               <CustomTextField fullWidth label='' placeholder='Module 6' />
             </Grid>
-
 
             <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(2)} !important` }}>
               <Button type='submit' variant='contained' sx={{ width: '100%' }} onClick={editSuccess}>
