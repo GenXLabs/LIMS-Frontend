@@ -115,7 +115,7 @@ const navigation = () => {
     {
       title: 'Research Management',
       icon: ' ',
-      path: '/staff/sop-management/instruments'
+      path: '/student/research'
     }
 
   ]
