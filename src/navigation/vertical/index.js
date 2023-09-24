@@ -65,7 +65,7 @@ const navigation = () => {
     {
       path: '/staff/inventory-management',
       title: 'Inventory Management',
-      icon: 'tabler:file-text'
+      icon: 'material-symbols:lab-research-outline-sharp'
     },
     {
       sectionTitle: 'Quality assurance'
