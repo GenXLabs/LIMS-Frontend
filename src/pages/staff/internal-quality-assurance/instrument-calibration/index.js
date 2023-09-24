@@ -11,13 +11,24 @@ import UsersTable from 'src/views/table/usersTable'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import TableFilter from './TableFilter'
+import { useRouter } from 'next/router'
 
 const IntrumentCalibration = () => {
+  const router = useRouter()
+  const handleUploadRedirect = () => {
+    router.push('/staff/internal-quality-assurance/instrument-calibration/FileUploaderMultiple')
+  }
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader action={<Button variant='contained'>+Upload instrument calibration report</Button>}></CardHeader>
+          <CardHeader
+            action={
+              <Button variant='contained' onClick={handleUploadRedirect}>
+                + Upload instrument calibration report
+              </Button>
+            }
+          ></CardHeader>
           <CardContent>
             <TableFilter />
           </CardContent>

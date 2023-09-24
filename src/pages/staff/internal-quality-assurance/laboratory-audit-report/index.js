@@ -11,13 +11,24 @@ import UsersTable from 'src/views/table/usersTable'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import TableFilter from './TableFilter'
+import { useRouter } from 'next/router'
 
 const AuditReport = () => {
+  const router = useRouter()
+  const handleUploadRedirect = () => {
+    router.push('/staff/internal-quality-assurance/laboratory-audit-report/FileUploaderMultiple')
+  }
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader action={<Button variant='contained'>+Upload Audit Report</Button>}></CardHeader>
+          <CardHeader
+            action={
+              <Button variant='contained' onClick={handleUploadRedirect}>
+                + Upload Audit Report
+              </Button>
+            }
+          ></CardHeader>
           <CardContent>
             <TableFilter />
           </CardContent>

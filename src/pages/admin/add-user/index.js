@@ -17,6 +17,10 @@ import { styled, useTheme } from '@mui/material/styles'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
 import { toast } from 'react-hot-toast'
+import { useForm } from 'react-hook-form'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -34,6 +38,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
 import axios from 'axios'
+import { Grid } from '@mui/material'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -75,7 +80,7 @@ const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
   }
 }))
 
-const Register = () => {
+const AddUser = () => {
   // ** States
   const [showPassword, setShowPassword] = useState(false)
   const [firstName, setFirstName] = useState('')
@@ -84,7 +89,7 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const[isUniquEmail, setIsUniqueEmail] = useState(true)
+  const [isUniquEmail, setIsUniqueEmail] = useState(true)
 
   // ** Hooks
   const theme = useTheme()
@@ -103,7 +108,7 @@ const Register = () => {
   const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('')
 
   // sign up handling
-  const handleSignUp = async () => {
+  const handleAdd = async () => {
     console.log('sign up')
 
     let errorCount = 0
@@ -157,24 +162,23 @@ const Register = () => {
       //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
       //   .then(res => {
       //     console.log(res.data)
-  
+
       //   })
       //   .catch(err => {
       //     console.log(err)
       //   })
       try {
-      const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-      console.log(res.data)
-      if (res.data !== null) {
-        setIsUniqueEmail(false)
-        toast.error('Email already exists')
-        console.log('Email already exists')
+        const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
+        console.log(res.data)
+        if (res.data !== null) {
+          setIsUniqueEmail(false)
+          toast.error('Email already exists')
+          console.log('Email already exists')
 
-        return
-      }
-      
+          return
+        }
       } catch (err) {
-        console.log("email not found ",err)
+        console.log('email not found ', err)
       }
 
       // if email is unique, register the user
@@ -182,85 +186,26 @@ const Register = () => {
         const res = await axios.post('http://localhost:8082/api/v1/lims/user/add', userData)
         console.log(res.data)
         toast.success('Registration successful')
-        router.push('/login')
+        router.push('/users/user-accounts')
       } catch (err) {
         console.log(err)
         toast.error('Registration failed')
       }
-        
-
-          
     }
+
+ 
+
+
   }
 
   return (
-    <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
-      {!hidden ? (
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            position: 'relative',
-            alignItems: 'center',
-            borderRadius: '20px',
-            justifyContent: 'center',
-            backgroundColor: 'customColors.bodyBg',
-            margin: theme => theme.spacing(8, 0, 8, 8)
-          }}
-        >
-          {/* <RegisterIllustration
-            alt='register-illustration'
-            src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-          /> */}
-          <FooterIllustrationsV2 />
-        </Box>
-      ) : null}
-      <RightWrapper>
-        <Box
-          sx={{
-            p: [6, 12],
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Box sx={{ width: '100%', maxWidth: 400 }}>
-            {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                fill={theme.palette.primary.main}
-                d='M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z'
-              />
-              <path
-                fill='#161616'
-                opacity={0.06}
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z'
-              />
-              <path
-                fill='#161616'
-                opacity={0.06}
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z'
-              />
-              <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                fill={theme.palette.primary.main}
-                d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
-              />
-            </svg> */}
-            {/* <Box sx={{ my: 6 }}>
-              <Typography variant='h3' sx={{ mb: 1.5 }}>
-                Adventure starts here 🚀
-              </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography>
-            </Box> */}
-            <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
+    <Card>
+      <CardHeader title='' />
+      <CardContent>
+        <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
+          <Grid container spacing={4}>
+            <Grid item container spacing={4} xs={12} sm={12}>
+                <Grid item xs={12} sm={6}>
               <CustomTextField
                 autoFocus
                 fullWidth
@@ -273,6 +218,8 @@ const Register = () => {
                 value={firstName}
                 onChange={e => setFirstName(e.target.value)}
               />
+                </Grid>
+                <Grid item xs={12} sm={6}>
               <CustomTextField
                 autoFocus
                 fullWidth
@@ -285,6 +232,9 @@ const Register = () => {
                 value={lastName}
                 onChange={e => setLastName(e.target.value)}
               />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+
               <CustomTextField
                 fullWidth
                 label='Email'
@@ -297,6 +247,8 @@ const Register = () => {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
               />
+                </Grid>
+                <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Phone Number'
@@ -310,6 +262,9 @@ const Register = () => {
                 value={phoneNumber}
                 onChange={e => setPhoneNumber(e.target.value)}
               />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+
               <CustomTextField
                 fullWidth
                 label='Password'
@@ -336,6 +291,8 @@ const Register = () => {
                   )
                 }}
               />
+                </Grid>
+                <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Confirm Password'
@@ -362,64 +319,21 @@ const Register = () => {
                   )
                 }}
               />
-              <FormControlLabel
-                control={<Checkbox />}
-                sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    <Typography sx={{ color: 'text.secondary' }}>I agree to</Typography>
-                    <Typography component={LinkStyled} href='/' onClick={e => e.preventDefault()} sx={{ ml: 1 }}>
-                      privacy policy & terms
-                    </Typography>
-                  </Box>
-                }
-              />
-              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleSignUp}>
-                Sign up
+                </Grid>
+
+            </Grid>
+          </Grid>
+          <Grid item container justifyContent='flex-end'>
+                <Grid item xs={12} sm={2}>
+              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleAdd}>
+                Add User
               </Button>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Typography sx={{ color: 'text.secondary', mr: 2 }}>Already have an account?</Typography>
-                <Typography component={LinkStyled} href='/login'>
-                  Sign in instead
-                </Typography>
-              </Box>
-              {/* <Divider
-                sx={{
-                  color: 'text.disabled',
-                  '& .MuiDivider-wrapper': { px: 6 },
-                  fontSize: theme.typography.body2.fontSize,
-                  my: theme => `${theme.spacing(6)} !important`
-                }}
-              >
-                or
-              </Divider> */}
-              {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton href='/' component={Link} sx={{ color: '#497ce2' }} onClick={e => e.preventDefault()}>
-                  <Icon icon='mdi:facebook' />
-                </IconButton>
-                <IconButton href='/' component={Link} sx={{ color: '#1da1f2' }} onClick={e => e.preventDefault()}>
-                  <Icon icon='mdi:twitter' />
-                </IconButton>
-                <IconButton
-                  href='/'
-                  component={Link}
-                  onClick={e => e.preventDefault()}
-                  sx={{ color: theme => (theme.palette.mode === 'light' ? '#272727' : 'grey.300') }}
-                >
-                  <Icon icon='mdi:github' />
-                </IconButton>
-                <IconButton href='/' component={Link} sx={{ color: '#db4437' }} onClick={e => e.preventDefault()}>
-                  <Icon icon='mdi:google' />
-                </IconButton>
-              </Box> */}
-            </form>
-          </Box>
-        </Box>
-      </RightWrapper>
-    </Box>
+                </Grid>
+            </Grid>
+        </form>
+      </CardContent>
+    </Card>
   )
 }
-Register.getLayout = page => <BlankLayout>{page}</BlankLayout>
-Register.guestGuard = true
 
-export default Register
+export default AddUser
