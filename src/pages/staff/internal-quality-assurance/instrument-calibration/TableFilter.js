@@ -10,6 +10,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
 import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
+import Alert from './AlertsBasic'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -18,6 +19,7 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { useRouter } from 'next/router'
 
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
@@ -51,27 +53,32 @@ const escapeRegExp = value => {
 
 const rows = [
   {
-    id: 'firstreport.pdf',
+    id: 1,
+    name: 'firstreport.pdf',
     date: '1/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'secondreport.pdf',
+    id: 2,
+    name: 'secondreport.pdf',
     date: '2/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'thirdreport.pdf',
+    id: 3,
+    name: 'thirdreport.pdf',
     date: '3/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'fourthreport.pdf',
+    id: 4,
+    name: 'fourthreport.pdf',
     date: '4/1/2023',
     avatar: 'avatar-1.png'
   },
   {
-    id: 'fifethreport.pdf',
+    id: 5,
+    name: 'fifethreport.pdf',
     date: '5/1/2023',
     avatar: 'avatar-1.png'
   }
@@ -81,17 +88,16 @@ const columns = [
   {
     flex: 0.1,
     minWidth: 290,
-    field: 'id',
-    headerName: 'ID',
+    field: 'name',
+    headerName: 'NAME',
     renderCell: params => {
       const { row } = params
-
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.id}
+              {row.name}
             </Typography>
           </Box>
         </Box>
@@ -116,12 +122,16 @@ const columns = [
     field: 'actions',
     headerName: 'Actions',
     renderCell: params => {
+      const router = useRouter()
+      const handleUploadRedirect = () => {
+      router.push('/staff/internal-quality-assurance/instrument-calibration/AlertsBasic')
+  }
       return (
         <Box className='d-flex align-items-center'>
           <IconButton color='primary'>
             <Icon icon='fluent:edit-16-regular' />
           </IconButton>
-          <IconButton color='primary'>
+          <IconButton color='primary' onClick={handleUploadRedirect}>
             <Icon icon='lucide:trash-2' />
           </IconButton>
         </Box>
