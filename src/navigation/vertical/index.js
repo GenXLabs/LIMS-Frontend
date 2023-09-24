@@ -32,14 +32,17 @@ const navigation = () => {
       title: 'User Accounts',
       icon: 'tabler:users'
     },
+   
+    //new timetable
     {
-      sectionTitle: 'Practical timetable'
+      sectionTitle: 'Practical Timetable'
     },
     {
-      path: '/student/practical-timetable',
+      path: '/student/timetable',
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
+    //end timetable nav
     {
       sectionTitle: 'Practical Manual'
     },
