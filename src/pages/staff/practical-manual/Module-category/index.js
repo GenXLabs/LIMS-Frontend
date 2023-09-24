@@ -1,30 +1,54 @@
-import React from 'react'
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import { CardContent, Grid, TextField } from '@mui/material'
-import CustomTextField from 'src/@core/components/mui/text-field'
-import Icon from 'src/@core/components/icon'
-import UsersTable from 'src/views/table/usersTable'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import TableStickyHeader from './TableStickyHeader'
 
-function ModuleCategory() {
+
+
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
+import FormLayoutsAlignment from './FormLayoutsAlignment'; // Import your ModuleForm component
+import { useRouter } from 'next/router';
+import TableStickyHeader from './TableStickyHeader';
+
+const ModuleCategory = () => {
+  const router = useRouter();
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const handleUploadRedirect = () => {
+    router.push('staff/practical-manual/Module-category/FileUploaderMultiple');
+  };
+
+  const handleAddModuleClick = () => {
+    setIsFormVisible(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormVisible(false);
+  };
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Module Category' action={<Button variant='contained'>Add Module</Button>}></CardHeader>
+          <CardHeader
+            title='Module Category'
+            action={
+              <Button
+                variant='contained'
+                onClick={isFormVisible ? handleCloseForm : handleAddModuleClick}
+              >
+                {isFormVisible ? 'Close Form' : 'Add Module'}
+              </Button>
+            }
+          />
           <CardContent>
-            <TableStickyHeader />
+            {isFormVisible ? (
+              <FormLayoutsAlignment onClose={handleCloseForm} />
+            ) : (
+              <TableStickyHeader />
+            )}
           </CardContent>
         </Card>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default ModuleCategory
+export default ModuleCategory;
