@@ -266,32 +266,31 @@ const TableColumns = () => {
           setData(res.data.data)
           console.log(res.data.data)
 
-          // smsService
-          //   .login()
-          //   .then(token => {
-          //     console.log('Login successful. Token:', token)
+          smsService
+            .login()
+            .then(token => {
+              console.log('Login successful. Token:', token)
 
-          //     smsService
-          //       .sendSMS('767912651', approvalMessage, token)
-          //       .then(response => {
-          //         console.log('SMS sent successfully:', response)
-          //       })
-          //       .catch(error => {
-          //         console.error('Error sending SMS:', error)
-          //       })
-          //   })
-          //   .catch(error => {
-          //     console.error('Login failed:', error)
-          //   })
-
-          sendEmail
-            .sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Approved', approvalMessage)
-            .then(response => {
-              console.log('Email sent successfully:', response)
+              smsService
+                .sendSMS('767912651', approvalMessage, token)
+                .then(response => {
+                  console.log('SMS sent successfully:', response)
+                })
+                .catch(error => {
+                  console.error('Error sending SMS:', error)
+                })
             })
             .catch(error => {
-              console.error('Error sending Email:', error)
+              console.error('Login failed:', error)
             })
+
+          // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Approved', approvalMessage)
+          //   .then(() => {
+          //     console.log('Email sent successfully.')
+          //   })
+          //   .catch(() => {
+          //     console.error('Email sending failed.')
+          //   })
         })
       } else {
         toast.error('Something went wrong!')
@@ -327,32 +326,31 @@ const TableColumns = () => {
           setData(res.data.data)
           console.log(res.data.data)
 
-          // smsService
-          //   .login()
-          //   .then(token => {
-          //     console.log('Login successful. Token:', token)
+          smsService
+            .login()
+            .then(token => {
+              console.log('Login successful. Token:', token)
 
-          //     smsService
-          //       .sendSMS('767912651', declineMessage, token)
-          //       .then(response => {
-          //         console.log('SMS sent successfully:', response)
-          //       })
-          //       .catch(error => {
-          //         console.error('Error sending SMS:', error)
-          //       })
-          //   })
-          //   .catch(error => {
-          //     console.error('Login failed:', error)
-          //   })
-
-          sendEmail
-            .sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Declined', declineMessage)
-            .then(response => {
-              console.log('Email sent successfully:', response)
+              smsService
+                .sendSMS('767912651', declineMessage, token)
+                .then(response => {
+                  console.log('SMS sent successfully:', response)
+                })
+                .catch(error => {
+                  console.error('Error sending SMS:', error)
+                })
             })
             .catch(error => {
-              console.error('Error sending Email:', error)
+              console.error('Login failed:', error)
             })
+
+          // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Declined', declineMessage)
+          //   .then(() => {
+          //     console.log('Email sent successfully.')
+          //   })
+          //   .catch(() => {
+          //     console.error('Email sending failed.')
+          //   })
         })
       } else {
         toast.error('Something went wrong!')

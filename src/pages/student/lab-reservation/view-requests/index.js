@@ -20,6 +20,8 @@ import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 
 import ApiDefinitions from 'src/api/apiDefinitions'
+import apiDefinitions from 'src/api/apiDefinitions'
+import toast from 'react-hot-toast'
 
 //10 mock data for below table
 // const rows = [
@@ -77,115 +79,156 @@ const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const columns = [
-  {
-    flex: 0.1,
-    minWidth: 80,
-    field: 'id',
-    headerName: 'ID',
-    sortable: true,
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.id}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.1,
-    type: 'venue',
-    minWidth: 120,
-    headerName: 'Venue',
-    field: 'venue', // Add the 'field' property for sorting
-    sortable: true, // Enable sorting
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.venue}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.15,
-    type: 'date',
-    minWidth: 120,
-    headerName: 'Date',
-    field: 'date',
-    valueGetter: params => new Date(params.value),
-    sortable: true,
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.date}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.15,
-    minWidth: 110,
-    field: 'start_time',
-    headerName: 'Start Time',
-    sortable: true,
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_time}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.15,
-    minWidth: 110,
-    field: 'end_time',
-    headerName: 'End Time',
-    sortable: true,
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.end_time}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.25,
-    minWidth: 140,
-    field: 'status',
-    headerName: 'Status',
-    renderCell: params => {
-      const status = statusObj[params.row.status]
-
-      return (
-        <CustomChip
-          rounded
-          size='small'
-          skin='light'
-          color={status.color}
-          label={status.title}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 140,
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false, // No sorting for this column
-    filterable: false, // No filtering for this column
-    renderCell: params => {
-      return (
-        <Box className='d-flex align-items-center'>
-          <IconButton color='primary' disabled={params.row.status !== 1}>
-            <Icon icon='fluent:edit-16-regular' />
-          </IconButton>
-          <IconButton color='primary' disabled={params.row.status !== 1}>
-            <Icon icon='lucide:trash-2' />
-          </IconButton>
-        </Box>
-      )
-    }
-  }
-]
-
 const TableColumns = () => {
   // ** Table data
   const [data, setData] = useState([])
+
+  const handleEditReservation = id => {
+    console.log('Edit Reservation', id)
+  }
+
+  const handleDeleteReservation = id => {
+    console.log('Delete Reservation', id)
+
+    apiDefinitions.updateReservationStatus(id, 4).then(res => {
+      console.log(res)
+      if (res.data.code == '200') {
+        toast.success('Reservation Approved!')
+
+        apiDefinitions.getAllLabReservations().then(res => {
+          //add id to data
+          res.data.data.forEach((item, index) => {
+            item.id = index + 1
+          })
+
+          //add avatar if not available
+          res.data.data.forEach(item => {
+            if (!item.avatar) {
+              item.avatar = ''
+            }
+          })
+          setData(res.data.data)
+          console.log(res.data.data)
+        })
+      } else {
+        toast.error('Something went wrong!')
+      }
+    })
+  }
+
+  const columns = [
+    {
+      flex: 0.1,
+      minWidth: 80,
+      field: 'id',
+      headerName: 'ID',
+      sortable: true,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.id}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
+      type: 'venue',
+      minWidth: 120,
+      headerName: 'Venue',
+      field: 'venue', // Add the 'field' property for sorting
+      sortable: true, // Enable sorting
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.venue}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      type: 'date',
+      minWidth: 120,
+      headerName: 'Date',
+      field: 'date',
+      valueGetter: params => new Date(params.value),
+      sortable: true,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.date}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'start_time',
+      headerName: 'Start Time',
+      sortable: true,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.start_time}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      minWidth: 110,
+      field: 'end_time',
+      headerName: 'End Time',
+      sortable: true,
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.end_time}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.25,
+      minWidth: 140,
+      field: 'status',
+      headerName: 'Status',
+      renderCell: params => {
+        const status = statusObj[params.row.status]
+
+        return (
+          <CustomChip
+            rounded
+            size='small'
+            skin='light'
+            color={status.color}
+            label={status.title}
+            sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+          />
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 140,
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false, // No sorting for this column
+      filterable: false, // No filtering for this column
+      renderCell: params => {
+        return (
+          <Box className='d-flex align-items-center'>
+            <IconButton
+              color='primary'
+              disabled={params.row.status !== 1}
+              onClick={() => handleEditReservation(params.row.reservation_id)}
+            >
+              <Icon icon='fluent:edit-16-regular' />
+            </IconButton>
+            <IconButton
+              color='primary'
+              disabled={params.row.status !== 1}
+              onClick={() => handleDeleteReservation(params.row.reservation_id)}
+            >
+              <Icon icon='lucide:trash-2' />
+            </IconButton>
+          </Box>
+        )
+      }
+    }
+  ]
 
   const userData = JSON.parse(localStorage.getItem('userData'))
 

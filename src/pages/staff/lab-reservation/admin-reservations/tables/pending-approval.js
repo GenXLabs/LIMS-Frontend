@@ -33,6 +33,10 @@ import apiDefinitions from 'src/api/apiDefinitions'
 
 import toast from 'react-hot-toast'
 
+import smsService from 'src/api/sendSMS'
+
+import sendEmail from 'src/api/sendEmail'
+
 // ** renders client column
 const renderClient = params => {
   const { row } = params
@@ -241,171 +245,127 @@ const TableColumns = () => {
   const handleRequestApprove = () => {
     console.log('approve')
 
-    // Define the API endpoint for login
-    const loginUrl = 'https://e-sms.dialog.lk/api/v1/login'
+    // Create the SMS body for approval
+    const approvalMessage = `Your reservation request for ${viewMoreData.venue} has been approved.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
-    // Define the API endpoint for sending approval SMS
-    const apiUrl = 'https://e-sms.dialog.lk/api/v1/sms'
+    handleViewClose()
 
-    // Define the login payload
-    const loginPayload = {
-      username: 'antpixelcore',
-      password: 'Pixelcore@1133'
-    }
+    apiDefinitions.updateReservationStatus(viewMoreData.reservation_id, 2).then(res => {
+      console.log(res)
+      if (res.data.code == '200') {
+        toast.success('Reservation Approved!')
 
-    // Make a POST request to the login API
-    fetch(loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(loginPayload)
-    })
-      .then(response => response.json())
-      .then(loginData => {
-        console.log(loginData)
+        apiDefinitions.getAllLabReservations().then(res => {
+          // Filter the data to include only items with status = 0
+          const filteredData = res.data.data.filter(item => item.status === 1)
 
-        // Check if the login response contains a refresh token
-        if (loginData.token) {
-          console.log('Login Successful. Refresh Token:', loginData.token)
-
-          // Create the SMS body for approval
-          const approvalMessage = `Your reservation request for ${params.row.venue} has been approved.\nDate: ${params.row.date}\nTime: ${params.row.start_time} - ${params.row.end_time}`
-
-          function generateRandomString(length) {
-            const characters = '0123456789'
-            let randomString = ''
-            for (let i = 0; i < length; i++) {
-              const randomIndex = Math.floor(Math.random() * characters.length)
-              randomString += characters.charAt(randomIndex)
-            }
-
-            return randomString
-          }
-
-          // Generate a random transaction_id
-          const transactionId = generateRandomString(8)
-
-          // Create the payload for sending SMS
-          const payload = {
-            msisdn: [{ mobile: '767912651' }],
-            sourceAddress: 'Pixelcore',
-            message: approvalMessage,
-            transaction_id: transactionId
-          }
-
-          // Make a POST request to send the approval SMS using the obtained refresh token
-          fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${loginData.token}`
-            },
-            body: JSON.stringify(payload)
+          // Add an 'id' to data
+          filteredData.forEach((item, index) => {
+            item.id = index + 1
           })
-            .then(response => response.json())
-            .then(smsData => {
-              if (smsData.status) {
-                console.log('Approval SMS Sent', smsData)
-              } else {
-                console.log('Approval SMS Not Sent', smsData)
-              }
+
+          // Add 'avatar' if not available
+          filteredData.forEach(item => {
+            if (!item.avatar) {
+              item.avatar = ''
+            }
+          })
+
+          setData(filteredData)
+
+          smsService
+            .login()
+            .then(token => {
+              console.log('Login successful. Token:', token)
+
+              smsService
+                .sendSMS('767912651', approvalMessage, token)
+                .then(response => {
+                  console.log('SMS sent successfully:', response)
+                })
+                .catch(error => {
+                  console.error('Error sending SMS:', error)
+                })
             })
             .catch(error => {
-              console.error('Error:', error)
+              console.error('Login failed:', error)
             })
-        } else {
-          console.log('Login failed. Refresh token not found in the response')
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error)
-      })
+
+          // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Approved', approvalMessage)
+          //   .then(() => {
+          //     console.log('Email sent successfully.')
+          //   })
+          //   .catch(() => {
+          //     console.error('Email sending failed.')
+          //   })
+        })
+      } else {
+        toast.error('Something went wrong!')
+      }
+    })
   }
 
   const handleRequestDecline = () => {
     console.log('decline')
 
-    // Define the API endpoint for login
-    const loginUrl = 'https://e-sms.dialog.lk/api/v1/login'
+    // Create the SMS body for approval
+    const declineMessage = `Your reservation request for ${viewMoreData.venue} has been declined.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
-    // Define the API endpoint for sending decline SMS
-    const apiUrl = 'https://e-sms.dialog.lk/api/v1/sms'
+    handleViewClose()
 
-    // Define the login payload
-    const loginPayload = {
-      username: 'antpixelcore',
-      password: 'Pixelcore@1133'
-    }
+    apiDefinitions.updateReservationStatus(viewMoreData.reservation_id, 5).then(res => {
+      console.log(res)
+      if (res.data.code == '200') {
+        toast.success('Reservation Declined!')
 
-    // Make a POST request to the login API
-    fetch(loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(loginPayload)
-    })
-      .then(response => response.json())
-      .then(loginData => {
-        console.log(loginData)
+        apiDefinitions.getAllLabReservations().then(res => {
+          // Filter the data to include only items with status = 0
+          const filteredData = res.data.data.filter(item => item.status === 1)
 
-        // Check if the login response contains a refresh token
-        if (loginData.token) {
-          console.log('Login Successful. Refresh Token:', loginData.token)
-
-          // Create the SMS body for decline
-          const declineMessage = `Your reservation request for ${params.row.venue} has been declined.\nDate: ${params.row.date}\nTime: ${params.row.start_time} - ${params.row.end_time}`
-
-          function generateRandomString(length) {
-            const characters = '0123456789'
-            let randomString = ''
-            for (let i = 0; i < length; i++) {
-              const randomIndex = Math.floor(Math.random() * characters.length)
-              randomString += characters.charAt(randomIndex)
-            }
-
-            return randomString
-          }
-
-          // Generate a random transaction_id
-          const transactionId = generateRandomString(8)
-
-          // Create the payload for sending SMS
-          const payload = {
-            msisdn: [{ mobile: '767912651' }],
-            sourceAddress: 'Pixelcore',
-            message: declineMessage,
-            transaction_id: transactionId
-          }
-
-          // Make a POST request to send the decline SMS using the obtained refresh token
-          fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${loginData.token}`
-            },
-            body: JSON.stringify(payload)
+          // Add an 'id' to data
+          filteredData.forEach((item, index) => {
+            item.id = index + 1
           })
-            .then(response => response.json())
-            .then(smsData => {
-              if (smsData.status) {
-                console.log('Decline SMS Sent', smsData)
-              } else {
-                console.log('Decline SMS Not Sent', smsData)
-              }
+
+          // Add 'avatar' if not available
+          filteredData.forEach(item => {
+            if (!item.avatar) {
+              item.avatar = ''
+            }
+          })
+
+          setData(filteredData)
+
+          smsService
+            .login()
+            .then(token => {
+              console.log('Login successful. Token:', token)
+
+              smsService
+                .sendSMS('767912651', declineMessage, token)
+                .then(response => {
+                  console.log('SMS sent successfully:', response)
+                })
+                .catch(error => {
+                  console.error('Error sending SMS:', error)
+                })
             })
             .catch(error => {
-              console.error('Error:', error)
+              console.error('Login failed:', error)
             })
-        } else {
-          console.log('Login failed. Refresh token not found in the response')
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error)
-      })
+
+          // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Declined', declineMessage)
+          //   .then(() => {
+          //     console.log('Email sent successfully.')
+          //   })
+          //   .catch(() => {
+          //     console.error('Email sending failed.')
+          //   })
+        })
+      } else {
+        toast.error('Something went wrong!')
+      }
+    })
   }
 
   return (
