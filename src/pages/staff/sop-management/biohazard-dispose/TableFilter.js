@@ -18,7 +18,6 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-
 // ** renders client column
 const renderClient = params => {
   const { row } = params
@@ -36,7 +35,6 @@ const renderClient = params => {
   }
 }
 
-
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
@@ -44,41 +42,44 @@ const escapeRegExp = value => {
 const rows = [
   {
     id: '1',
-    name: 'PDF1',
+    Title: 'PDF1',
+    Uploader: 'ishum',
     avatar: 'avatar-1.png',
     date: '02/01/2022',
-    description: 'Microbiological ',
-
+    description: 'Microbiological'
   },
   {
     id: '2',
-    name: 'PDF2',
+    Title: 'PDF1',
+    Uploader: 'ishum',
     avatar: 'avatar-1.png',
     date: '04/11/2022',
-    description: 'Pathological waste',
+    description: 'Pathological waste'
   },
   {
     id: '3',
-    name: 'PDF3',
+    Title: 'PDF1',
+    Uploader: 'ishum',
     avatar: 'avatar-1.png',
     date: '22/01/2023',
-    description: 'Human body fluids',
+    description: 'Human body fluids'
   },
   {
     id: '34',
-    name: 'PDF4',
+    Title: 'PDF1',
+    Uploader: 'ishum',
     avatar: 'avatar-1.png',
     date: '22/12/2023',
-    description: 'Sharps waste',
-  },
+    description: 'Sharps waste'
+  }
 ]
 
 const columns = [
   {
     flex: 0.275,
     minWidth: 290,
-    field: 'name',
-    headerName: 'Name',
+    field: 'Title',
+    headerName: 'Title',
     renderCell: params => {
       const { row } = params
 
@@ -87,12 +88,25 @@ const columns = [
           {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params.row.name}
+              {params.row.Title}
             </Typography>
           </Box>
         </Box>
       )
     }
+  },
+  {
+    flex: 0.2,
+    type: 'Uploader',
+    minWidth: 120,
+    headerName: 'Uploader',
+    field: 'Uploader',
+    valueGetter: params => new Date(params.value),
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.Uploader}
+      </Typography>
+    )
   },
   {
     flex: 0.2,
@@ -137,12 +151,10 @@ const columns = [
           <IconButton color='primary'>
             <Icon icon='material-symbols:download' />
           </IconButton>
-
         </Box>
       )
     }
   }
-
 ]
 
 const TableColumns = () => {
@@ -170,33 +182,31 @@ const TableColumns = () => {
   }
 
   return (
-
-      <DataGrid
-        autoHeight
-        columns={columns}
-        pageSizeOptions={[7, 10, 25, 50]}
-        paginationModel={paginationModel}
-        slots={{ toolbar: QuickSearchToolbar }}
-        onPaginationModelChange={setPaginationModel}
-        rows={filteredData.length ? filteredData : data}
-        sx={{
-          '& .MuiSvgIcon-root': {
-            fontSize: '1.125rem'
-          }
-        }}
-        slotProps={{
-          baseButton: {
-            size: 'medium',
-            variant: 'outlined'
-          },
-          toolbar: {
-            value: searchText,
-            clearSearch: () => handleSearch(''),
-            onChange: event => handleSearch(event.target.value)
-          }
-        }}
-      />
-
+    <DataGrid
+      autoHeight
+      columns={columns}
+      pageSizeOptions={[7, 10, 25, 50]}
+      paginationModel={paginationModel}
+      slots={{ toolbar: QuickSearchToolbar }}
+      onPaginationModelChange={setPaginationModel}
+      rows={filteredData.length ? filteredData : data}
+      sx={{
+        '& .MuiSvgIcon-root': {
+          fontSize: '1.125rem'
+        }
+      }}
+      slotProps={{
+        baseButton: {
+          size: 'medium',
+          variant: 'outlined'
+        },
+        toolbar: {
+          value: searchText,
+          clearSearch: () => handleSearch(''),
+          onChange: event => handleSearch(event.target.value)
+        }
+      }}
+    />
   )
 }
 

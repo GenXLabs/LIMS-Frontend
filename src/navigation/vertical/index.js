@@ -80,7 +80,7 @@ const navigation = () => {
     },
     {
       title: 'Instruments',
-      icon: 'arcticons:pslab',
+      icon: 'ion:flask-outline',
       path: '/staff/sop-management/instruments'
     },
     {
