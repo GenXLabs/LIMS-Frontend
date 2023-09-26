@@ -1,5 +1,6 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,6 +20,9 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
+import axios from 'axios'
+import { set } from 'nprogress'
+
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
 
@@ -28,12 +32,17 @@ const renderClient = params => {
   const stateNum = Math.floor(Math.random() * 6)
   const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
   const color = states[stateNum]
-  if (row.avatar.length) {
+
+  // Check if row.avatar exists and has a length property
+  if (row.avatar && row.avatar.length) {
     return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
   } else {
+    // If no avatar is available, display initials or a default avatar
+    const initials = getInitials(row.fullName ? row.fullName : 'John Doe')
+
     return (
       <CustomAvatar skin='light' color={color} sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}>
-        {getInitials(row.full_name ? row.full_name : 'John Doe')}
+        {initials}
       </CustomAvatar>
     )
   }
@@ -49,142 +58,189 @@ const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const rows = [
-  {
-    id: '1',
-    first_name: 'Dilshan',
-    last_name: 'Fronando',
-    email: 'dilshan@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'staff'
-  },
-  {
-    id: '2',
-    first_name: 'Avishka',
-    last_name: 'Nuwan',
-    email: 'avishka@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'admin'
-  },
-  {
-    id: '3',
-    first_name: 'Isum',
-    last_name: 'Sandupa',
-    email: 'isum@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'staff'
-  },
-  {
-    id: '4',
-    first_name: 'Kaveeja',
-    last_name: 'Perera',
-    email: 'kaveeja@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'student'
-  },
-  {
-    id: '5',
-    first_name: 'Sehana',
-    last_name: 'Senanayaka',
-    email: 'sehana@gmail.com',
-    avatar: 'avatar-1.png',
-    type: 'student'
-  }
-]
-
-const columns = [
-  {
-    flex: 0.1,
-    minWidth: 290,
-    field: 'id',
-    headerName: 'ID',
-    renderCell: params => {
-      const { row } = params
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.id}
-            </Typography>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 120,
-    headerName: 'Name',
-    field: 'name',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.first_name} {params.row.last_name}
-      </Typography>
-    )
-  },
-
-  {
-    flex: 0.1,
-    minWidth: 140,
-    field: 'type',
-    headerName: 'Type',
-    renderCell: params => {
-      const status = statusObj[params.row.type]
-
-      return (
-        <CustomChip
-          rounded
-          size='small'
-          skin='light'
-          color={status.color}
-          label={params.row.type}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
-    }
-  },
-
-  {
-    flex: 0.125,
-    field: 'email',
-    type: 'email',
-    minWidth: 80,
-    headerName: 'Email',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.email}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.1,
-    minWidth: 120,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: params => {
-      return (
-        <Box className='d-flex align-items-center'>
-          <IconButton color='primary'>
-            <Icon icon='fluent:edit-16-regular' />
-          </IconButton>
-          <IconButton color='primary'>
-            <Icon icon='lucide:trash-2' />
-          </IconButton>
-        </Box>
-      )
-    }
-  }
-]
+// const rows = [
+//   {
+//     id: '1',
+//     user_id:'1',
+//     first_name: 'Dilshan',
+//     last_name: 'Fronando',
+//     email: 'dilshan@gmail.com',
+//     avatar: 'avatar-1.png',
+//     type: 'staff'
+//   },
+//   {
+//     id: '2',
+//     user_id:'2',
+//     first_name: 'Avishka',
+//     last_name: 'Nuwan',
+//     email: 'avishka@gmail.com',
+//     avatar: 'avatar-1.png',
+//     type: 'admin'
+//   },
+//   {
+//     id: '3',
+//     user_id:'3',
+//     first_name: 'Isum',
+//     last_name: 'Sandupa',
+//     email: 'isum@gmail.com',
+//     avatar: 'avatar-1.png',
+//     type: 'staff'
+//   },
+//   {
+//     id: '4',
+//     user_id:'4',
+//     first_name: 'Kaveeja',
+//     last_name: 'Perera',
+//     email: 'kaveeja@gmail.com',
+//     avatar: 'avatar-1.png',
+//     type: 'student'
+//   },
+//   {
+//     id: '5',
+//     user_id:'5',
+//     first_name: 'Sehana',
+//     last_name: 'Senanayaka',
+//     email: 'sehana@gmail.com',
+//     avatar: 'avatar-1.png',
+//     type: 'student'
+//   }
+// ]
 
 const TableColumns = () => {
+  const router = useRouter()
+  
+
   // ** States
-  const [data] = useState(rows)
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://localhost:8082/api/v1/lims/user')
+        const data = response.data
+        setData(data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    // This effect will run whenever `data` changes
+    console.log('Data has changed:', data);
+  }, [data]);
+
+  const columns = [
+    {
+      flex: 0.1,
+      minWidth: 290,
+      field: 'id',
+      headerName: 'ID',
+      renderCell: params => {
+        const { row } = params
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(params)}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+                {row.id}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 120,
+      headerName: 'Name',
+      field: 'name',
+      valueGetter: params => new Date(params.value),
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.fullName}
+        </Typography>
+      )
+    },
+
+    // {
+    //   flex: 0.1,
+    //   minWidth: 140,
+    //   field: 'type',
+    //   headerName: 'Type',
+    //   renderCell: params => {
+    //     const status = statusObj[params.row.type]
+
+    //     return (
+    //       <CustomChip
+    //         rounded
+    //         size='small'
+    //         skin='light'
+    //         color={status.color}
+    //         label={params.row.type}
+    //         sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+    //       />
+    //     )
+    //   }
+    // },
+
+    {
+      flex: 0.125,
+      field: 'email',
+      type: 'email',
+      minWidth: 80,
+      headerName: 'Email',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.email}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 120,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: params => {
+        const handleEditUser = () => {
+          console.log('edit user')
+          router.push({
+            pathname: '/admin/edit-user-profile',
+            query: { userId: params.row.id }
+          })
+        }
+
+        const handleDelete = () => {
+          console.log('delete user')
+          axios.delete(`http://localhost:8082/api/v1/lims/user/delete/${params.row.id}`)
+          .then(res => {
+            console.log(res)
+            setData(data.filter(item => item.id !== params.row.id))
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        }
+
+        return (
+          <Box className='d-flex align-items-center'>
+            <IconButton color='primary' onClick={handleEditUser}>
+              <Icon icon='fluent:edit-16-regular' />
+            </IconButton>
+            <IconButton color='error' onClick={handleDelete}>
+              <Icon icon='lucide:trash-2' />
+            </IconButton>
+          </Box>
+        )
+      }
+    }
+  ]
 
   const handleSearch = searchValue => {
     setSearchText(searchValue)
@@ -192,10 +248,11 @@ const TableColumns = () => {
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
-      })
-    })
+        // Check if the field value is null or undefined before calling toString
+        return row[field] != null && searchRegex.test(row[field].toString());
+      });
+    });
+    
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {

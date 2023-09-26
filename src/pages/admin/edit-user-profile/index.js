@@ -1,4 +1,6 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+import { useEffect,useState } from 'react'
 
 //import styled components
 import { styled } from '@mui/material/styles'
@@ -22,7 +24,17 @@ import FormValidationBasic from './FormValidationBasic'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 
+
 const UserProfile = () => {
+  const router = useRouter()
+  const [userId,setUserId] = useState('')
+
+
+  useEffect(() => {
+  setUserId(router.query.userId)
+  console.log("userId",router.query.userId)
+  },[router.query.userId])
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
