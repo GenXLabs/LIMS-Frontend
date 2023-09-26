@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, Grid } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '@mui/material/Button'
 import TableFilter from './TableFilter'
 import Dialog from '@mui/material/Dialog'
@@ -18,7 +18,30 @@ import CustomTextField from 'src/@core/components/mui/text-field'
 const ViewInstrument = () => {
   const [open, setOpen] = useState(false)
   const handleClickOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+
+  const handleClose = () => {
+    setOpen(false)
+    setTitle('')
+    setDescription('')
+  }
+
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  console.log(title)
+  console.log(description)
+
+
+
+  const handleAddInstrument = () => {
+    const addInstrumentPayload = [
+      {
+        title: title,
+        description: description
+      }
+    ]
+    console.log(addInstrumentPayload)
+    handleClose()
+  }
 
   return (
     <>
@@ -44,19 +67,30 @@ const ViewInstrument = () => {
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
-              <CustomTextField label='Title' fullWidth />
+              <CustomTextField label='Title' fullWidth value={title} onChange={e => setTitle(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField label='Description' fullWidth multiline rows={3} />
+              <CustomTextField
+                label='Description'
+                fullWidth
+                multiline
+                rows={3}
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
             </Grid>
           </Grid>
-          <Grid item xs={12} sx={{ p: 4 ,mt:5, border: '1px solid #7367F0', borderRadius: '10px' }}>
+          <Grid item xs={12} sx={{ p: 4, mt: 5, border: '1px solid #7367F0', borderRadius: '10px' }}>
             <FileUploaderRestrictions />
           </Grid>
         </DialogContent>
-         <DialogActions className='dialog-actions-dense'sx={{m:4}}>
-          <Button onClick={handleClose}variant='contained'>Add</Button>
-          <Button onClick={handleClose} variant='contained'color='error'>Canceled</Button >
+        <DialogActions className='dialog-actions-dense' sx={{ m: 4 }}>
+          <Button onClick={handleAddInstrument} variant='contained'>
+            Add
+          </Button>
+          <Button onClick={handleClose} variant='contained' color='error'>
+            Canceled
+          </Button>
         </DialogActions>
       </Dialog>
     </>
