@@ -25,7 +25,7 @@ import Icon from 'src/@core/components/icon'
 import { useRouter } from 'next/router'
 
 const CustomInput = forwardRef((props, ref) => {
-  return <CustomTextField fullWidth {...props} inputRef={ref} label='Birth Date' autoComplete='off' />
+  return <CustomTextField fullWidth {...props} inputRef={ref} label='Date' autoComplete='off' />
 })
 
 const FormLayoutsSeparator = () => {
