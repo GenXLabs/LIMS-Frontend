@@ -51,22 +51,15 @@ const navigation = () => {
       icon: 'tabler:file-text'
     },
     {
-      path: '/student/document-retrieval',
-      title: 'Document Retrieval',
+      path: '/student/practical-manual',
+      title: 'Practical Manuals',
       icon: 'tabler:file-text'
     },
     {
       path: '/staff/practical-manual/manage-document',
-      title: 'Manage Document',
+      title: 'Admin Practical Manuals',
       icon: 'tabler:file-text'
     },
-
-    {
-      path: '/student/document-file',
-      title: 'Document File',
-      icon: 'tabler:file-text'
-    },
-
     {
       sectionTitle: 'Inventory Management'
     },
