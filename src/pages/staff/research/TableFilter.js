@@ -7,20 +7,21 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid } from '@mui/x-data-grid'
+import Button from '@mui/material/Button'
+import { IconButton } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import Grid from '@mui/material/Grid'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import QuickSearchToolbar from './QuickSearchToolbar'
 
-
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-
 // ** Data Import
 import { rows } from 'src/@fake-db/table/static-data'
-
 
 // ** renders client column
 const renderClient = params => {
@@ -53,10 +54,11 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    
+    flex: 0.1,
     minWidth: 250,
     field: 'full_name',
     headerName: 'Name',
+
     renderCell: params => {
       const { row } = params
 
@@ -76,8 +78,10 @@ const columns = [
     }
   },
   {
+    flex: 0.1,
     minWidth: 140,
     headerName: 'Type of study',
+
     field: 'studyname',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
@@ -87,10 +91,11 @@ const columns = [
     )
   },
   {
-    
+    flex: 0.1,
     minWidth: 80,
     field: 'batch',
     headerName: 'Batch',
+
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.batch}
@@ -98,10 +103,11 @@ const columns = [
     )
   },
   {
-    
+    flex: 0.1,
     field: 'students',
     minWidth: 80,
     headerName: 'Students',
+
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.students}
@@ -109,31 +115,37 @@ const columns = [
     )
   },
   {
+    flex: 0.1,
     field: 'staffname',
     minWidth: 130,
     headerName: 'Staff Name',
+
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.staffname}
       </Typography>
     )
   },
-  { 
+  {
+    flex: 0.1,
     type: 'date',
     field: 'startdate',
     minWidth: 120,
     headerName: 'Start Date',
+
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.startdate}
       </Typography>
     )
   },
-  { 
+  {
+    flex: 0.1,
     type: 'date',
     field: 'enddate',
     minWidth: 120,
     headerName: 'End Date',
+
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
         {params.row.enddate}
@@ -141,8 +153,8 @@ const columns = [
     )
   },
   {
-    
-    minWidth: 130,
+    flex: 0.1,
+    minWidth: 160,
     field: 'status',
     headerName: 'Status',
     renderCell: params => {
@@ -161,14 +173,34 @@ const columns = [
     }
   },
   {
+    flex: 0.1,
     field: 'actions',
-    minWidth: 120,
+    minWidth: 180,
     headerName: 'Actions ',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.actions}
-      </Typography>
-    )
+    headerAlign: 'center',
+    renderCell: params => {
+      return (
+        <Grid container spacing={5}>
+          <Grid item container sm={12}>
+            <Grid item sm={4}>
+              <IconButton color='primary'>
+                <Icon icon='fluent:edit-16-regular' />
+              </IconButton>
+            </Grid>
+            <Grid item sm={4}>
+              <IconButton color='error'>
+                <Icon icon='lucide:trash-2' />
+              </IconButton>
+            </Grid>
+            <Grid item sm={4}>
+              <IconButton color='success'>
+                <Icon icon='material-symbols:download' />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Grid>
+      )
+    }
   }
 ]
 
