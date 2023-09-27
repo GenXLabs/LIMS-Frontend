@@ -109,9 +109,14 @@ const navigation = () => {
       sectionTitle: 'Research Management'
     },
     {
-      title: 'Research Management',
+      title: 'Student Research ',
       icon: ' ',
-      path: '/staff/sop-management/instruments'
+      path: '/student/research'
+    },
+    {
+      title: 'Staff Research',
+      icon: ' ',
+      path: '/staff/research'
     }
   ]
 }
