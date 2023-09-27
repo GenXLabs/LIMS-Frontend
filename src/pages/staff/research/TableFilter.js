@@ -105,7 +105,7 @@ const columns = [
   {
     flex: 0.1,
     field: 'students',
-    minWidth: 80,
+    minWidth: 100,
     headerName: 'Students',
 
     renderCell: params => (
