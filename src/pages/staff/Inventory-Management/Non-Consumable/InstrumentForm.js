@@ -1,24 +1,23 @@
-// InventoryForm.js
 import React, { useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
 
 const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
   const [inventoryNo, setInventoryNo] = React.useState('');
-  const [inventoryName, setInventoryName] = React.useState('');
-  const [availability, setAvailability] = React.useState('');
-  const [newlyArrivals, setNewlyArrivals] = React.useState('');
-  const [broken, setBroken] = React.useState('');
-  const [returns, setReturns] = React.useState('');
+  const [instrumentName, setInstrumentName] = React.useState('');
+  const [serialNo, setSerialNo] = React.useState('');
+  const [date, setDate] = React.useState('');
+  const [time, setTime] = React.useState('');
+  const [doneBy, setDoneBy] = React.useState('');
 
   // Use useEffect to update the form fields when editItem changes
   useEffect(() => {
     if (editItem) {
       setInventoryNo(editItem.inventoryNo);
-      setInventoryName(editItem.inventoryName);
-      setAvailability(editItem.availability);
-      setNewlyArrivals(editItem.newlyArrivals);
-      setBroken(editItem.broken);
-      setReturns(editItem.returns);
+      setInstrumentName(editItem.instrumentName);
+      setSerialNo(editItem.serialNo);
+      setDate(editItem.date);
+      setTime(editItem.time);
+      setDoneBy(editItem.doneBy);
     }
   }, [editItem]);
 
@@ -26,11 +25,11 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
     // Create an object with the form data
     const formData = {
       inventoryNo,
-      inventoryName,
-      availability,
-      newlyArrivals,
-      broken,
-      returns,
+      instrumentName,
+      serialNo,
+      date,
+      time,
+      doneBy,
     };
 
     // Pass the data to the parent component
@@ -38,11 +37,11 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
 
     // Clear the form fields
     setInventoryNo('');
-    setInventoryName('');
-    setAvailability('');
-    setNewlyArrivals('');
-    setBroken('');
-    setReturns('');
+    setInstrumentName('');
+    setSerialNo('');
+    setDate('');
+    setTime('');
+    setDoneBy('');
 
     // Close the dialog
     onClose();
@@ -51,7 +50,7 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle style={{ fontWeight: 'bold', fontSize: '20px' }}>
-        {editItem ? 'Edit Glassware Details' : 'Add New Glassware Details'}
+        {editItem ? 'Edit Instrument Details' : 'Add New Instrument Details'}
       </DialogTitle>
       <DialogContent>
         <TextField
@@ -62,38 +61,38 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
           margin="normal"
         />
         <TextField
-          label="Inventory Name"
+          label="Instrument Name"
           fullWidth
-          value={inventoryName}
-          onChange={(e) => setInventoryName(e.target.value)}
+          value={instrumentName}
+          onChange={(e) => setInstrumentName(e.target.value)}
           margin="normal"
         />
         <TextField
-          label="Availability"
+          label="Serial No"
           fullWidth
-          value={availability}
-          onChange={(e) => setAvailability(e.target.value)}
+          value={serialNo}
+          onChange={(e) => setSerialNo(e.target.value)}
           margin="normal"
         />
         <TextField
-          label="Newly Arrivals"
+          label="Date"
           fullWidth
-          value={newlyArrivals}
-          onChange={(e) => setNewlyArrivals(e.target.value)}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           margin="normal"
         />
         <TextField
-          label="Broken"
+          label="Time"
           fullWidth
-          value={broken}
-          onChange={(e) => setBroken(e.target.value)}
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
           margin="normal"
         />
         <TextField
-          label="Returns"
+          label="Done By"
           fullWidth
-          value={returns}
-          onChange={(e) => setReturns(e.target.value)}
+          value={doneBy}
+          onChange={(e) => setDoneBy(e.target.value)}
           margin="normal"
         />
         <Button variant="contained" color="primary" onClick={handleSubmit}>

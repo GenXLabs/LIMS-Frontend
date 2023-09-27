@@ -7,6 +7,9 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
 import Typography from '@mui/material/Typography'
+import Anatomy from './Anatomy'
+import Instruments from './Instrument'
+
 
 const TabsSimple = () => {
   // ** State
@@ -24,12 +27,12 @@ const TabsSimple = () => {
         
       </TabList>
       <TabPanel value='1'>
-        
+          <Anatomy/>
       </TabPanel>
       <TabPanel value='2'>
-        
+        <Instruments/>
       </TabPanel>
-     
+       
     </TabContext>
   )
 }
