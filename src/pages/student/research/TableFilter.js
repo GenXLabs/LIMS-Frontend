@@ -50,7 +50,6 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    flex: 0.12,
     minWidth: 250,
     field: 'full_name',
     headerName: 'Name',
@@ -73,80 +72,71 @@ const columns = [
     }
   },
   {
-    flex: 0.12,
-    type: 'date',
-    minWidth: 100,
+    minWidth: 140,
     headerName: 'Type of study',
-    field: 'start_date',
+    field: 'studyname',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_date}
+        {params.row.studyname}
       </Typography>
     )
   },
   {
-    flex: 0.12,
-    minWidth: 100,
-    field: 'Salary',
+    minWidth: 80,
+    field: 'batch',
     headerName: 'Batch',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.salary}
+        {params.row.batch}
       </Typography>
     )
   },
   {
-    flex: 0.12,
-    field: 'age',
-    minWidth: 100,
+    field: 'students',
+    minWidth: 80,
     headerName: 'Students',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.students}
       </Typography>
     )
   },
   {
-    flex: 0.12,
-
-    field: 'age',
-    minWidth: 100,
+    field: 'staffname',
+    minWidth: 130,
     headerName: 'Staff Name',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.staffname}
       </Typography>
     )
   },
   {
-    flex: 0.12,
-
-    field: 'age',
-    minWidth: 100,
+    type: 'date',
+    field: 'startdate',
+    minWidth: 120,
     headerName: 'Start Date',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.startdate}
       </Typography>
     )
   },
-  {
-    flex: 0.12,
-
-    field: 'age',
-    minWidth: 100,
+  { 
+    type: 'date',
+    field: 'enddate',
+    minWidth: 120,
     headerName: 'End Date',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.enddate}
       </Typography>
     )
   },
 
   {
-    flex: 0.12,
-    minWidth: 100,
+    minWidth: 130,
     field: 'status',
     headerName: 'Status',
     renderCell: params => {

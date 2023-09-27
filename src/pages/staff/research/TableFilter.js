@@ -53,8 +53,8 @@ const escapeRegExp = value => {
 
 const columns = [
   {
-    flex: 0.275,
-    minWidth: 290,
+    
+    minWidth: 250,
     field: 'full_name',
     headerName: 'Name',
     renderCell: params => {
@@ -76,43 +76,73 @@ const columns = [
     }
   },
   {
-    flex: 0.2,
-    type: 'date',
-    minWidth: 120,
-    headerName: 'Date',
-    field: 'start_date',
+    minWidth: 140,
+    headerName: 'Type of study',
+    field: 'studyname',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_date}
+        {params.row.studyname}
       </Typography>
     )
   },
   {
-    flex: 0.2,
-    minWidth: 110,
-    field: 'salary',
-    headerName: 'Salary',
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.salary}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.125,
-    field: 'age',
+    
     minWidth: 80,
-    headerName: 'Age',
+    field: 'batch',
+    headerName: 'Batch',
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+        {params.row.batch}
       </Typography>
     )
   },
   {
-    flex: 0.2,
-    minWidth: 140,
+    
+    field: 'students',
+    minWidth: 80,
+    headerName: 'Students',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.students}
+      </Typography>
+    )
+  },
+  {
+    field: 'staffname',
+    minWidth: 130,
+    headerName: 'Staff Name',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.staffname}
+      </Typography>
+    )
+  },
+  { 
+    type: 'date',
+    field: 'startdate',
+    minWidth: 120,
+    headerName: 'Start Date',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.startdate}
+      </Typography>
+    )
+  },
+  { 
+    type: 'date',
+    field: 'enddate',
+    minWidth: 120,
+    headerName: 'End Date',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.enddate}
+      </Typography>
+    )
+  },
+  {
+    
+    minWidth: 130,
     field: 'status',
     headerName: 'Status',
     renderCell: params => {
@@ -129,6 +159,16 @@ const columns = [
         />
       )
     }
+  },
+  {
+    field: 'actions',
+    minWidth: 120,
+    headerName: 'Actions ',
+    renderCell: params => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.actions}
+      </Typography>
+    )
   }
 ]
 
