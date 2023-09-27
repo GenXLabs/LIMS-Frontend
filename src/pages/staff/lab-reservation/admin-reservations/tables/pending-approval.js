@@ -246,7 +246,13 @@ const TableColumns = () => {
     console.log('approve')
 
     // Create the SMS body for approval
-    const approvalMessage = `Your reservation request for ${viewMoreData.venue} has been approved.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
+    const approvalMessageEmail = `
+  <p>Your reservation request for <strong>${viewMoreData.venue}</strong> has been approved.</p>
+  <p>Date: <strong>${viewMoreData.date}</strong></p>
+  <p>Time: <strong>${viewMoreData.start_time} - ${viewMoreData.end_time}</strong></p>
+`
+
+    const approvalMessageSMS = `Your reservation request for ${viewMoreData.venue} has been approved.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
     handleViewClose()
 
@@ -256,22 +262,19 @@ const TableColumns = () => {
         toast.success('Reservation Approved!')
 
         apiDefinitions.getAllLabReservations().then(res => {
-          // Filter the data to include only items with status = 0
-          const filteredData = res.data.data.filter(item => item.status === 1)
-
-          // Add an 'id' to data
-          filteredData.forEach((item, index) => {
+          //add id to data
+          res.data.data.forEach((item, index) => {
             item.id = index + 1
           })
 
-          // Add 'avatar' if not available
-          filteredData.forEach(item => {
+          //add avatar if not available
+          res.data.data.forEach(item => {
             if (!item.avatar) {
               item.avatar = ''
             }
           })
-
-          setData(filteredData)
+          setData(res.data.data)
+          console.log(res.data.data)
 
           smsService
             .login()
@@ -279,7 +282,7 @@ const TableColumns = () => {
               console.log('Login successful. Token:', token)
 
               smsService
-                .sendSMS('767912651', approvalMessage, token)
+                .sendSMS(smsNumber, approvalMessageSMS, token)
                 .then(response => {
                   console.log('SMS sent successfully:', response)
                 })
@@ -289,6 +292,21 @@ const TableColumns = () => {
             })
             .catch(error => {
               console.error('Login failed:', error)
+            })
+
+          const emailPayload = {
+            recipient: emailID,
+            subject: 'Lab Reservation Approved - KIU LIMS',
+            content: approvalMessageEmail
+          }
+
+          apiDefinitions
+            .sendEmail(emailPayload)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
             })
 
           // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Approved', approvalMessage)
@@ -309,7 +327,13 @@ const TableColumns = () => {
     console.log('decline')
 
     // Create the SMS body for approval
-    const declineMessage = `Your reservation request for ${viewMoreData.venue} has been declined.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
+    const declineMessageEmail = `
+  <p>Your reservation request for <strong>${viewMoreData.venue}</strong> has been declined.</p>
+  <p>Date: <strong>${viewMoreData.date}</strong></p>
+  <p>Time: <strong>${viewMoreData.start_time} - ${viewMoreData.end_time}</strong></p>
+`
+
+    const declineMessageSMS = `Your reservation request for ${viewMoreData.venue} has been declined.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
     handleViewClose()
 
@@ -319,22 +343,19 @@ const TableColumns = () => {
         toast.success('Reservation Declined!')
 
         apiDefinitions.getAllLabReservations().then(res => {
-          // Filter the data to include only items with status = 0
-          const filteredData = res.data.data.filter(item => item.status === 1)
-
-          // Add an 'id' to data
-          filteredData.forEach((item, index) => {
+          //add id to data
+          res.data.data.forEach((item, index) => {
             item.id = index + 1
           })
 
-          // Add 'avatar' if not available
-          filteredData.forEach(item => {
+          //add avatar if not available
+          res.data.data.forEach(item => {
             if (!item.avatar) {
               item.avatar = ''
             }
           })
-
-          setData(filteredData)
+          setData(res.data.data)
+          console.log(res.data.data)
 
           smsService
             .login()
@@ -342,7 +363,7 @@ const TableColumns = () => {
               console.log('Login successful. Token:', token)
 
               smsService
-                .sendSMS('767912651', declineMessage, token)
+                .sendSMS(smsNumber, declineMessageSMS, token)
                 .then(response => {
                   console.log('SMS sent successfully:', response)
                 })
@@ -352,6 +373,21 @@ const TableColumns = () => {
             })
             .catch(error => {
               console.error('Login failed:', error)
+            })
+
+          const emailPayload = {
+            recipient: emailID,
+            subject: 'Lab Reservation Declined - KIU LIMS',
+            content: declineMessageEmail
+          }
+
+          apiDefinitions
+            .sendEmail(emailPayload)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
             })
 
           // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Declined', declineMessage)

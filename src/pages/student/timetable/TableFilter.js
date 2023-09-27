@@ -7,8 +7,6 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid } from '@mui/x-data-grid'
-import { IconButton } from '@mui/material'
-import Icon from 'src/@core/components/icon'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -17,6 +15,9 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+
+// ** Data Import
+import { rows } from 'src/@fake-db/table/static-data'
 
 // ** renders client column
 const renderClient = params => {
@@ -35,61 +36,31 @@ const renderClient = params => {
   }
 }
 
+const statusObj = {
+  1: { title: 'current', color: 'primary' },
+  2: { title: 'professional', color: 'success' },
+  3: { title: 'rejected', color: 'error' },
+  4: { title: 'resigned', color: 'warning' },
+  5: { title: 'applied', color: 'info' }
+}
+
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
-
-const rows = [
-  {
-    id: '1',
-    Title: 'PDF1',
-    Uploader: 'ishum',
-    avatar: 'avatar-1.png',
-    date: '02/01/2022',
-    description: 'Microbiological'
-  },
-  {
-    id: '2',
-    Title: 'PDF1',
-    Uploader: 'ishum',
-    avatar: 'avatar-1.png',
-    date: '04/11/2022',
-    description: 'Pathological waste'
-  },
-  {
-    id: '3',
-    Title: 'PDF1',
-    Uploader: 'ishum',
-    avatar: 'avatar-1.png',
-    date: '22/01/2023',
-    description: 'Human body fluids'
-  },
-  {
-    id: '34',
-    Title: 'PDF1',
-    Uploader: 'ishum',
-    avatar: 'avatar-1.png',
-    date: '22/12/2023',
-    description: 'Sharps waste'
-  }
-]
 
 const columns = [
   {
     flex: 0.275,
     minWidth: 290,
-    field: 'Title',
-    headerName: 'Title',
+    field: 'title',
+    headerName: 'Event Title',
     renderCell: params => {
       const { row } = params
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params.row.Title}
-            </Typography>
+            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}></Typography>
           </Box>
         </Box>
       )
@@ -97,63 +68,49 @@ const columns = [
   },
   {
     flex: 0.2,
-    type: 'Uploader',
+    type: 'string',
     minWidth: 120,
-    headerName: 'Uploader',
-    field: 'Uploader',
+    headerName: 'Start Time',
+    field: 'start_time',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.Uploader}
+        {params.row.start_time}
       </Typography>
     )
   },
   {
     flex: 0.2,
-    type: 'description',
+    type: 'string',
     minWidth: 120,
-    headerName: 'description',
-    field: 'description',
+    headerName: 'End tTime',
+    field: 'end_time',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.description}
+        {params.row.end_time}
       </Typography>
     )
   },
   {
     flex: 0.2,
-    type: 'date',
+    type: 'string',
     minWidth: 120,
-    headerName: 'Date',
-    field: 'start_date',
+    headerName: 'Venue',
+    field: 'venue',
     valueGetter: params => new Date(params.value),
     renderCell: params => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.date}
+        {params.row.venue}
       </Typography>
     )
   },
   {
-    flex: 0.1,
-    minWidth: 120,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: params => {
-      return (
-        <Box className='d-flex align-items-center'>
-          <IconButton color='primary'>
-            <Icon icon='fluent:edit-16-regular' />
-          </IconButton>
-          <IconButton color='primary'>
-            <Icon icon='lucide:trash-2' />
-          </IconButton>
-          <IconButton color='primary'>
-            <Icon icon='material-symbols:download' />
-          </IconButton>
-        </Box>
-      )
-    }
+    flex: 0.2,
+    minWidth: 110,
+    field: 'Instructor email',
+    headerName: 'email',
+    renderCell: params => <Typography variant='body2' sx={{ color: 'text.primary' }}></Typography>
   }
 ]
 
@@ -182,31 +139,34 @@ const TableColumns = () => {
   }
 
   return (
-    <DataGrid
-      autoHeight
-      columns={columns}
-      pageSizeOptions={[7, 10, 25, 50]}
-      paginationModel={paginationModel}
-      slots={{ toolbar: QuickSearchToolbar }}
-      onPaginationModelChange={setPaginationModel}
-      rows={filteredData.length ? filteredData : data}
-      sx={{
-        '& .MuiSvgIcon-root': {
-          fontSize: '1.125rem'
-        }
-      }}
-      slotProps={{
-        baseButton: {
-          size: 'medium',
-          variant: 'outlined'
-        },
-        toolbar: {
-          value: searchText,
-          clearSearch: () => handleSearch(''),
-          onChange: event => handleSearch(event.target.value)
-        }
-      }}
-    />
+    <Card>
+      <CardHeader title='Scheduled Reservations' />
+      <DataGrid
+        autoHeight
+        columns={columns}
+        pageSizeOptions={[7, 10, 25, 50]}
+        paginationModel={paginationModel}
+        slots={{ toolbar: QuickSearchToolbar }}
+        onPaginationModelChange={setPaginationModel}
+        rows={filteredData.length ? filteredData : data}
+        sx={{
+          '& .MuiSvgIcon-root': {
+            fontSize: '1.125rem'
+          }
+        }}
+        slotProps={{
+          baseButton: {
+            size: 'medium',
+            variant: 'outlined'
+          },
+          toolbar: {
+            value: searchText,
+            clearSearch: () => handleSearch(''),
+            onChange: event => handleSearch(event.target.value)
+          }
+        }}
+      />
+    </Card>
   )
 }
 

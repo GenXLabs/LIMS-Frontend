@@ -8,7 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import Icon from 'src/@core/components/icon';
 import QuickSearchToolbar from './QuickSearchToolbar';
-
+import Swal from 'sweetalert2'
 import Alert from '@mui/material/Alert'; // Import the Alert component
 
 const escapeRegExp = (value) => {
@@ -124,15 +124,21 @@ const DownloadButton = () => {
   const [showDownloadAlert, setShowDownloadAlert] = useState(false);
 
   const toggleDownloadAlert = () => {
-    setShowDownloadAlert(true);
+    // setShowDownloadAlert(true);
 
-    // Hide the alert after a delay (e.g., 3 seconds)
-    setTimeout(() => {
-      setShowDownloadAlert(false);
-    }, 3000); // 3000 milliseconds = 3 seconds
+    // // Hide the alert after a delay (e.g., 3 seconds)
+    // setTimeout(() => {
+    //   setShowDownloadAlert(false);
+    // }, 3000); // 3000 milliseconds = 3 seconds
 
-    // Add your download logic here
-    // You can trigger the actual download process here
+    // // Add your download logic here
+    // // You can trigger the actual download process here
+    Swal.fire({
+      icon: 'success',
+      title: 'Successfully Downloaded',
+      text: 'Successfully Downloaded — check it out!',
+      confirmButtonText: 'Ok'
+    })
   };
 
   return (
