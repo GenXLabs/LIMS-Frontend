@@ -25,7 +25,6 @@ const TabsSimple = () => {
       <TabList onChange={handleChange} aria-label='simple tabs example'>
         <Tab value='1' label='Glassware' />
         <Tab value='2' label='Reagents' />
-        
       </TabList>
       <TabPanel value='1'>
         <Glassware />
@@ -33,7 +32,6 @@ const TabsSimple = () => {
       <TabPanel value='2'>
         <Reagents />
       </TabPanel>
-     
     </TabContext>
   )
 }

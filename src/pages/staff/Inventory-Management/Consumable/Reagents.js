@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   Card,
   CardContent,
@@ -13,105 +13,128 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  Button,
-} from '@mui/material';
+  Button
+} from '@mui/material'
 
 // Import the InventoryForm component
-import InventoryForm from './GlasswareForm';
+import InventoryForm from './ReagentsForm'
 
 const tableStyle = {
   minWidth: 650,
   border: '1px solid rgba(0, 0, 0, 0.12)',
-  borderRadius: '10px',
-};
+  borderRadius: '10px'
+}
 
 const tableHeaderCellStyle = {
   fontWeight: 'bold',
-  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
-};
+  borderBottom: '2px solid rgba(0, 0, 0, 0.12)'
+}
 
 const titleStyle = {
   marginBottom: '15px',
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center',
-};
+  alignItems: 'center'
+}
 
 const InventoryTable = () => {
   // Sample data for the table
   const [data, setData] = useState([
-    { inventoryNo: '001', inventoryName: 'Item A', availability: 20, newlyArrivals: 5, broken: 2, returns: 3 },
-    { inventoryNo: '002', inventoryName: 'Item B', availability: 15, newlyArrivals: 3, broken: 1, returns: 2 },
-    { inventoryNo: '003', inventoryName: 'Item C', availability: 25, newlyArrivals: 7, broken: 0, returns: 4 },
-  ]);
+    {
+      chemicalName: 'Chemical A',
+      type: 'Type A',
+      msdsLocation: 'Location A',
+      hazardClass: 'Class A',
+      maxQuantity: 100,
+      balance: 50
+    },
+    {
+      chemicalName: 'Chemical B',
+      type: 'Type B',
+      msdsLocation: 'Location B',
+      hazardClass: 'Class B',
+      maxQuantity: 150,
+      balance: 75
+    },
+    {
+      chemicalName: 'Chemical C',
+      type: 'Type C',
+      msdsLocation: 'Location C',
+      hazardClass: 'Class C',
+      maxQuantity: 200,
+      balance: 100
+    }
+  ])
 
   // State for search
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('')
 
   // State for the form dialog
-  const [openForm, setOpenForm] = useState(false);
+  const [openForm, setOpenForm] = useState(false)
 
   // State for editing item
-  const [editItem, setEditItem] = useState(null);
+  const [editItem, setEditItem] = useState(null)
 
   // Function to filter data based on search text
   const filteredData = data.filter(
-    (row) =>
-      row.inventoryNo.includes(searchText) ||
-      row.inventoryName.toLowerCase().includes(searchText.toLowerCase())
-  );
+    row =>
+      row.chemicalName.includes(searchText) ||
+      row.type.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.msdsLocation.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.hazardClass.toLowerCase().includes(searchText.toLowerCase())
+  )
 
-  // Function to add new inventory details
-  const addInventoryDetails = (formData) => {
+  // Function to add new chemical details
+  const addChemicalDetails = formData => {
     // Add the new data to the existing data
-    setData([...data, formData]);
-  };
+    setData([...data, formData])
+  }
 
-  // Function to edit inventory details
-  const editInventoryDetails = (index, updatedData) => {
-    const updatedDataArray = [...data];
-    updatedDataArray[index] = updatedData;
-    setData(updatedDataArray);
-    setEditItem(null); // Reset editItem state after editing
-  };
+  // Function to edit chemical details
+  const editChemicalDetails = (index, updatedData) => {
+    const updatedDataArray = [...data]
+    updatedDataArray[index] = updatedData
+    setData(updatedDataArray)
+    setEditItem(null) // Reset editItem state after editing
+  }
 
-  // Function to delete inventory details
-  const deleteInventoryDetails = (index) => {
-    const updatedDataArray = [...data];
-    updatedDataArray.splice(index, 1);
-    setData(updatedDataArray);
-  };
+  // Function to delete chemical details
+  const deleteChemicalDetails = index => {
+    const updatedDataArray = [...data]
+    updatedDataArray.splice(index, 1)
+    setData(updatedDataArray)
+  }
 
   return (
     <Card elevation={3}>
       <CardContent>
         <Box style={titleStyle}>
-          <Typography variant="h5">Glassware Details</Typography>
+          <Typography variant='h5'>Chemical Details</Typography>
         </Box>
         <Box style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
           <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
+            label='Search'
+            variant='outlined'
+            size='small'
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={e => setSearchText(e.target.value)}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setSearchText('')} size="small">
+                <InputAdornment position='end'>
+                  <IconButton onClick={() => setSearchText('')} size='small'>
                     Clear
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             style={{ marginLeft: '706px' }}
             onClick={() => {
-              setOpenForm(true);
-              setEditItem(null); // Reset editItem when adding a new item
+              setOpenForm(true)
+              setEditItem(null) // Reset editItem when adding a new item
             }}
           >
             + Add Details
@@ -121,40 +144,44 @@ const InventoryTable = () => {
           <Table style={tableStyle}>
             <TableHead>
               <TableRow>
-                <TableCell style={tableHeaderCellStyle}>Inventory No</TableCell>
-                <TableCell style={tableHeaderCellStyle}>Inventory Name</TableCell>
-                <TableCell style={tableHeaderCellStyle}>Availability</TableCell>
-                <TableCell style={tableHeaderCellStyle}>Newly Arrivals</TableCell>
-                <TableCell style={tableHeaderCellStyle}>Broken</TableCell>
-                <TableCell style={tableHeaderCellStyle}>Returns</TableCell>
+                <TableCell style={tableHeaderCellStyle}>Name of the chemical</TableCell>
+                <TableCell style={tableHeaderCellStyle}>Type</TableCell>
+                <TableCell style={tableHeaderCellStyle}>MSDs location</TableCell>
+                <TableCell style={tableHeaderCellStyle}>Hazard Class</TableCell>
+                <TableCell style={tableHeaderCellStyle}>Maximum Quantity</TableCell>
                 <TableCell style={tableHeaderCellStyle}>Balance</TableCell>
                 <TableCell style={tableHeaderCellStyle}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredData.map((row, index) => (
-                <TableRow key={row.inventoryNo}>
-                  <TableCell>{row.inventoryNo}</TableCell>
-                  <TableCell>{row.inventoryName}</TableCell>
-                  <TableCell>{row.availability}</TableCell>
-                  <TableCell>{row.newlyArrivals}</TableCell>
-                  <TableCell>{row.broken}</TableCell>
-                  <TableCell>{row.returns}</TableCell>
-                  <TableCell>{row.availability + row.newlyArrivals - row.broken - row.returns}</TableCell>
+                <TableRow key={row.chemicalName}>
+                  <TableCell>{row.chemicalName}</TableCell>
+                  <TableCell>{row.type}</TableCell>
+                  <TableCell>{row.msdsLocation}</TableCell>
+                  <TableCell>{row.hazardClass}</TableCell>
+                  <TableCell>{row.maxQuantity}</TableCell>
+                  <TableCell>{row.balance}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => {
-                        setOpenForm(true);
-                        setEditItem(row); // Set editItem to the selected row data
+                        setOpenForm(true)
+                        setEditItem(row) // Set editItem to the selected row data
                       }}
-                      size="small"
-                      style={{ backgroundColor: '#684AFF', color: 'white', borderRadius: '8px', marginRight: '7px', width: '55px' }}
+                      size='small'
+                      style={{
+                        backgroundColor: '#684AFF',
+                        color: 'white',
+                        borderRadius: '8px',
+                        marginRight: '7px',
+                        width: '55px'
+                      }}
                     >
                       Edit
                     </IconButton>
                     <IconButton
-                      onClick={() => deleteInventoryDetails(index)}
-                      size="small"
+                      onClick={() => deleteChemicalDetails(index)}
+                      size='small'
                       style={{ backgroundColor: '#FF4A4A', color: 'white', borderRadius: '8px' }}
                     >
                       Delete
@@ -170,13 +197,11 @@ const InventoryTable = () => {
       <InventoryForm
         open={openForm}
         onClose={() => setOpenForm(false)}
-        onSubmit={editItem ? (formData) => editInventoryDetails(data.indexOf(editItem), formData) : addInventoryDetails}
+        onSubmit={editItem ? formData => editChemicalDetails(data.indexOf(editItem), formData) : addChemicalDetails}
         editItem={editItem} // Pass the editItem data to InventoryForm
       />
     </Card>
-  );
-};
+  )
+}
 
-export default InventoryTable;
-
-
+export default InventoryTable
