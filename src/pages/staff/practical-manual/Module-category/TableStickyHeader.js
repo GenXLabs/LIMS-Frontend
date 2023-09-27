@@ -13,21 +13,41 @@ import Icon from 'src/@core/components/icon'
 import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
 import CustomTextField from 'src/@core/components/mui/text-field'
-import { styled } from '@mui/material/styles'
 
 import Swal from 'sweetalert2'
+
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 const TableStickyHeaderColumns = () => {
+  const [editModalState, setEditModalState] = useState(false)
+
+  const [editModuleCategory, setEditModuleCategory] = useState('')
+
+  const handleEditModuleCat = () => {
+    console.log('Edit Module Category', editModuleCategory)
+    setEditModuleCategory('')
+    setEditModalState(false)
+  }
+
+  const handleEditModalOpen = row => {
+    setEditModalState(true)
+    setEditModuleCategory(row.module_name)
+  }
+
+  const handleModuleCatCancel = () => {
+    setEditModalState(false)
+    setEditModuleCategory('')
+  }
+
   const rows = [
     {
       id: '1',
@@ -94,10 +114,10 @@ const TableStickyHeaderColumns = () => {
       renderCell: params => {
         return (
           <Box className='d-flex align-items-center'>
-            <IconButton color='primary'>
+            <IconButton color='primary' onClick={() => handleEditModalOpen(params.row)}>
               <Icon icon='fluent:edit-16-regular' />
             </IconButton>
-            <IconButton color='primary'>
+            <IconButton color='error'>
               <Icon icon='lucide:trash-2' />
             </IconButton>
           </Box>
@@ -111,7 +131,6 @@ const TableStickyHeaderColumns = () => {
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5 })
-  const [isFormVisible, setIsFormVisible] = useState(false)
 
   const handleSearch = searchValue => {
     setSearchText(searchValue)
@@ -128,38 +147,6 @@ const TableStickyHeaderColumns = () => {
     } else {
       setFilteredData([])
     }
-  }
-
-  const editSuccess = () => {
-    Swal.fire({
-      icon: 'success',
-      title: 'Changes Saved Successfully...!',
-      showDenyButton: true,
-      confirmButtonText: 'Continue'
-    }).then(result => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        handleCloseForm()
-      } else if (result.isDenied) {
-        handleCloseForm()
-      }
-    })
-  }
-
-  const deleteSuccess = () => {
-    Swal.fire({
-      icon: 'question',
-      title: 'Are you sure want to Delete?',
-      showDenyButton: true,
-      confirmButtonText: 'Yes'
-    }).then(result => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        Swal.fire('Deleted', '', 'success')
-      } else if (result.isDenied) {
-        Swal.fire('Not Deleted', '', 'error')
-      }
-    })
   }
 
   return (
@@ -189,6 +176,27 @@ const TableStickyHeaderColumns = () => {
           }
         }}
       />
+      <Dialog open={editModalState} onClose={handleModuleCatCancel} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Edit Module Category</DialogTitle>
+        <DialogContent sx={{ minWidth: '500px' }}>
+          <CustomTextField
+            id='moduleCategory'
+            fullWidth
+            type='text'
+            label='Module Category Name'
+            value={editModuleCategory}
+            onChange={e => setEditModuleCategory(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense'>
+          <Button onClick={handleEditModuleCat} variant='contained'>
+            Edit
+          </Button>
+          <Button onClick={handleModuleCatCancel} variant='contained' color='error'>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
