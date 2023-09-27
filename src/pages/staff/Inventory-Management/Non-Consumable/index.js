@@ -1,0 +1,37 @@
+// ** React Imports
+import { useState } from 'react'
+
+// ** MUI Imports
+import Tab from '@mui/material/Tab'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import TabContext from '@mui/lab/TabContext'
+import Typography from '@mui/material/Typography'
+
+const TabsSimple = () => {
+  // ** State
+  const [value, setValue] = useState('1')
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  return (
+    <TabContext value={value}>
+      <TabList onChange={handleChange} aria-label='simple tabs example'>
+        <Tab value='1' label='Anatomy' />
+        <Tab value='2' label='Instruments' />
+        
+      </TabList>
+      <TabPanel value='1'>
+        
+      </TabPanel>
+      <TabPanel value='2'>
+        
+      </TabPanel>
+     
+    </TabContext>
+  )
+}
+
+export default TabsSimple
