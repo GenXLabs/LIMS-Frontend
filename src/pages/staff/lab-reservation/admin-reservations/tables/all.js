@@ -67,6 +67,8 @@ const escapeRegExp = value => {
 }
 
 const TableColumns = () => {
+  const [smsNumber, setSMSNumber] = useState('767912651')
+  const [emailID, setEmailID] = useState('sandupa.isum@gmail.com')
   const [viewMoreOpen, setViewMoreOpen] = useState(false)
   const [viewMoreData, setViewMoreData] = useState([])
 
@@ -242,7 +244,13 @@ const TableColumns = () => {
     console.log('approve')
 
     // Create the SMS body for approval
-    const approvalMessage = `Your reservation request for ${viewMoreData.venue} has been approved.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
+    const approvalMessageEmail = `
+  <p>Your reservation request for <strong>${viewMoreData.venue}</strong> has been approved.</p>
+  <p>Date: <strong>${viewMoreData.date}</strong></p>
+  <p>Time: <strong>${viewMoreData.start_time} - ${viewMoreData.end_time}</strong></p>
+`
+
+    const approvalMessageSMS = `Your reservation request for ${viewMoreData.venue} has been approved.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
     handleViewClose()
 
@@ -272,7 +280,7 @@ const TableColumns = () => {
               console.log('Login successful. Token:', token)
 
               smsService
-                .sendSMS('767912651', approvalMessage, token)
+                .sendSMS(smsNumber, approvalMessageSMS, token)
                 .then(response => {
                   console.log('SMS sent successfully:', response)
                 })
@@ -282,6 +290,21 @@ const TableColumns = () => {
             })
             .catch(error => {
               console.error('Login failed:', error)
+            })
+
+          const emailPayload = {
+            recipient: emailID,
+            subject: 'Lab Reservation Approved - KIU LIMS',
+            content: approvalMessageEmail
+          }
+
+          apiDefinitions
+            .sendEmail(emailPayload)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
             })
 
           // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Approved', approvalMessage)
@@ -302,7 +325,13 @@ const TableColumns = () => {
     console.log('decline')
 
     // Create the SMS body for approval
-    const declineMessage = `Your reservation request for ${viewMoreData.venue} has been declined.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
+    const declineMessageEmail = `
+  <p>Your reservation request for <strong>${viewMoreData.venue}</strong> has been declined.</p>
+  <p>Date: <strong>${viewMoreData.date}</strong></p>
+  <p>Time: <strong>${viewMoreData.start_time} - ${viewMoreData.end_time}</strong></p>
+`
+
+    const declineMessageSMS = `Your reservation request for ${viewMoreData.venue} has been declined.\nDate: ${viewMoreData.date}\nTime: ${viewMoreData.start_time} - ${viewMoreData.end_time}`
 
     handleViewClose()
 
@@ -332,7 +361,7 @@ const TableColumns = () => {
               console.log('Login successful. Token:', token)
 
               smsService
-                .sendSMS('767912651', declineMessage, token)
+                .sendSMS(smsNumber, declineMessageSMS, token)
                 .then(response => {
                   console.log('SMS sent successfully:', response)
                 })
@@ -342,6 +371,21 @@ const TableColumns = () => {
             })
             .catch(error => {
               console.error('Login failed:', error)
+            })
+
+          const emailPayload = {
+            recipient: emailID,
+            subject: 'Lab Reservation Declined - KIU LIMS',
+            content: declineMessageEmail
+          }
+
+          apiDefinitions
+            .sendEmail(emailPayload)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.log(err)
             })
 
           // sendEmail('sandupa.isum@gmail.com', 'Lab Reservation Declined', declineMessage)

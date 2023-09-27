@@ -2,9 +2,6 @@
 
 import axios from 'axios'
 
-const username = process.env.DIALOG_USERNAME
-const password = process.env.DIALOG_PASSWORD
-
 const api = axios.create({
   baseURL: 'https://e-sms.dialog.lk/api/v1' // Set your API base URL here
 })
@@ -13,8 +10,8 @@ export default {
   login: async function () {
     try {
       const loginPayload = {
-        username: username,
-        password: password
+        username: 'antpixelcore',
+        password: 'Pixelcore@1133'
       }
 
       const response = await api.post('/login', loginPayload)
