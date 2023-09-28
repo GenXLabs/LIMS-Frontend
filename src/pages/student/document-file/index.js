@@ -6,6 +6,7 @@ const AlertsBasic = () => {
     <div className='demo-space-y'>
 
       <Alert severity='success'> successfully Downloaded — check it out!</Alert>
+      <Alert severity='success'>Successfuly Deleted</Alert>
     </div>
   )
 }

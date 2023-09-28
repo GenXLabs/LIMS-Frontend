@@ -52,7 +52,7 @@ const InstrumentCalibration = () => {
               title='Instruments'
               action={
                 <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
-                  Add Instrument
+                  Add Audit reports
                 </Button>
               }
             ></CardHeader>
