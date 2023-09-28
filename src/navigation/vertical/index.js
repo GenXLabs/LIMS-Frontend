@@ -32,8 +32,7 @@ const navigation = () => {
       title: 'User Accounts',
       icon: 'tabler:users'
     },
-   
-    //new timetable
+
     {
       sectionTitle: 'Practical Timetable'
     },
@@ -42,17 +41,17 @@ const navigation = () => {
       title: 'Practical Timetable',
       icon: 'simple-line-icons:calender'
     },
-    //end timetable nav
+
     {
       sectionTitle: 'Practical Manual'
     },
     {
-      path: '/staff/practical-manual/Module-category',
-      title: 'Module category',
+      path: '/staff/practical-manual/module-category',
+      title: 'Module Category',
       icon: 'tabler:file-text'
     },
     {
-      path: '/student/Document-Retrieval',
+      path: '/student/document-retrieval',
       title: 'Document Retrieval',
       icon: 'tabler:file-text'
     },
@@ -61,13 +60,20 @@ const navigation = () => {
       title: 'Manage Document',
       icon: 'tabler:file-text'
     },
+
+    {
+      path: '/student/document-file',
+      title: 'Document File',
+      icon: 'tabler:file-text'
+    },
+
     {
       sectionTitle: 'Inventory Management'
     },
     {
       path: '/staff/inventory-management',
       title: 'Inventory Management',
-      icon: 'simple-line-icons:calender'
+      icon: 'material-symbols:lab-research-outline-sharp'
     },
     {
       sectionTitle: 'Quality assurance'
@@ -93,13 +99,21 @@ const navigation = () => {
     },
     {
       title: 'Instruments',
-      icon: 'arcticons:pslab',
+      icon: 'ion:flask-outline',
       path: '/staff/sop-management/instruments'
     },
     {
       title: 'Biohazard Dispose',
       icon: 'fluent-emoji-high-contrast:biohazard',
       path: '/staff/sop-management/biohazard-dispose'
+    },
+    {
+      sectionTitle: 'Research Management'
+    },
+    {
+      title: 'Research Management',
+      icon: ' ',
+      path: '/staff/sop-management/instruments'
     }
   ]
 }
