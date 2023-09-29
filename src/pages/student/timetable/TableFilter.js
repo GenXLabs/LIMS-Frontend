@@ -128,7 +128,7 @@ const EventTable = () => {
         </Paper>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export default EventTable
