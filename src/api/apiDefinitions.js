@@ -20,5 +20,19 @@ export default {
 
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
+  },
+
+  /*sop management*/
+  /*Instrument*/
+  getAllInstrument: async function(){
+  return await api.get(`/instrument/get-all`)
+  },
+
+  addInstrument: async function	(dataPayload){
+    return await api.post(`/instrument/create`,dataPayload)
+  },
+
+  deleteInstrumrnt : async function (){
+    return await api.delete(`/instrument/delete`)
   }
 }

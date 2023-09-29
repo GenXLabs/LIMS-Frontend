@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Grid } from '@mui/material'
 
 // ** MUI Imports
@@ -19,50 +19,66 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import CustomTextField from 'src/@core/components/mui/text-field'
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const rows = [
-  {
-    id: '1',
-    title: 'PDF1',
-    uploaded_by: 'ishum',
-    uploaded_date: '02/01/2022',
-    description: 'About the microscope'
-  },
-  {
-    id: '2',
-    title: 'PDF2',
-    uploaded_by: 'sampath',
-    uploaded_date: '04/11/2022',
-    description: 'About the Test tubes'
-  },
-  {
-    id: '3',
-    title: 'PDF3',
-    uploaded_by: 'samantha',
-    uploaded_date: '22/01/2023',
-    description: 'About the Dropper'
-  },
-  {
-    id: '4',
-    title: 'PDF4',
-    uploaded_by: 'kamal',
-    uploaded_date: '22/12/2023',
-    description: 'About the Bunsen burner'
-  }
-]
+// const rows = [
+//   {
+//     id: '1',
+//     title: 'PDF1',
+//     uploaded_by: 'ishum',
+//     uploaded_date: '02/01/2022',
+//     description: 'About the microscope'
+//   },
+//   {
+//     id: '2',
+//     title: 'PDF2',
+//     uploaded_by: 'sampath',
+//     uploaded_date: '04/11/2022',
+//     description: 'About the Test tubes'
+//   },
+//   {
+//     id: '3',
+//     title: 'PDF3',
+//     uploaded_by: 'samantha',
+//     uploaded_date: '22/01/2023',
+//     description: 'About the Dropper'
+//   },
+//   {
+//     id: '4',
+//     title: 'PDF4',
+//     uploaded_by: 'kamal',
+//     uploaded_date: '22/12/2023',
+//     description: 'About the Bunsen burner'
+//   }
+// ]
 
-const TableColumns = () => {
+const TableColumns = tableRefresh => {
   // ** States
-  const [data] = useState(rows)
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
   const [editOpen, setEditOpen] = useState(false)
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllInstrument()
+      .then(res => {
+        const instrumentData = res.data.data.map((item, index) => ({
+          ...item,
+          id: index + 1 // Generate a unique id
+        }))
+        setData(instrumentData)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [tableRefresh])
 
   const handleEditOpen = row => {
     setEditOpen(true)
@@ -158,6 +174,10 @@ const TableColumns = () => {
       align: 'center',
 
       renderCell: params => {
+        const handleDelete =()=>{
+
+        }
+        
         return (
           <Grid container sx={{ display: 'flex', justifyContent: 'center' }} spacing={5}>
             <Grid item>
@@ -166,7 +186,7 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error'>
+              <IconButton color='error' onClick={handleDelete}>
                 <Icon icon='lucide:trash-2' />
               </IconButton>
             </Grid>
@@ -249,7 +269,7 @@ const TableColumns = () => {
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>
-          Cancel
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>
