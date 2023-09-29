@@ -164,6 +164,128 @@ const TableColumns = () => {
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
+<<<<<<< Updated upstream
+=======
+  const [editOpen, setEditOpen] = useState(false)
+
+  const handleEditOpen = row => {
+    setEditOpen(true)
+    setEditTitle(row.title)
+    setEditDescription(row.description)
+    console.log(editOpen)
+  }
+
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+
+  const handleEditClose = () => {
+    setEditOpen(false)
+    setEditTitle('')
+    setEditDescription('')
+  }
+
+  const handleEditBiohazard = () => {
+    const editBiohazardPayload = [
+      {
+        title: editTitle,
+        description: editDescription
+      }
+    ]
+    console.log(editBiohazardPayload)
+    handleEditClose()
+  }
+
+  const columns = [
+    {
+      flex: 0.2,
+      minWidth: 250,
+      field: 'title',
+      headerName: 'Title',
+      renderCell: params => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Icon icon='uiw:file-pdf' />
+            <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '24px' }}>
+              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+                {params.row.id}
+              </Typography>
+              <Typography noWrap variant='caption'>
+                {params.row.title}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 250,
+      headerName: 'Description',
+      field: 'description',
+
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.description}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'Uploaded By',
+      field: 'uploaded_by',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.uploaded_by}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.15,
+      type: 'date',
+      minWidth: 120,
+      headerName: 'Uploaded Date',
+      field: 'uploaded_date',
+      valueGetter: params => new Date(params.value),
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.uploaded_date}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.2,
+      minWidth: 250,
+      field: 'actions',
+      headerName: 'Actions',
+      headerAlign: 'center',
+      align: 'center',
+
+      renderCell: params => {
+        return (
+          <Grid container sx={{ display: 'flex', justifyContent: 'center' }} spacing={5}>
+            <Grid item>
+              <IconButton color='primary' onClick={() => handleEditOpen(params.row)}>
+                <Icon icon='fluent:edit-16-regular' />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color='error'>
+                <Icon icon='lucide:trash-2' />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton color='success'>
+                <Icon icon='material-symbols:download' />
+              </IconButton>
+            </Grid>
+          </Grid>
+        )
+      }
+    }
+  ]
+
+>>>>>>> Stashed changes
   const handleSearch = searchValue => {
     setSearchText(searchValue)
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')

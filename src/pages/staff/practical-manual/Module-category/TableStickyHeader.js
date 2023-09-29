@@ -40,7 +40,7 @@ const TableStickyHeaderColumns = () => {
 
   const handleEditModalOpen = row => {
     setEditModalState(true)
-    setEditModuleCategory(row.module_name)
+    setEditModuleCategory(row.module_category)
   }
 
   const handleModuleCatCancel = () => {
@@ -52,27 +52,27 @@ const TableStickyHeaderColumns = () => {
     {
       id: '1',
       module_code: 1,
-      module_name: 'Module 1'
+      module_category: 'Module 1'
     },
     {
       id: '2',
       module_code: 2,
-      module_name: 'Module 2'
+      module_category: 'Module 2'
     },
     {
       id: '3',
       module_code: 3,
-      module_name: 'Module 3'
+      module_category: 'Module 3'
     },
     {
       id: '4',
       module_code: 4,
-      module_name: 'Module 4'
+      module_category: 'Module 4'
     },
     {
       id: '5',
       module_code: 5,
-      module_name: 'Module 5'
+      module_category: 'Module 5'
     }
   ]
 
@@ -93,11 +93,11 @@ const TableStickyHeaderColumns = () => {
     {
       flex: 0.25,
       minWidth: 170,
-      headerName: 'Module Name',
-      field: 'module_name',
+      headerName: 'Module Category',
+      field: 'module_category',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.module_name}
+          {params.row.module_category}
         </Typography>
       )
     },
