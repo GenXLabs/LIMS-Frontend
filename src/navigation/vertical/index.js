@@ -51,29 +51,27 @@ const navigation = () => {
       icon: 'tabler:file-text'
     },
     {
-      path: '/student/document-retrieval',
-      title: 'Document Retrieval',
+      path: '/student/practical-manual',
+      title: 'Practical Manuals',
       icon: 'tabler:file-text'
     },
     {
       path: '/staff/practical-manual/manage-document',
-      title: 'Manage Document',
+      title: 'Admin Practical Manuals',
       icon: 'tabler:file-text'
     },
-
-    {
-      path: '/student/document-file',
-      title: 'Document File',
-      icon: 'tabler:file-text'
-    },
-
     {
       sectionTitle: 'Inventory Management'
     },
     {
-      path: '/staff/inventory-management',
-      title: 'Inventory Management',
-      icon: 'material-symbols:lab-research-outline-sharp'
+      path: '/staff/Inventory-Management/Consumable',
+      title: 'Consumable',
+      icon: 'material-symbols:lab-research-outline'
+    },
+    {
+      path: '/staff/Inventory-Management/Non-Consumable',
+      title: 'Non Consumable',
+      icon: 'covid:virus-lab-research-microscope'
     },
     {
       sectionTitle: 'Quality assurance'
@@ -111,9 +109,14 @@ const navigation = () => {
       sectionTitle: 'Research Management'
     },
     {
-      title: 'Research Management',
+      title: 'Student Research ',
       icon: ' ',
-      path: '/staff/sop-management/instruments'
+      path: '/student/research'
+    },
+    {
+      title: 'Staff Research',
+      icon: ' ',
+      path: '/staff/research'
     }
   ]
 }
