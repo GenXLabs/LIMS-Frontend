@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -13,6 +13,8 @@ import {
   TextField,
   InputAdornment
 } from '@mui/material'
+
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const tableStyle = {
   minWidth: 650,
@@ -34,29 +36,44 @@ const titleStyle = {
 
 const EventTable = () => {
   // Sample data for the table with new columns
-  const [data, setData] = useState([
-    {
-      eventTitle: 'Event A',
-      startTime: '10:00 AM',
-      endTime: '12:00 PM',
-      venue: 'Venue X',
-      instructorEmail: 'instructorA@example.com'
-    },
-    {
-      eventTitle: 'Event B',
-      startTime: '2:00 PM',
-      endTime: '4:00 PM',
-      venue: 'Venue Y',
-      instructorEmail: 'instructorB@example.com'
-    },
-    {
-      eventTitle: 'Event C',
-      startTime: '9:00 AM',
-      endTime: '11:00 AM',
-      venue: 'Venue Z',
-      instructorEmail: 'instructorC@example.com'
+  const [data, setData] = useState([])
+  //   {
+  //     eventTitle: 'Event A',
+  //     startTime: '10:00 AM',
+  //     endTime: '12:00 PM',
+  //     venue: 'Venue X',
+  //     instructorEmail: 'instructorA@example.com'
+  //   },
+  //   {
+  //     eventTitle: 'Event B',
+  //     startTime: '2:00 PM',
+  //     endTime: '4:00 PM',
+  //     venue: 'Venue Y',
+  //     instructorEmail: 'instructorB@example.com'
+  //   },
+  //   {
+  //     eventTitle: 'Event C',
+  //     startTime: '9:00 AM',
+  //     endTime: '11:00 AM',
+  //     venue: 'Venue Z',
+  //     instructorEmail: 'instructorC@example.com'
+  //   }
+  // ])
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await apiDefinitions.getAllEvents(); // Call the function
+        const data = response.data;
+        setData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
-  ])
+  
+    fetchData(); // Invoke the fetchData function
+  }, []);
+  
 
   // State for search
   const [searchText, setSearchText] = useState('')
@@ -64,9 +81,10 @@ const EventTable = () => {
   // Function to filter data based on search text
   const filteredData = data.filter(
     row =>
-      row.eventTitle.toLowerCase().includes(searchText.toLowerCase()) ||
-      row.instructorEmail.toLowerCase().includes(searchText.toLowerCase())
-  )
+      (row.eventTitle && row.eventTitle.toLowerCase().includes(searchText.toLowerCase())) ||
+      (row.instructorEmail && row.instructorEmail.toLowerCase().includes(searchText.toLowerCase()))
+  );
+  
 
   return (
     <Card elevation={3}>

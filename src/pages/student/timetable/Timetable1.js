@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const timeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', 'LUNCH BREAK', '3:00 PM', '5:00 PM']
@@ -76,33 +77,28 @@ function Timetable() {
   }
 
   const handleAddEvent = () => {
-    if (eventText.trim() !== '' && startTime.trim() !== '' && endTime.trim() !== '' && instructorEmail.trim() !== '') {
-      if (selectedEvent) {
-        // If a selected event exists, update it
-        const updatedData = timetableData.map(item =>
-          item.day === selectedEvent.day && item.time === selectedEvent.time ? { ...item, event: eventText } : item
-        )
-        setTimetableData(updatedData)
-      } else {
-        // Otherwise, add a new event
-        const updatedData = [
-          ...timetableData,
-          {
-            day: selectedDay,
-            time: selectedTime,
-            event: eventText,
-            venue: selectedVenue,
-            startTime,
-            endTime,
-            instructorEmail
-          }
-        ]
-        setTimetableData(updatedData)
-      }
+    const eventData = {
+      venue: selectedVenue,
+      date: selectedDay,
+      time: selectedTime,
+      email: instructorEmail,
+      event_title: eventText,
+    };
+    
 
-      closeAddEventForm()
+    const addEventData = async () => {
+      try {
+        const response = await apiDefinitions.addEvent(eventData) // Pass eventData as the payload
+        console.log('add event response', response)
+      } catch (error) {
+        console.error('add event error', error)
+      }
     }
+
+    addEventData()
+    closeAddEventForm()
   }
+  console.log('add event data')
 
   const handleEditEvent = (day, time, event) => {
     const selectedEventData = timetableData.find(item => item.day === day && item.time === time)
@@ -240,8 +236,8 @@ function Timetable() {
             <h2>{selectedEvent ? 'Edit Event' : 'Add Event'}</h2>
           </div>
           <div className='modal-body'>
-            <p>Day: {selectedDay}</p>
-            <p>Time: {selectedTime}</p>
+            {/* <p>Day: {selectedDay}</p>
+            <p>Time: {selectedTime}</p> */}
             <div style={{ marginBottom: '20px', marginTop: '-10px' }}>
               <input
                 type='text'
@@ -268,15 +264,14 @@ function Timetable() {
                 }}
               >
                 <option value='Lab 01'>Lab 01</option>
-                <option value='Lab 02'>Lab 02</option>
+                {/* <option value='Lab 02'>Lab 02</option> */}
               </select>
             </div>
             <div style={{ marginBottom: '20px' }}>
               <input
                 type='text'
-                placeholder='Start Time'
-                value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+                disabled
+                value={selectedTime}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
@@ -288,9 +283,8 @@ function Timetable() {
             <div style={{ marginBottom: '20px' }}>
               <input
                 type='text'
-                placeholder='End Time'
-                value={endTime}
-                onChange={e => setEndTime(e.target.value)}
+                disabled
+                value={selectedDay}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
