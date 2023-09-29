@@ -64,9 +64,14 @@ const navigation = () => {
       sectionTitle: 'Inventory Management'
     },
     {
-      path: '/staff/inventory-management',
-      title: 'Inventory Management',
-      icon: 'material-symbols:lab-research-outline-sharp'
+      path: '/staff/Inventory-Management/Consumable',
+      title: 'Consumable',
+      icon: 'material-symbols:lab-research-outline'
+    },
+    {
+      path: '/staff/Inventory-Management/Non-Consumable',
+      title: 'Non Consumable',
+      icon: 'covid:virus-lab-research-microscope'
     },
     {
       sectionTitle: 'Quality assurance'
@@ -104,9 +109,14 @@ const navigation = () => {
       sectionTitle: 'Research Management'
     },
     {
-      title: 'Research Management',
+      title: 'Student Research ',
       icon: ' ',
-      path: '/staff/sop-management/instruments'
+      path: '/student/research'
+    },
+    {
+      title: 'Staff Research',
+      icon: ' ',
+      path: '/staff/research'
     }
   ]
 }
