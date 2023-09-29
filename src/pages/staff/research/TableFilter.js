@@ -7,7 +7,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid } from '@mui/x-data-grid'
-import Button from '@mui/material/Button'
+import Button from '@mui/material/Button' 
 import { IconButton } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import Grid from '@mui/material/Grid'
@@ -73,6 +73,8 @@ const columns = [
               {row.email}
             </Typography>
           </Box>
+
+          
         </Box>
       )
     }
@@ -202,6 +204,7 @@ const columns = [
       )
     }
   }
+   
 ]
 
 const TableColumns = () => {
@@ -229,9 +232,11 @@ const TableColumns = () => {
   }
 
   return (
-    <Card>
-      <CardHeader title='Quick Filter' />
+  
+   
+      
       <DataGrid
+      
         autoHeight
         columns={columns}
         pageSizeOptions={[7, 10, 25, 50]}
@@ -256,7 +261,7 @@ const TableColumns = () => {
           }
         }}
       />
-    </Card>
+
   )
 }
 
