@@ -250,7 +250,7 @@ const TableColumns = () => {
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>
-            Canceled
+          Cancel
           </Button>
         </DialogActions>
       </Dialog>
