@@ -1,6 +1,6 @@
 // ** React Imports
-import { useState } from 'react'
-import { Button, Grid } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Button, Grid, MenuItem } from '@mui/material'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,50 +19,22 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import CustomTextField from 'src/@core/components/mui/text-field'
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const rows = [
-  {
-    id: '1',
-    title: 'PDF1',
-    uploaded_by: 'Isum',
-    uploaded_date: '6/1/2022',
-    description: 'dummy text of the printing'
-  },
-  {
-    id: '2',
-    title: 'PDF2',
-    uploaded_by: 'Shehan',
-    uploaded_date: '5/1/2022',
-    description: 'dummy text of the printing'
-  },
-  {
-    id: '3',
-    title: 'PDF3',
-    uploaded_by: 'Dhanuka',
-    uploaded_date: '2/1/2023',
-    description: 'dummy text of the printing'
-  },
-  {
-    id: '4',
-    title: 'PDF4',
-    uploaded_by: 'Dilshan',
-    uploaded_date: '1/1/2023',
-    description: 'dummy text of the printing'
-  }
-]
-
 const TableColumns = () => {
   // ** States
-  const [data] = useState(rows)
+  const [data] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
   const [editOpen, setEditOpen] = useState(false)
+
+  const [moduleCategories, setModuleCategories] = useState([])
 
   const handleEditOpen = row => {
     setEditOpen(true)
@@ -80,6 +52,37 @@ const TableColumns = () => {
     setEditDescription('')
   }
 
+  useEffect(() => {
+    apiDefinitions
+      .getAllModuleCategories()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(category => category.deleted_at === null)
+        console.log(filteredData)
+        setModuleCategories(filteredData)
+      })
+      .catch(err => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllPracticalManuals()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
+
+        // Add an "id" field to each record
+        const dataWithId = filteredData.map((record, index) => ({
+          ...record,
+          id: index + 1 // You can replace this with the desired value for "id"
+        }))
+
+        console.log(dataWithId)
+        setFilteredData(dataWithId)
+      })
+      .catch(err => console.log(err))
+  }, [])
+
   const handleEditInstrument = () => {
     const editInstrumentPayload = [
       {
@@ -91,10 +94,15 @@ const TableColumns = () => {
     handleEditClose()
   }
 
+  const moduleCategoryMapping = {}
+  moduleCategories.forEach(category => {
+    moduleCategoryMapping[category.category_id] = category.category_name
+  })
+
   const columns = [
     {
-      flex: 0.2,
-      minWidth: 250,
+      flex: 0.25,
+      minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: params => {
@@ -102,10 +110,18 @@ const TableColumns = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Icon icon='uiw:file-pdf' />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '24px' }}>
-              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-                {params.row.id}
-              </Typography>
-              <Typography noWrap variant='caption'>
+              <Typography
+                noWrap
+                variant='body2'
+                sx={{
+                  color: 'text.primary',
+                  whiteSpace: 'pre-line',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxHeight: '3em',
+                  lineHeight: '1.5em'
+                }}
+              >
                 {params.row.title}
               </Typography>
             </Box>
@@ -114,13 +130,58 @@ const TableColumns = () => {
       }
     },
     {
+      flex: 0.1,
+      minWidth: 100,
+      headerName: (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          Module Category
+        </Typography>
+      ),
+      field: 'module_category',
+      renderCell: params => (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          {moduleCategoryMapping[params.row.module_category]}
+        </Typography>
+      )
+    },
+    {
       flex: 0.2,
       minWidth: 250,
       headerName: 'Description',
       field: 'description',
 
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
           {params.row.description}
         </Typography>
       )
@@ -137,22 +198,39 @@ const TableColumns = () => {
       )
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       type: 'date',
-      minWidth: 120,
-      headerName: 'Uploaded Date',
+      minWidth: 100,
+      headerName: (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          Uploaded Date
+        </Typography>
+      ),
       field: 'uploaded_date',
-      valueGetter: params => new Date(params.value),
+      valueGetter: params => new Date(params.value), // Converts the number to a Date object
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.uploaded_date}
+          {new Date(params.row.created_at).toLocaleDateString()} {/* Adjust the formatting as needed */}
         </Typography>
       )
     },
+
     {
       flex: 0.2,
       minWidth: 250,
       field: 'actions',
+      sortable: false,
+      filterable: false,
       headerName: 'Actions',
       headerAlign: 'center',
       align: 'center',
@@ -226,11 +304,23 @@ const TableColumns = () => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Instrument calibration</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Practical Manual</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
               <CustomTextField label='Title' fullWidth value={editTitle} onChange={e => setEditTitle(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField select defaultValue='' label='Module Category' id='custom-select' fullWidth>
+                <MenuItem value=''>
+                  <em>None</em>
+                </MenuItem>
+                {moduleCategories.map(category => (
+                  <MenuItem key={category.category_id} value={category.category_id}>
+                    {category.category_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             </Grid>
             <Grid item xs={12}>
               <CustomTextField

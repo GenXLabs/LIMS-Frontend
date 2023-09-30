@@ -88,7 +88,7 @@ const TableColumns = () => {
 
   const columns = [
     {
-      flex: 0.15,
+      flex: 0.25,
       minWidth: 180,
       field: 'full_name',
       headerName: 'Requested By',
