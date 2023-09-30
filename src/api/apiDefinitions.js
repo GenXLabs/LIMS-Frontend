@@ -65,21 +65,33 @@ export default {
   /* Practical Manual and Module Category APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Inventory Management APIs Start */
-  getAllGlasswares: async function(){
+  getAllGlasswares: async function () {
     return await api.get(`/inventory-management/get-all`)
+  },
+
+  addGlasswares: async function (dataPayload) {
+    return await api.post(`/inventory-management/create`, dataPayload)
+  },
+
+  deleteGlasswares: async function (id) {
+    return await api.delete(`/inventory-management/delete/${id}`)
+  },
+
+  editGlasswares: async function (id, dataPayload) {
+    return await api.put(`/inventory-management/update/${id}`, dataPayload)
   },
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
-  getAllInstrument: async function(){
-  return await api.get(`/instrument/get-all`)
+  getAllInstrument: async function () {
+    return await api.get(`/instrument/get-all`)
   },
 
-  addInstrument: async function	(dataPayload){
-    return await api.post(`/instrument/create`,dataPayload)
+  addInstrument: async function (dataPayload) {
+    return await api.post(`/instrument/create`, dataPayload)
   },
 
-  deleteInstrumrnt : async function (){
+  deleteInstrumrnt: async function () {
     return await api.delete(`/instrument/delete`)
   },
   /* SOP Management APIs End */
@@ -90,11 +102,11 @@ export default {
 
   // practical time table API
 
-  addEvent: async function (eventPayload){
+  addEvent: async function (eventPayload) {
     return await api.post(`/timetable-events`, eventPayload)
   },
 
-  getAllEvents: async function(){
+  getAllEvents: async function () {
     return await api.get(`/timetable-events`)
-  },
+  }
 }
