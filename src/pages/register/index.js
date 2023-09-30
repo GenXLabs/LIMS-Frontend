@@ -205,10 +205,11 @@ const Register = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          <RegisterIllustration
+          {/* <RegisterIllustration
             alt='register-illustration'
             src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-          />
+          /> */}
+          <RegisterIllustration alt='register-illustration' src={`/images/pages/bg.png`} sx={{ width: '650px' }} />
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
