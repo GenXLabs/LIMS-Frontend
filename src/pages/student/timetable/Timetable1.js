@@ -122,7 +122,9 @@ function Timetable() {
   const handleDeleteEvent = (day, time, event) => {
     const updatedData = timetableData.filter((item) => !(item.day === day && item.time === time));
     setTimetableData(updatedData);
+    
     // Prevent the event from propagating to open the Add Event form
+
     event.stopPropagation();
   };
 

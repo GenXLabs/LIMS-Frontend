@@ -88,16 +88,19 @@ function Timetable() {
     setEmailError('');
 
     // Validation for start time (00:00 AM/PM format)
+
     const timeRegex = /^(0[1-9]|1[0-2]):[0-5][0-9]\s(AM|PM)$/;
 
     if (!timeRegex.test(startTime)) {
       setStartTimeError('Start time should be in the format: 00:00 AM/PM');
+
       return;
     }
 
     // Validation for end time (00:00 AM/PM format)
     if (!timeRegex.test(endTime)) {
       setEndTimeError('End time should be in the format: 00:00 AM/PM');
+
       return;
     }
 
@@ -106,6 +109,7 @@ function Timetable() {
 
     if (!emailRegex.test(instructorEmail)) {
       setEmailError('Email should be in the format: a-z+@my.kiu.lk');
+      
       return;
     }
 
