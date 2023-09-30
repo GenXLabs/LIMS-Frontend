@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState } from 'react'
-import { Button, Grid } from '@mui/material'
+import { Button, Grid, MenuItem } from '@mui/material'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -28,6 +28,7 @@ const rows = [
   {
     id: '1',
     title: 'PDF1',
+    module_category: 'Microscope',
     uploaded_by: 'ishum',
     uploaded_date: '02/01/2022',
     description: 'About the microscope'
@@ -35,6 +36,7 @@ const rows = [
   {
     id: '2',
     title: 'PDF2',
+    module_category: 'Microscope',
     uploaded_by: 'sampath',
     uploaded_date: '04/11/2022',
     description: 'About the Test tubes'
@@ -42,6 +44,7 @@ const rows = [
   {
     id: '3',
     title: 'PDF3',
+    module_category: 'Microscope',
     uploaded_by: 'samantha',
     uploaded_date: '22/01/2023',
     description: 'About the Dropper'
@@ -49,6 +52,7 @@ const rows = [
   {
     id: '4',
     title: 'PDF4',
+    module_category: 'Microscope',
     uploaded_by: 'kamal',
     uploaded_date: '22/12/2023',
     description: 'About the Bunsen burner'
@@ -93,8 +97,8 @@ const TableColumns = () => {
 
   const columns = [
     {
-      flex: 0.2,
-      minWidth: 250,
+      flex: 0.15,
+      minWidth: 180,
       field: 'title',
       headerName: 'Title',
       renderCell: params => {
@@ -112,6 +116,18 @@ const TableColumns = () => {
           </Box>
         )
       }
+    },
+    {
+      flex: 0.2,
+      minWidth: 220,
+      headerName: 'Module Category',
+      field: 'module_category',
+
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.module_category}
+        </Typography>
+      )
     },
     {
       flex: 0.2,
@@ -139,7 +155,7 @@ const TableColumns = () => {
     {
       flex: 0.15,
       type: 'date',
-      minWidth: 120,
+      minWidth: 150,
       headerName: 'Uploaded Date',
       field: 'uploaded_date',
       valueGetter: params => new Date(params.value),
@@ -153,6 +169,8 @@ const TableColumns = () => {
       flex: 0.2,
       minWidth: 250,
       field: 'actions',
+      sortable: false,
+      filterable: false,
       headerName: 'Actions',
       headerAlign: 'center',
       align: 'center',
@@ -226,11 +244,21 @@ const TableColumns = () => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Instrument</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Practical Manual</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
               <CustomTextField label='Title' fullWidth value={editTitle} onChange={e => setEditTitle(e.target.value)} />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField select defaultValue='' label='Module Category' id='custom-select' fullWidth>
+                <MenuItem value=''>
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </CustomTextField>
             </Grid>
             <Grid item xs={12}>
               <CustomTextField
@@ -249,7 +277,7 @@ const TableColumns = () => {
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>
-            Canceled
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

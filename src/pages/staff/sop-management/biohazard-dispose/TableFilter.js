@@ -101,7 +101,7 @@ const TableColumns = () => {
       renderCell: params => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Icon icon='teenyicons:pdf-outline' />
+            <Icon icon='uiw:file-pdf' />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '24px' }}>
               <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
                 {params.row.id}
@@ -181,6 +181,7 @@ const TableColumns = () => {
       }
     }
   ]
+
 
   const handleSearch = searchValue => {
     setSearchText(searchValue)

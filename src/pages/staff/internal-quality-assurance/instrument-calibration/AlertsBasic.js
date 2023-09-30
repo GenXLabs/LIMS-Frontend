@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert'
 const AlertsBasic = () => {
   return (
     <div className='demo-space-y'>
-      <Alert severity='success'>Successfuly Deleted</Alert>
+      <Alert severity='success'>Successfuly Delete</Alert>
     </div>
   )
 }
