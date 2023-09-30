@@ -84,7 +84,8 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const[isUniquEmail, setIsUniqueEmail] = useState(true)
+  const [isUniquEmail, setIsUniqueEmail] = useState(true)
+  const [isPasswordEdited, setIsPasswordEdited] = useState(false)
 
   // ** Hooks
   const theme = useTheme()
@@ -157,24 +158,23 @@ const Register = () => {
       //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
       //   .then(res => {
       //     console.log(res.data)
-  
+
       //   })
       //   .catch(err => {
       //     console.log(err)
       //   })
       try {
-      const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-      console.log(res.data)
-      if (res.data !== null) {
-        setIsUniqueEmail(false)
-        toast.error('Email already exists')
-        console.log('Email already exists')
+        const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
+        console.log(res.data)
+        if (res.data !== null) {
+          setIsUniqueEmail(false)
+          toast.error('Email already exists')
+          console.log('Email already exists')
 
-        return
-      }
-      
+          return
+        }
       } catch (err) {
-        console.log("email not found ",err)
+        console.log('email not found ', err)
       }
 
       // if email is unique, register the user
@@ -187,9 +187,6 @@ const Register = () => {
         console.log(err)
         toast.error('Registration failed')
       }
-        
-
-          
     }
   }
 
@@ -208,10 +205,10 @@ const Register = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          {/* <RegisterIllustration
+          <RegisterIllustration
             alt='register-illustration'
             src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
-          /> */}
+          />
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -310,7 +307,7 @@ const Register = () => {
                 value={phoneNumber}
                 onChange={e => setPhoneNumber(e.target.value)}
               />
-              <CustomTextField
+              {/* <CustomTextField
                 fullWidth
                 label='Password'
                 id='auth-login-v2-password'
@@ -335,7 +332,47 @@ const Register = () => {
                     </InputAdornment>
                   )
                 }}
+              /> */}
+              <CustomTextField
+                fullWidth
+                label='Password'
+                id='auth-login-v2-password'
+                required
+                helperText={passwordErrorText}
+                error={passwordErrorText !== ''}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='**********'
+                sx={{ mb: 2 }} // Reduce the margin to create space for the label
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <Icon fontSize='1.25rem' icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
+              {/* Conditionally render the password requirements label if password has characters */}
+              {password.length > 0 && (
+                <Typography variant='body2' sx={{ color: 'green' }}>
+                  Password must be at least 6 characters long.
+                </Typography>
+              )}
+
+              {/* Password requirements label */}
+              {isPasswordEdited && (
+                <Typography variant='body2' sx={{ color: 'green' }}>
+                  Password must be at least 6 characters long.
+                </Typography>
+              )}
+
               <CustomTextField
                 fullWidth
                 label='Confirm Password'
@@ -362,7 +399,7 @@ const Register = () => {
                   )
                 }}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox />}
                 sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
                 label={
@@ -373,7 +410,7 @@ const Register = () => {
                     </Typography>
                   </Box>
                 }
-              />
+              /> */}
               <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleSignUp}>
                 Sign up
               </Button>
