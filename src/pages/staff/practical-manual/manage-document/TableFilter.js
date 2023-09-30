@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Grid, MenuItem } from '@mui/material'
 
 // ** MUI Imports
@@ -19,54 +19,22 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import CustomTextField from 'src/@core/components/mui/text-field'
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const rows = [
-  {
-    id: '1',
-    title: 'PDF1',
-    module_category: 'Microscope',
-    uploaded_by: 'ishum',
-    uploaded_date: '02/01/2022',
-    description: 'About the microscope'
-  },
-  {
-    id: '2',
-    title: 'PDF2',
-    module_category: 'Microscope',
-    uploaded_by: 'sampath',
-    uploaded_date: '04/11/2022',
-    description: 'About the Test tubes'
-  },
-  {
-    id: '3',
-    title: 'PDF3',
-    module_category: 'Microscope',
-    uploaded_by: 'samantha',
-    uploaded_date: '22/01/2023',
-    description: 'About the Dropper'
-  },
-  {
-    id: '4',
-    title: 'PDF4',
-    module_category: 'Microscope',
-    uploaded_by: 'kamal',
-    uploaded_date: '22/12/2023',
-    description: 'About the Bunsen burner'
-  }
-]
-
 const TableColumns = () => {
   // ** States
-  const [data] = useState(rows)
+  const [data] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
   const [editOpen, setEditOpen] = useState(false)
+
+  const [moduleCategories, setModuleCategories] = useState([])
 
   const handleEditOpen = row => {
     setEditOpen(true)
@@ -84,6 +52,37 @@ const TableColumns = () => {
     setEditDescription('')
   }
 
+  useEffect(() => {
+    apiDefinitions
+      .getAllModuleCategories()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(category => category.deleted_at === null)
+        console.log(filteredData)
+        setModuleCategories(filteredData)
+      })
+      .catch(err => console.log(err))
+  }, [])
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllPracticalManuals()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
+
+        // Add an "id" field to each record
+        const dataWithId = filteredData.map((record, index) => ({
+          ...record,
+          id: index + 1 // You can replace this with the desired value for "id"
+        }))
+
+        console.log(dataWithId)
+        setFilteredData(dataWithId)
+      })
+      .catch(err => console.log(err))
+  }, [])
+
   const handleEditInstrument = () => {
     const editInstrumentPayload = [
       {
@@ -95,10 +94,15 @@ const TableColumns = () => {
     handleEditClose()
   }
 
+  const moduleCategoryMapping = {}
+  moduleCategories.forEach(category => {
+    moduleCategoryMapping[category.category_id] = category.category_name
+  })
+
   const columns = [
     {
-      flex: 0.15,
-      minWidth: 180,
+      flex: 0.25,
+      minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: params => {
@@ -106,10 +110,18 @@ const TableColumns = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Icon icon='uiw:file-pdf' />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '24px' }}>
-              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-                {params.row.id}
-              </Typography>
-              <Typography noWrap variant='caption'>
+              <Typography
+                noWrap
+                variant='body2'
+                sx={{
+                  color: 'text.primary',
+                  whiteSpace: 'pre-line',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxHeight: '3em',
+                  lineHeight: '1.5em'
+                }}
+              >
                 {params.row.title}
               </Typography>
             </Box>
@@ -118,14 +130,37 @@ const TableColumns = () => {
       }
     },
     {
-      flex: 0.2,
-      minWidth: 220,
-      headerName: 'Module Category',
+      flex: 0.1,
+      minWidth: 100,
+      headerName: (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          Module Category
+        </Typography>
+      ),
       field: 'module_category',
-
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.module_category}
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          {moduleCategoryMapping[params.row.module_category]}
         </Typography>
       )
     },
@@ -136,7 +171,17 @@ const TableColumns = () => {
       field: 'description',
 
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
           {params.row.description}
         </Typography>
       )
@@ -153,18 +198,33 @@ const TableColumns = () => {
       )
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       type: 'date',
-      minWidth: 150,
-      headerName: 'Uploaded Date',
+      minWidth: 100,
+      headerName: (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          Uploaded Date
+        </Typography>
+      ),
       field: 'uploaded_date',
-      valueGetter: params => new Date(params.value),
+      valueGetter: params => new Date(params.value), // Converts the number to a Date object
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.uploaded_date}
+          {new Date(params.row.created_at).toLocaleDateString()} {/* Adjust the formatting as needed */}
         </Typography>
       )
     },
+
     {
       flex: 0.2,
       minWidth: 250,
@@ -255,9 +315,11 @@ const TableColumns = () => {
                 <MenuItem value=''>
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {moduleCategories.map(category => (
+                  <MenuItem key={category.category_id} value={category.category_id}>
+                    {category.category_name}
+                  </MenuItem>
+                ))}
               </CustomTextField>
             </Grid>
             <Grid item xs={12}>
