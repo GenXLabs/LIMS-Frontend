@@ -56,6 +56,10 @@ export default {
     return await api.get(`/module-categories/get-by-id/${categoryID}`)
   },
 
+  deletePracticalManual: async function (manualID, payload) {
+    return await api.put(`/practical-manual/delete/${manualID}`, payload)
+  },
+
   getPDFByManualID: async function (manualID) {
     return await api.get(`/practical-manual/download-pdf/${manualID}`, {
       responseType: 'blob'
@@ -65,36 +69,48 @@ export default {
   /* Practical Manual and Module Category APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Inventory Management APIs Start */
-  getAllGlasswares: async function(){
+  getAllGlasswares: async function () {
     return await api.get(`/inventory-management/get-all`)
   },
+
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
-  getAllInstrument: async function(){
-  return await api.get(`/instrument/get-all`)
+  getAllInstrument: async function () {
+    return await api.get(`/instrument/get-all`)
   },
 
-  addInstrument: async function	(dataPayload){
-    return await api.post(`/instrument/create`,dataPayload)
+  addInstrument: async function (dataPayload) {
+    return await api.post(`/instrument/create`, dataPayload)
   },
 
-  deleteInstrumrnt : async function (){
+  deleteInstrumrnt: async function () {
     return await api.delete(`/instrument/delete`)
   },
+
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
-  },
+  /* Practical Timetable APIs Start */
 
-  // practical time table API
-
-  addEvent: async function (eventPayload){
+  addEvent: async function (eventPayload) {
     return await api.post(`/timetable-events`, eventPayload)
   },
 
-  getAllEvents: async function(){
+  getAllEvents: async function () {
     return await api.get(`/timetable-events`)
   },
+
+  /* Practical Timetable APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* USer Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
+
+  /* USer Management APIs End */
+
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
+  }
 }

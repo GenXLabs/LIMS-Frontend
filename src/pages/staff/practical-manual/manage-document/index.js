@@ -29,6 +29,8 @@ const ViewInstrument = () => {
   const [open, setOpen] = useState(false)
   const handleClickOpen = () => setOpen(true)
 
+  const [refreshTable, setRefreshTable] = useState(false)
+
   const [moduleCategories, setModuleCategories] = useState([])
 
   const handleClose = () => {
@@ -190,6 +192,7 @@ const ViewInstrument = () => {
       .then(response => {
         console.log('Manual created:', response.data)
         toast.success('Manual created successfully!')
+        setRefreshTable(!refreshTable)
         handleClose()
       })
       .catch(error => {
@@ -224,7 +227,7 @@ const ViewInstrument = () => {
               }
             ></CardHeader>
             <CardContent>
-              <TableFilter />
+              <TableFilter refreshTable={refreshTable} />
             </CardContent>
           </Card>
         </Grid>

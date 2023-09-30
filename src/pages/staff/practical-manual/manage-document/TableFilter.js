@@ -20,26 +20,38 @@ import DialogActions from '@mui/material/DialogActions'
 
 import CustomTextField from 'src/@core/components/mui/text-field'
 import apiDefinitions from 'src/api/apiDefinitions'
+import toast from 'react-hot-toast'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const TableColumns = () => {
+const TableColumns = refreshTable => {
   // ** States
-  const [data] = useState([])
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+
+  const [refreshTable2, setRefreshTable2] = useState(false)
 
   const [editOpen, setEditOpen] = useState(false)
 
   const [moduleCategories, setModuleCategories] = useState([])
 
+  const [selectedModuleCategory, setSelectedModuleCategory] = useState('')
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
+  const [editManualID, setEditManualID] = useState('')
+
   const handleEditOpen = row => {
     setEditOpen(true)
     setEditTitle(row.title)
     setEditDescription(row.description)
+    setSelectedModuleCategory(row.module_category)
+    setEditManualID(row.manual_id)
+
     console.log(editOpen)
   }
 
@@ -50,6 +62,8 @@ const TableColumns = () => {
     setEditOpen(false)
     setEditTitle('')
     setEditDescription('')
+    setSelectedModuleCategory('')
+    setEditManualID('')
   }
 
   useEffect(() => {
@@ -78,18 +92,31 @@ const TableColumns = () => {
         }))
 
         console.log(dataWithId)
-        setFilteredData(dataWithId)
+        setData(dataWithId)
       })
       .catch(err => console.log(err))
-  }, [])
+  }, [refreshTable, refreshTable2])
 
   const handleEditInstrument = () => {
-    const editInstrumentPayload = [
-      {
-        title: editTitle,
-        description: editDescription
-      }
-    ]
+    const editInstrumentPayload = {
+      title: editTitle,
+      description: editDescription,
+      module_category: selectedModuleCategory,
+      updated_by: userData.id
+    }
+
+    apiDefinitions
+      .updatePracticalManual(editManualID, editInstrumentPayload)
+      .then(res => {
+        console.log(res)
+        toast.success('Practical Manual Updated Successfully')
+        setRefreshTable2(!refreshTable2)
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Updating Practical Manual')
+      })
+
     console.log(editInstrumentPayload)
     handleEditClose()
   }
@@ -98,6 +125,76 @@ const TableColumns = () => {
   moduleCategories.forEach(category => {
     moduleCategoryMapping[category.category_id] = category.category_name
   })
+
+  const UploadedByCell = ({ createdBy }) => {
+    // Define a state variable to store the full name
+    const [fullName, setFullName] = useState('')
+
+    // Use useEffect to make the API call and update the full name when the component mounts
+    useEffect(() => {
+      apiDefinitions
+        .getUserById(createdBy)
+        .then(response => {
+          // Assuming the API response contains a 'data' object with a 'fullName' property
+          const userFullName = response.data.fullName
+          setFullName(userFullName)
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error)
+        })
+    }, [createdBy])
+
+    return (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {fullName}
+      </Typography>
+    )
+  }
+
+  const handleDeleteManual = row => {
+    const deleteManualPayload = {
+      deleted_by: userData.id
+    }
+
+    apiDefinitions
+      .deletePracticalManual(row.manual_id, deleteManualPayload)
+      .then(res => {
+        console.log(res)
+        toast.success('Practical Manual Deleted Successfully')
+        setRefreshTable2(!refreshTable2)
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Deleting Practical Manual')
+      })
+  }
+
+  const handlePDFDownload = row => {
+    apiDefinitions
+      .getPDFByManualID(row.manual_id)
+      .then(res => {
+        console.log(res)
+        toast.success('Practical Manual Downloaded Successfully')
+
+        // Create a URL for the blob data
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+
+        // Create a temporary link element and trigger a download
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${row.title}_manual_${row.manual_id}.pdf`)
+        document.body.appendChild(link)
+        link.click()
+
+        // Clean up
+        window.URL.revokeObjectURL(url)
+      })
+
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Downloading Practical Manual')
+      })
+  }
 
   const columns = [
     {
@@ -166,7 +263,7 @@ const TableColumns = () => {
     },
     {
       flex: 0.2,
-      minWidth: 250,
+      minWidth: 220,
       headerName: 'Description',
       field: 'description',
 
@@ -187,15 +284,11 @@ const TableColumns = () => {
       )
     },
     {
-      flex: 0.15,
-      minWidth: 120,
+      flex: 0.25,
+      minWidth: 200,
       headerName: 'Uploaded By',
-      field: 'uploaded_by',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.uploaded_by}
-        </Typography>
-      )
+      field: 'created_by',
+      renderCell: params => <UploadedByCell createdBy={params.row.created_by} />
     },
     {
       flex: 0.1,
@@ -216,7 +309,7 @@ const TableColumns = () => {
           Uploaded Date
         </Typography>
       ),
-      field: 'uploaded_date',
+      field: 'created_at',
       valueGetter: params => new Date(params.value), // Converts the number to a Date object
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
@@ -244,12 +337,12 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error'>
+              <IconButton color='error' onClick={() => handleDeleteManual(params.row)}>
                 <Icon icon='lucide:trash-2' />
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='success'>
+              <IconButton color='success' onClick={() => handlePDFDownload(params.row)}>
                 <Icon icon='material-symbols:download' />
               </IconButton>
             </Grid>
@@ -266,9 +359,14 @@ const TableColumns = () => {
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
         // @ts-ignore
-        return searchRegex.test(row[field].toString())
+        const fieldValue = row[field] ?? '' // Use an empty string as the default value
+        const isMatch = searchRegex.test(fieldValue.toString())
+        console.log(`Field: ${field}, Value: ${fieldValue}, Match: ${isMatch}`)
+
+        return isMatch
       })
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -311,7 +409,14 @@ const TableColumns = () => {
               <CustomTextField label='Title' fullWidth value={editTitle} onChange={e => setEditTitle(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField select defaultValue='' label='Module Category' id='custom-select' fullWidth>
+              <CustomTextField
+                select
+                value={selectedModuleCategory}
+                label='Module Category'
+                id='custom-select'
+                fullWidth
+                onChange={e => setSelectedModuleCategory(e.target.value)}
+              >
                 <MenuItem value=''>
                   <em>None</em>
                 </MenuItem>
