@@ -102,13 +102,37 @@ export default {
 
   /* Practical Timetable APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  /* USer Management APIs Start */
+  /* User Management APIs Start */
 
   getUserById: async function (userID) {
     return await api.get(`/user/get?id=${userID}`)
   },
 
-  /* USer Management APIs End */
+  /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Research Management APIs Start */
+
+  getAllResearch: async function () {
+    return await api.get(`/research-management/get-all`)
+  },
+
+  addResearch: async function (researchPayload) {
+    return await api.post(`/research-management/create`, researchPayload)
+  },
+
+  updateResearch: async function (researchID, researchPayload) {
+    return await api.put(`/research-management/update/${researchID}`, researchPayload)
+  },
+
+  deleteResearch: async function (researchID) {
+    return await api.delete(`/research-management/delete/${researchID}`)
+  },
+
+  getResearchById: async function (researchID) {
+    return await api.get(`/research-management/get/${researchID}`)
+  },
+
+  /* Research Management APIs End */
 
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
