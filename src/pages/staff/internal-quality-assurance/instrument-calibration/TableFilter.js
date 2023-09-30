@@ -28,30 +28,30 @@ const rows = [
   {
     id: '1',
     title: 'PDF1',
-    uploaded_by: 'ishum',
-    uploaded_date: '02/01/2022',
-    description: 'About the microscope'
+    uploaded_by: 'isum',
+    uploaded_date: '01/09/2023',
+    description: 'Lorem ipsum dolor sit'
   },
   {
     id: '2',
     title: 'PDF2',
-    uploaded_by: 'sampath',
-    uploaded_date: '04/11/2022',
-    description: 'About the Test tubes'
+    uploaded_by: 'shehana',
+    uploaded_date: '02/09/2023',
+    description: 'Lorem ipsum dolor sit'
   },
   {
     id: '3',
     title: 'PDF3',
-    uploaded_by: 'samantha',
-    uploaded_date: '22/01/2023',
-    description: 'About the Dropper'
+    uploaded_by: 'dhanuka',
+    uploaded_date: '03/01/2023',
+    description: 'Lorem ipsum dolor sit'
   },
   {
     id: '4',
     title: 'PDF4',
-    uploaded_by: 'kamal',
-    uploaded_date: '22/12/2023',
-    description: 'About the Bunsen burner'
+    uploaded_by: 'sam',
+    uploaded_date: '04/01/2023',
+    description: 'Lorem ipsum dolor sit'
   }
 ]
 
@@ -226,7 +226,7 @@ const TableColumns = () => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Instrument</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Instrument calibration</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
@@ -249,7 +249,7 @@ const TableColumns = () => {
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>
-            Canceled
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

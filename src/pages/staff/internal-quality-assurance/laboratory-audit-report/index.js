@@ -49,7 +49,7 @@ const InstrumentCalibration = () => {
         <Grid item xs={12}>
           <Card>
             <CardHeader
-              title='Instruments'
+              title='Audit reports'
               action={
                 <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
                   Add Audit reports
@@ -63,7 +63,7 @@ const InstrumentCalibration = () => {
         </Grid>
       </Grid>
       <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Add Instrument</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Upload Audit reports</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
@@ -89,7 +89,7 @@ const InstrumentCalibration = () => {
             Add
           </Button>
           <Button onClick={handleClose} variant='contained' color='error'>
-            Canceled
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>
