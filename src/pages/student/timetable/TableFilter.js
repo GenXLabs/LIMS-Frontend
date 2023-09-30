@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
 import {
   Card,
@@ -14,10 +13,9 @@ import {
   Box,
   TextField,
   InputAdornment
+} from '@mui/material'
 
-} from '@mui/material';
-
-import apiDefinitions from 'src/api/apiDefinitions';
+import apiDefinitions from 'src/api/apiDefinitions'
 
 // Styles for the table and components
 const tableStyle = {
@@ -25,7 +23,6 @@ const tableStyle = {
   border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: '10px'
 }
-
 
 const tableHeaderCellStyle = {
   fontWeight: 'bold',
@@ -41,81 +38,44 @@ const titleStyle = {
 
 const EventTable = () => {
   // Sample data for the table with new columns
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
 
   useEffect(() => {
     async function fetchData() {
       try {
         // Fetch data from the API
-        const response = await apiDefinitions.getAllEvents();
-        const responseData = response.data;
-        console.log(responseData);
-        setData(responseData);
+        const response = await apiDefinitions.getAllEvents()
+        const responseData = response.data
+        console.log(responseData)
+        setData(responseData)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       }
     }
 
     // Call the fetchData function when the component mounts
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   // State for search
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('')
 
   // Function to filter data based on search text across all fields
   const filteredData = data.filter(row => {
     return Object.values(row).some(value => {
       if (typeof value === 'string') {
-        return value.toLowerCase().includes(searchText.toLowerCase());
+        return value.toLowerCase().includes(searchText.toLowerCase())
       }
-      return false;
-    });
-  });
+
+      return false
+    })
+  })
 
   // Conditional rendering based on user's access level
-  const userAccessLevel = JSON.parse(localStorage.getItem('userData')).accessLevel;
+  const userAccessLevel = JSON.parse(localStorage.getItem('userData')).accessLevel
   if (userAccessLevel !== 0) {
-    return null; // Return null to hide the table for student logins
+    return null // Return null to hide the table for student logins
   }
-
-}
-
-const EventTable = () => {
-  // Sample data for the table with new columns
-  const [data, setData] = useState([
-    {
-      eventTitle: 'Event A',
-      startTime: '10:00 AM',
-      endTime: '12:00 PM',
-      venue: 'Venue X',
-      instructorEmail: 'instructorA@example.com'
-    },
-    {
-      eventTitle: 'Event B',
-      startTime: '2:00 PM',
-      endTime: '4:00 PM',
-      venue: 'Venue Y',
-      instructorEmail: 'instructorB@example.com'
-    },
-    {
-      eventTitle: 'Event C',
-      startTime: '9:00 AM',
-      endTime: '11:00 AM',
-      venue: 'Venue Z',
-      instructorEmail: 'instructorC@example.com'
-    }
-  ])
-
-  // State for search
-  const [searchText, setSearchText] = useState('')
-
-  // Function to filter data based on search text
-  const filteredData = data.filter(
-    row =>
-      row.eventTitle.toLowerCase().includes(searchText.toLowerCase()) ||
-      row.instructorEmail.toLowerCase().includes(searchText.toLowerCase())
-  )
 
   return (
     <Card elevation={3}>
@@ -162,12 +122,10 @@ const EventTable = () => {
               </TableBody>
             </Table>
           )}
-
         </Paper>
       </CardContent>
     </Card>
-  );
-};
-
+  )
+}
 
 export default EventTable
