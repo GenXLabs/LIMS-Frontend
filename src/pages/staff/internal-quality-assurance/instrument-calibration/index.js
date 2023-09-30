@@ -49,10 +49,17 @@ const InstrumentCalibration = () => {
         <Grid item xs={12}>
           <Card>
             <CardHeader
+<<<<<<< Updated upstream
               title='Instrument calibration'
               action={
                 <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
                   Add Instrument calibration report
+=======
+              title='Instruments Calibration'
+              action={
+                <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
+                  Add Instrument calibration report 
+>>>>>>> Stashed changes
                 </Button>
               }
             ></CardHeader>
