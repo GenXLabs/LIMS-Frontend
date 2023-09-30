@@ -20,5 +20,9 @@ export default {
 
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
-  }
+  },
+
+  getAllGlasswares: async function(){
+    return await api.get(`/inventory-management/get-all`)
+  },
 }
