@@ -258,9 +258,6 @@ const ViewInstrument = () => {
                 error={moduleCategoryError ? moduleCategoryError : null}
                 helperText={moduleCategoryErrorText ? moduleCategoryErrorText : null}
               >
-                <MenuItem value=''>
-                  <em>None</em>
-                </MenuItem>
                 {moduleCategories.map(moduleCategory => (
                   <MenuItem key={moduleCategory.category_id} value={moduleCategory.category_id}>
                     {moduleCategory.category_name}

@@ -1,14 +1,16 @@
 import Icon from 'src/@core/components/icon'
 import React, { useEffect, useState } from 'react'
-import { Button, Card, CardContent, Grid, Typography } from '@mui/material'
+import { Button, Card, CardContent, Grid, MenuItem, Typography } from '@mui/material'
 import apiDefinitions from 'src/api/apiDefinitions'
 import toast from 'react-hot-toast'
-import { manual } from 'prismjs'
+import CustomTextField from 'src/@core/components/mui/text-field'
 
 const PracticalManual = () => {
   const [allPracticalManuals, setAllPracticalManuals] = useState([])
   const [allModuleCategories, setAllModuleCategories] = useState([])
   const [moduleCategoryMap, setModuleCategoryMap] = useState({})
+  const [moduleCategory, setModuleCategory] = useState('all') // Set the value to 'all' initially
+  const [filteredModuleCategories, setFilteredModuleCategories] = useState([])
 
   useEffect(() => {
     apiDefinitions
@@ -16,7 +18,6 @@ const PracticalManual = () => {
       .then(res => {
         const filteredData = res.data.data.filter(manual => manual.deleted_at == null)
         setAllPracticalManuals(filteredData)
-        console.log(filteredData)
       })
       .catch(err => {
         console.log(err)
@@ -26,7 +27,6 @@ const PracticalManual = () => {
       .getAllModuleCategories()
       .then(res => {
         const moduleCategoryData = res.data.data
-        console.log(moduleCategoryData)
         setAllModuleCategories(moduleCategoryData)
 
         // Create a mapping between module category IDs and names
@@ -35,6 +35,10 @@ const PracticalManual = () => {
           categoryMap[category.category_id] = category.category_name
         })
         setModuleCategoryMap(categoryMap)
+
+        // Filter module categories based on deleted_at property
+        const filteredCategories = moduleCategoryData.filter(category => category.deleted_at === null)
+        setFilteredModuleCategories(filteredCategories)
       })
       .catch(err => {
         console.log(err)
@@ -68,9 +72,41 @@ const PracticalManual = () => {
       })
   }
 
+  // Filter practical manuals based on the selected module category
+  const filteredManuals = allPracticalManuals.filter(manual => {
+    if (moduleCategory === 'all') {
+      return true // Return all manuals when "All Categories" is selected
+    }
+
+    return manual.module_category === moduleCategory
+  })
+
   return (
     <Grid container spacing={6}>
-      {allPracticalManuals.map(manual => (
+      <Grid item xs={12}>
+        <Card>
+          <CardContent>
+            <Grid item xs={4}>
+              <CustomTextField
+                select
+                label='Filter By Module Category'
+                id='custom-select'
+                fullWidth
+                value={moduleCategory}
+                onChange={e => setModuleCategory(e.target.value)}
+              >
+                <MenuItem value='all'>All Categories</MenuItem>
+                {filteredModuleCategories.map(moduleCategoryItem => (
+                  <MenuItem key={moduleCategoryItem.category_id} value={moduleCategoryItem.category_id}>
+                    {moduleCategoryItem.category_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
+      {filteredManuals.map(manual => (
         <Grid item xs={6} key={manual.id}>
           <div
             style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}

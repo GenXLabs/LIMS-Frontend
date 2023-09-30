@@ -417,9 +417,7 @@ const TableColumns = refreshTable => {
                 fullWidth
                 onChange={e => setSelectedModuleCategory(e.target.value)}
               >
-                <MenuItem value=''>
-                  <em>None</em>
-                </MenuItem>
+                <MenuItem value='all'>All</MenuItem>
                 {moduleCategories.map(category => (
                   <MenuItem key={category.category_id} value={category.category_id}>
                     {category.category_name}
