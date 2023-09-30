@@ -28,54 +28,30 @@ const rows = [
   {
     id: '1',
     title: 'PDF1',
-<<<<<<< Updated upstream
-    uploaded_by: 'isum',
-    uploaded_date: '01/09/2023',
-    description: 'Lorem ipsum dolor sit'
-=======
     uploaded_by: 'Isum',
     uploaded_date: '6/1/2022',
     description: 'dummy text of the printing'
->>>>>>> Stashed changes
   },
   {
     id: '2',
     title: 'PDF2',
-<<<<<<< Updated upstream
-    uploaded_by: 'shehana',
-    uploaded_date: '02/09/2023',
-    description: 'Lorem ipsum dolor sit'
-=======
-    uploaded_by: 'Shehan',
+    uploaded_by: 'Shehana',
     uploaded_date: '5/1/2022',
     description: 'dummy text of the printing'
->>>>>>> Stashed changes
   },
   {
     id: '3',
     title: 'PDF3',
-<<<<<<< Updated upstream
-    uploaded_by: 'dhanuka',
-    uploaded_date: '03/01/2023',
-    description: 'Lorem ipsum dolor sit'
-=======
     uploaded_by: 'Dhanuka',
     uploaded_date: '2/1/2023',
     description: 'dummy text of the printing'
->>>>>>> Stashed changes
   },
   {
     id: '4',
     title: 'PDF4',
-<<<<<<< Updated upstream
-    uploaded_by: 'sam',
-    uploaded_date: '04/01/2023',
-    description: 'Lorem ipsum dolor sit'
-=======
     uploaded_by: 'Dilshan',
     uploaded_date: '1/1/2023',
     description: 'dummy text of the printing'
->>>>>>> Stashed changes
   }
 ]
 
