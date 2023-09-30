@@ -89,7 +89,7 @@ const ViewBiohazard = () => {
             Add
           </Button>
           <Button onClick={handleClose} variant='contained' color='error'>
-            Canceled
+          Cancel
           </Button>
         </DialogActions>
       </Dialog>

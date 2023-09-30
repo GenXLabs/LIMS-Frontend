@@ -11,6 +11,9 @@ import { useState } from 'react'
 import Icon from 'src/@core/components/icon'
 import TextField from '@mui/material/TextField'
 import FileUploaderRestrictions from './FileUploder'
+import apiDefinitions from 'src/api/apiDefinitions'
+
+import toast from 'react-hot-toast'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -27,19 +30,35 @@ const ViewInstrument = () => {
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [tableRefresh, setTableRefresh] = useState(false)
   console.log(title)
   console.log(description)
 
-
-
   const handleAddInstrument = () => {
-    const addInstrumentPayload = [
-      {
-        title: title,
-        description: description
-      }
-    ]
-    console.log(addInstrumentPayload)
+    const addInstrumentPayload = {
+      title: title,
+      description: description
+    }
+
+    console.log('Request Payload:', addInstrumentPayload)
+
+    apiDefinitions
+      .addInstrument(addInstrumentPayload)
+      .then(res => {
+        console.log(res)
+        toast.success('Instrument Added Successfully!')
+        setTableRefresh(!tableRefresh)
+      })
+      .catch(err => {
+        console.error('API Error:', err)
+        toast.error('Error Adding Instrument!')
+
+        // You can log more details about the error response
+        if (err.response) {
+          console.error('Response Data:', err.response.data)
+        }
+      })
+
     handleClose()
   }
 
@@ -57,7 +76,7 @@ const ViewInstrument = () => {
               }
             ></CardHeader>
             <CardContent>
-              <TableFilter />
+              <TableFilter tableRefresh={tableRefresh} />
             </CardContent>
           </Card>
         </Grid>
@@ -89,7 +108,7 @@ const ViewInstrument = () => {
             Add
           </Button>
           <Button onClick={handleClose} variant='contained' color='error'>
-            Canceled
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

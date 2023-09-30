@@ -1,4 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
+
 import {
   Card,
   CardContent,
@@ -12,6 +14,7 @@ import {
   Box,
   TextField,
   InputAdornment
+
 } from '@mui/material';
 
 import apiDefinitions from 'src/api/apiDefinitions';
@@ -21,19 +24,20 @@ const tableStyle = {
   minWidth: 650,
   border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: '10px'
-};
+}
+
 
 const tableHeaderCellStyle = {
   fontWeight: 'bold',
   borderBottom: '2px solid rgba(0, 0, 0, 0.12)'
-};
+}
 
 const titleStyle = {
   marginBottom: '15px',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center'
-};
+}
 
 const EventTable = () => {
   // Sample data for the table with new columns
@@ -74,6 +78,44 @@ const EventTable = () => {
   if (userAccessLevel !== 0) {
     return null; // Return null to hide the table for student logins
   }
+
+}
+
+const EventTable = () => {
+  // Sample data for the table with new columns
+  const [data, setData] = useState([
+    {
+      eventTitle: 'Event A',
+      startTime: '10:00 AM',
+      endTime: '12:00 PM',
+      venue: 'Venue X',
+      instructorEmail: 'instructorA@example.com'
+    },
+    {
+      eventTitle: 'Event B',
+      startTime: '2:00 PM',
+      endTime: '4:00 PM',
+      venue: 'Venue Y',
+      instructorEmail: 'instructorB@example.com'
+    },
+    {
+      eventTitle: 'Event C',
+      startTime: '9:00 AM',
+      endTime: '11:00 AM',
+      venue: 'Venue Z',
+      instructorEmail: 'instructorC@example.com'
+    }
+  ])
+
+  // State for search
+  const [searchText, setSearchText] = useState('')
+
+  // Function to filter data based on search text
+  const filteredData = data.filter(
+    row =>
+      row.eventTitle.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.instructorEmail.toLowerCase().includes(searchText.toLowerCase())
+  )
 
   return (
     <Card elevation={3}>
@@ -120,10 +162,12 @@ const EventTable = () => {
               </TableBody>
             </Table>
           )}
+
         </Paper>
       </CardContent>
     </Card>
   );
 };
 
-export default EventTable;
+
+export default EventTable
