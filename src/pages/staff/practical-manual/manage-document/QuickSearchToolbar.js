@@ -1,137 +1,55 @@
-import React, { useCallback, useState } from 'react';
-import { useRouter } from 'next/router'; // Import useRouter from Next.js
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  TextField,
-  Tooltip,
-} from '@mui/material';
-import { ButtonsContained } from './ButtonsContained';
+// ** MUI Imports
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import { GridToolbarFilterButton } from '@mui/x-data-grid'
 
-const QuickSearchToolbar = () => {
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [editConfirmationOpen, setEditConfirmationOpen] = useState(false);
-  const [downloadAlertOpen, setDownloadAlertOpen] = useState(false);
+// ** Custom Component Import
+import CustomTextField from 'src/@core/components/mui/text-field'
 
-  const handleOpenDeleteConfirmation = () => {
-    setDeleteConfirmationOpen(true);
-  };
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
-  const handleCloseDeleteConfirmation = () => {
-    setDeleteConfirmationOpen(false);
-  };
-
-  const handleOpenEditConfirmation = () => {
-    setEditConfirmationOpen(true);
-  };
-
-  const handleCloseEditConfirmation = () => {
-    setEditConfirmationOpen(false);
-  };
-
-  const handleOpenDownloadAlert = () => {
-    setDownloadAlertOpen(true);
-  };
-
-  const handleCloseDownloadAlert = () => {
-    setDownloadAlertOpen(false);
-  };
-
-  const handleDeleteRow = useCallback(() => {
-    // You can log a message here
-    console.log("Delete Row clicked");
-
-    handleOpenDeleteConfirmation();
-
-    // Store the row data that needs to be deleted
-    // (you can use state to store this temporarily)
-  }, []);
-
-  const handleEditRow = useCallback(() => {
-    // You can log a message here
-    console.log("Edit Row clicked");
-
-    handleOpenEditConfirmation();
-
-    // Store the row data that needs to be edited
-    // (you can use state to store this temporarily)
-  }, []);
-
-  const handleDeleteConfirmed = () => {
-    // Implement the logic to delete the module
-    // Close the confirmation dialog
-    handleCloseDeleteConfirmation();
-  };
-
-  const handleEditConfirmed = () => {
-    // Implement the logic to edit the module
-    // Close the confirmation dialog
-    handleCloseEditConfirmation();
-  };
-
-  const handleDownloadRow = useCallback(() => {
-    // Implement the logic to trigger download
-    // You can use window.alert for testing
-    window.alert('Successfully downloaded!');
-  }, []);
-
-  const router = useRouter(); // Get the router object
-
-  const manageDocument = () => {
-    // Handle the routing logic here
-    router.push('/staff/practical-manual/manage-document/fileManagerMultiple');
-  };
-
+const QuickSearchToolbar = props => {
   return (
-    <>
-      {/* Your table components and other UI elements go here */}
-      {/* Example of adding click events to buttons */}
-      <Button onClick={handleDeleteRow}>Delete Row</Button>
-      <Button onClick={handleEditRow}>Edit Row</Button>
+    <Box
+      sx={{
+        gap: 2,
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        p: theme => theme.spacing(2, 5, 4, 5)
+      }}
+    >
+      <GridToolbarFilterButton />
+      <CustomTextField
+        value={props.value}
+        placeholder='Search…'
+        onChange={props.onChange}
+        InputProps={{
+          startAdornment: (
+            <Box sx={{ mr: 2, display: 'flex' }}>
+              <Icon fontSize='1.25rem' icon='tabler:search' />
+            </Box>
+          ),
+          endAdornment: (
+            <IconButton size='small' title='Clear' aria-label='Clear' onClick={props.clearSearch}>
+              <Icon fontSize='1.25rem' icon='tabler:x' />
+            </IconButton>
+          )
+        }}
+        sx={{
+          width: {
+            xs: 1,
+            sm: 'auto'
+          },
+          '& .MuiInputBase-root > svg': {
+            mr: 2
+          }
+        }}
+      />
+    </Box>
+  )
+}
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteConfirmationOpen}>
-        <DialogTitle>Delete Module</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this module?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteConfirmation} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteConfirmed} color="primary">
-            Proceed
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Edit Confirmation Dialog */}
-      <Dialog open={editConfirmationOpen}>
-        <DialogTitle>Edit Module</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to edit this module?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditConfirmation} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleEditConfirmed} color="primary">
-            Proceed
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
-export default QuickSearchToolbar;
+export default QuickSearchToolbar

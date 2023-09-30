@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -16,31 +16,51 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 import Button from '@mui/material/Button'
 import CustomTextField from 'src/@core/components/mui/text-field'
 
-import Swal from 'sweetalert2'
-
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
+import apiDefinitions from 'src/api/apiDefinitions'
+import toast from 'react-hot-toast'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const TableStickyHeaderColumns = () => {
+const TableStickyHeaderColumns = refreshTable2 => {
   const [editModalState, setEditModalState] = useState(false)
 
   const [editModuleCategory, setEditModuleCategory] = useState('')
 
+  const [editModuleID, setEditModuleID] = useState('')
+
+  const [refreshTable, setRefreshTable] = useState(false)
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+  console.log(userData.id)
+
   const handleEditModuleCat = () => {
     console.log('Edit Module Category', editModuleCategory)
-    setEditModuleCategory('')
-    setEditModalState(false)
+    apiDefinitions
+      .updateModuleCategory(editModuleID, { updated_by: userData.id, category_name: editModuleCategory })
+      .then(() => {
+        toast.success('Module Category Updated Successfully')
+        setRefreshTable(!refreshTable)
+        setEditModuleCategory('')
+        setEditModalState(false)
+      })
+      .catch(err => {
+        console.log('Error Updating Module Category', err)
+        toast.error('Error Updating Module Category')
+        setEditModuleCategory('')
+        setEditModalState(false)
+      })
   }
 
   const handleEditModalOpen = row => {
     setEditModalState(true)
-    setEditModuleCategory(row.module_name)
+    setEditModuleCategory(row.category_name)
+    setEditModuleID(row.category_id)
   }
 
   const handleModuleCatCancel = () => {
@@ -48,56 +68,42 @@ const TableStickyHeaderColumns = () => {
     setEditModuleCategory('')
   }
 
-  const rows = [
-    {
-      id: '1',
-      module_code: 1,
-      module_name: 'Module 1'
-    },
-    {
-      id: '2',
-      module_code: 2,
-      module_name: 'Module 2'
-    },
-    {
-      id: '3',
-      module_code: 3,
-      module_name: 'Module 3'
-    },
-    {
-      id: '4',
-      module_code: 4,
-      module_name: 'Module 4'
-    },
-    {
-      id: '5',
-      module_code: 5,
-      module_name: 'Module 5'
-    }
-  ]
+  const handleDeleteModuleCategory = row => {
+    console.log('Delete Module Category', row.category_id)
+    apiDefinitions
+      .deleteModuleCategory(row.category_id, { deleted_by: userData.id })
+      .then(() => {
+        toast.success('Module Category Deleted Successfully')
+        setRefreshTable(!refreshTable)
+      })
+      .catch(err => {
+        console.log('Error Deleting Module Category', err)
+        toast.error('Error Deleting Module Category')
+      })
+  }
 
   const columns = [
     {
       flex: 0.1,
       minWidth: 170,
       headerName: 'Module Code',
-      field: 'module_code',
+      field: 'category_id',
       headerAlign: 'center',
       align: 'center',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.module_code}
+          {params.row.category_id}
         </Typography>
       )
     },
     {
       flex: 0.25,
       minWidth: 170,
-      headerName: 'Module Name',
-      field: 'module_name',
+      headerName: 'Module Category',
+      field: 'category_name',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.module_name}
+          {params.row.category_name}
         </Typography>
       )
     },
@@ -117,7 +123,7 @@ const TableStickyHeaderColumns = () => {
             <IconButton color='primary' onClick={() => handleEditModalOpen(params.row)}>
               <Icon icon='fluent:edit-16-regular' />
             </IconButton>
-            <IconButton color='error'>
+            <IconButton color='error' onClick={() => handleDeleteModuleCategory(params.row)}>
               <Icon icon='lucide:trash-2' />
             </IconButton>
           </Box>
@@ -127,21 +133,45 @@ const TableStickyHeaderColumns = () => {
   ]
 
   // ** States
-  const [data] = useState(rows)
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5 })
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllModuleCategories()
+      .then(res => {
+        const filteredData = res.data.data
+          .filter(category => category.deleted_at === null)
+          .map((category, index) => ({
+            ...category,
+            id: index + 1 // You can adjust the logic for generating the new ID as needed
+          }))
+        console.log('Module Categories', filteredData)
+        setData(filteredData)
+      })
+      .catch(err => {
+        console.log('Error getting module categories', err)
+      })
+  }, [refreshTable, refreshTable2])
 
   const handleSearch = searchValue => {
     setSearchText(searchValue)
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
-      return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
-      })
+      // Check if category_name or category_id match the search criteria
+      if (
+        (row.category_name && searchRegex.test(row.category_name.toString())) ||
+        (row.category_id && searchRegex.test(row.category_id.toString()))
+      ) {
+        return true
+      }
+
+      return false
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -154,7 +184,7 @@ const TableStickyHeaderColumns = () => {
       <DataGrid
         autoHeight
         columns={columns}
-        pageSizeOptions={[1, 2, 3, 4, 5]}
+        pageSizeOptions={[7, 10, 25, 50]}
         paginationModel={paginationModel}
         slots={{ toolbar: QuickSearchToolbar }}
         onPaginationModelChange={setPaginationModel}
