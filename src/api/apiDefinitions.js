@@ -17,7 +17,7 @@ export default {
   },
 
   /* Lab Reservation APIs End */
-
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Practical Manual and Module Category APIs Start */
 
   getAllPracticalManuals: async function () {
@@ -63,13 +63,14 @@ export default {
   },
 
   /* Practical Manual and Module Category APIs End */
-
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Inventory Management APIs Start */
+  getAllGlasswares: async function(){
+    return await api.get(`/inventory-management/get-all`)
   },
-
-  /*sop management*/
-  /*Instrument*/
+  /* Inventory Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* SOP Management APIs Start */
   getAllInstrument: async function(){
   return await api.get(`/instrument/get-all`)
   },
@@ -80,5 +81,10 @@ export default {
 
   deleteInstrumrnt : async function (){
     return await api.delete(`/instrument/delete`)
+  },
+  /* SOP Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
   }
 }

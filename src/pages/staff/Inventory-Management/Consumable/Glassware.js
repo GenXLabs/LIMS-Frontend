@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -18,6 +18,7 @@ import {
 
 // Import the InventoryForm component
 import InventoryForm from './GlasswareForm';
+import apiDefinitions from 'src/api/apiDefinitions';
 
 const tableStyle = {
   minWidth: 650,
@@ -37,81 +38,113 @@ const titleStyle = {
   alignItems: 'center',
 };
 
+
+
 const InventoryTable = () => {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllGlasswares()
+      .then(res => {
+        console.log(res.data)
+        setData(res.data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }, [])
+
   // Sample data for the table
-  const [data, setData] = useState([
-    { inventoryNo: '001', inventoryName: 'Item A', availability: 20, newlyArrivals: 5, broken: 2, returns: 3 },
-    { inventoryNo: '002', inventoryName: 'Item B', availability: 15, newlyArrivals: 3, broken: 1, returns: 2 },
-    { inventoryNo: '003', inventoryName: 'Item C', availability: 25, newlyArrivals: 7, broken: 0, returns: 4 },
-  ]);
 
   // State for search
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('')
 
   // State for the form dialog
-  const [openForm, setOpenForm] = useState(false);
+  const [openForm, setOpenForm] = useState(false)
 
   // State for editing item
-  const [editItem, setEditItem] = useState(null);
+  const [editItem, setEditItem] = useState(null)
 
   // Function to filter data based on search text
-  const filteredData = data.filter(
-    (row) =>
-      row.inventoryNo.includes(searchText) ||
-      row.inventoryName.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Function to filter data based on search text
+  // Function to filter data based on search text
+  // Function to filter data based on search text
+  // ...
+  // Function to filter data based on search text
+const filteredData = data
+  ? data.filter(row => {
+      const searchTextLower = searchText.toLowerCase()
+      const isMatch =
+        (row.inventoryNo && row.inventoryNo.toString().includes(searchTextLower)) ||
+        (row.inventoryName && row.inventoryName.toLowerCase().includes(searchTextLower)) ||
+        (row.availability && row.availability.toString().includes(searchTextLower)) ||
+        (row.newly && row.newly.toString().includes(searchTextLower)) ||
+        (row.broken && row.broken.toString().includes(searchTextLower)) ||
+        (row.returns && row.returns.toString().includes(searchTextLower)) ||
+        (row.balance && row.balance.toString().includes(searchTextLower))
+
+      return isMatch
+    })
+  : []
+
+
+
+
+
+  // ...
 
   // Function to add new inventory details
-  const addInventoryDetails = (formData) => {
+  const addInventoryDetails = formData => {
     // Add the new data to the existing data
-    setData([...data, formData]);
-  };
+    setData([...data, formData])
+  }
 
   // Function to edit inventory details
   const editInventoryDetails = (index, updatedData) => {
-    const updatedDataArray = [...data];
-    updatedDataArray[index] = updatedData;
-    setData(updatedDataArray);
-    setEditItem(null); // Reset editItem state after editing
-  };
+    const updatedDataArray = [...data]
+    updatedDataArray[index] = updatedData
+    setData(updatedDataArray)
+    setEditItem(null) // Reset editItem state after editing
+  }
 
   // Function to delete inventory details
-  const deleteInventoryDetails = (index) => {
-    const updatedDataArray = [...data];
-    updatedDataArray.splice(index, 1);
-    setData(updatedDataArray);
-  };
+  const deleteInventoryDetails = index => {
+    const updatedDataArray = [...data]
+    updatedDataArray.splice(index, 1)
+    setData(updatedDataArray)
+  }
 
   return (
     <Card elevation={3}>
       <CardContent>
         <Box style={titleStyle}>
-          <Typography variant="h5">Glassware Details</Typography>
+          <Typography variant='h5'>Glassware Details</Typography>
         </Box>
         <Box style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
           <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
+            label='Search'
+            variant='outlined'
+            size='small'
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={e => setSearchText(e.target.value)}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setSearchText('')} size="small">
+                <InputAdornment position='end'>
+                  <IconButton onClick={() => setSearchText('')} size='small'>
                     Clear
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             style={{ marginLeft: '706px' }}
             onClick={() => {
-              setOpenForm(true);
-              setEditItem(null); // Reset editItem when adding a new item
+              setOpenForm(true)
+              setEditItem(null) // Reset editItem when adding a new item
             }}
           >
             + Add Details
@@ -133,28 +166,34 @@ const InventoryTable = () => {
             </TableHead>
             <TableBody>
               {filteredData.map((row, index) => (
-                <TableRow key={row.inventoryNo}>
-                  <TableCell>{row.inventoryNo}</TableCell>
-                  <TableCell>{row.inventoryName}</TableCell>
+                <TableRow key={row.inventory_id}>
+                  <TableCell>{row.inventory_id}</TableCell>
+                  <TableCell>{row.inventory_name}</TableCell>
                   <TableCell>{row.availability}</TableCell>
-                  <TableCell>{row.newlyArrivals}</TableCell>
+                  <TableCell>{row.newly}</TableCell>
                   <TableCell>{row.broken}</TableCell>
                   <TableCell>{row.returns}</TableCell>
-                  <TableCell>{row.availability + row.newlyArrivals - row.broken - row.returns}</TableCell>
+                  <TableCell>{row.availability + row.newly - row.broken - row.returns}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={() => {
-                        setOpenForm(true);
-                        setEditItem(row); // Set editItem to the selected row data
+                        setOpenForm(true)
+                        setEditItem(row) // Set editItem to the selected row data
                       }}
-                      size="small"
-                      style={{ backgroundColor: '#684AFF', color: 'white', borderRadius: '8px', marginRight: '7px', width: '55px' }}
+                      size='small'
+                      style={{
+                        backgroundColor: '#684AFF',
+                        color: 'white',
+                        borderRadius: '8px',
+                        marginRight: '7px',
+                        width: '55px'
+                      }}
                     >
                       Edit
                     </IconButton>
                     <IconButton
                       onClick={() => deleteInventoryDetails(index)}
-                      size="small"
+                      size='small'
                       style={{ backgroundColor: '#FF4A4A', color: 'white', borderRadius: '8px' }}
                     >
                       Delete
@@ -170,11 +209,11 @@ const InventoryTable = () => {
       <InventoryForm
         open={openForm}
         onClose={() => setOpenForm(false)}
-        onSubmit={editItem ? (formData) => editInventoryDetails(data.indexOf(editItem), formData) : addInventoryDetails}
+        onSubmit={editItem ? formData => editInventoryDetails(data.indexOf(editItem), formData) : addInventoryDetails}
         editItem={editItem} // Pass the editItem data to InventoryForm
       />
     </Card>
-  );
+  )
 };
 
 export default InventoryTable;
