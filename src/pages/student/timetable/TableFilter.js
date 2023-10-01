@@ -1,173 +1,131 @@
-// ** React Imports
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import { DataGrid } from '@mui/x-data-grid'
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Box,
+  TextField,
+  InputAdornment
+} from '@mui/material'
 
-// ** Custom Components
-import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
-import QuickSearchToolbar from './QuickSearchToolbar'
+import apiDefinitions from 'src/api/apiDefinitions'
 
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** Data Import
-import { rows } from 'src/@fake-db/table/static-data'
-
-// ** renders client column
-const renderClient = params => {
-  const { row } = params
-  const stateNum = Math.floor(Math.random() * 6)
-  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
-  const color = states[stateNum]
-  if (row.avatar.length) {
-    return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
-  } else {
-    return (
-      <CustomAvatar skin='light' color={color} sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}>
-        {getInitials(row.full_name ? row.full_name : 'John Doe')}
-      </CustomAvatar>
-    )
-  }
+// Styles for the table and components
+const tableStyle = {
+  minWidth: 650,
+  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderRadius: '10px'
 }
 
-const statusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
+const tableHeaderCellStyle = {
+  fontWeight: 'bold',
+  borderBottom: '2px solid rgba(0, 0, 0, 0.12)'
 }
 
-const escapeRegExp = value => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+const titleStyle = {
+  marginBottom: '15px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
 }
 
-const columns = [
-  {
-    flex: 0.275,
-    minWidth: 290,
-    field: 'title',
-    headerName: 'Event Title',
-    renderCell: params => {
-      const { row } = params
+const EventTable = () => {
+  // Sample data for the table with new columns
+  const [data, setData] = useState([])
 
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}></Typography>
-          </Box>
-        </Box>
-      )
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch data from the API
+        const response = await apiDefinitions.getAllEvents()
+        const responseData = response.data
+        console.log(responseData)
+        setData(responseData)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
     }
-  },
-  {
-    flex: 0.2,
-    type: 'string',
-    minWidth: 120,
-    headerName: 'Start Time',
-    field: 'start_time',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_time}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.2,
-    type: 'string',
-    minWidth: 120,
-    headerName: 'End tTime',
-    field: 'end_time',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.end_time}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.2,
-    type: 'string',
-    minWidth: 120,
-    headerName: 'Venue',
-    field: 'venue',
-    valueGetter: params => new Date(params.value),
-    renderCell: params => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.venue}
-      </Typography>
-    )
-  },
-  {
-    flex: 0.2,
-    minWidth: 110,
-    field: 'Instructor email',
-    headerName: 'email',
-    renderCell: params => <Typography variant='body2' sx={{ color: 'text.primary' }}></Typography>
-  }
-]
 
-const TableColumns = () => {
-  // ** States
-  const [data] = useState(rows)
+    // Call the fetchData function when the component mounts
+    fetchData()
+  }, [])
+
+  // State for search
   const [searchText, setSearchText] = useState('')
-  const [filteredData, setFilteredData] = useState([])
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
-  const handleSearch = searchValue => {
-    setSearchText(searchValue)
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
+  // Function to filter data based on search text across all fields
+  const filteredData = data.filter(row => {
+    return Object.values(row).some(value => {
+      if (typeof value === 'string') {
+        return value.toLowerCase().includes(searchText.toLowerCase())
+      }
 
-    const filteredRows = data.filter(row => {
-      return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
-      })
+      return false
     })
-    if (searchValue.length) {
-      setFilteredData(filteredRows)
-    } else {
-      setFilteredData([])
-    }
+  })
+
+  // Conditional rendering based on user's access level
+  const userAccessLevel = JSON.parse(localStorage.getItem('userData')).accessLevel
+  if (userAccessLevel !== 0) {
+    return null // Return null to hide the table for student logins
   }
 
   return (
-    <Card>
-      <CardHeader title='Scheduled Reservations' />
-      <DataGrid
-        autoHeight
-        columns={columns}
-        pageSizeOptions={[7, 10, 25, 50]}
-        paginationModel={paginationModel}
-        slots={{ toolbar: QuickSearchToolbar }}
-        onPaginationModelChange={setPaginationModel}
-        rows={filteredData.length ? filteredData : data}
-        sx={{
-          '& .MuiSvgIcon-root': {
-            fontSize: '1.125rem'
-          }
-        }}
-        slotProps={{
-          baseButton: {
-            size: 'medium',
-            variant: 'outlined'
-          },
-          toolbar: {
-            value: searchText,
-            clearSearch: () => handleSearch(''),
-            onChange: event => handleSearch(event.target.value)
-          }
-        }}
-      />
+    <Card elevation={3}>
+      <CardContent>
+        <Box style={titleStyle}>
+          <Typography variant='h5'>Event Details</Typography>
+          <TextField
+            label='Search'
+            variant='outlined'
+            size='small'
+            value={searchText}
+            onChange={e => setSearchText(e.target.value)}
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>Clear</InputAdornment>
+            }}
+          />
+        </Box>
+        <Paper elevation={0}>
+          {filteredData.length === 0 ? (
+            // Render "No results found" message when filteredData is empty
+            <Typography variant='body1'>No results found.</Typography>
+          ) : (
+            // Render the table when there are matches
+            <Table style={tableStyle}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={tableHeaderCellStyle}>Event Title</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Start Time</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Venue</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Date</TableCell>
+                  <TableCell style={tableHeaderCellStyle}>Instructor's Email</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredData.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row.event_title}</TableCell>
+                    <TableCell>{row.time}</TableCell>
+                    <TableCell>{row.venue}</TableCell>
+                    <TableCell>{row.date}</TableCell>
+                    <TableCell>{row.email}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Paper>
+      </CardContent>
     </Card>
   )
 }
 
-export default TableColumns
+export default EventTable

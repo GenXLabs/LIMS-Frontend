@@ -1,129 +1,101 @@
-import React, { useState } from 'react'
-import Modal from 'react-modal'
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import apiDefinitions from 'src/api/apiDefinitions';
 
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const timeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', 'LUNCH BREAK', '3:00 PM', '5:00 PM']
+// Constants for days of the week and time slots
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const timeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', 'LUNCH BREAK', '3:00 PM', '5:00 PM'];
 
 function Timetable() {
-  const [timetableData, setTimetableData] = useState([])
-  const [showAddEventForm, setShowAddEventForm] = useState(false)
-  const [selectedDay, setSelectedDay] = useState('')
-  const [selectedTime, setSelectedTime] = useState('')
-  const [eventText, setEventText] = useState('')
-  const [selectedEvent, setSelectedEvent] = useState(null) // Track the selected event for editing
-  const [selectedVenue, setSelectedVenue] = useState('Lab 01') // Venue selection
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
-  const [instructorEmail, setInstructorEmail] = useState('')
+  // State variables to manage data and form state
+  const [timetableData, setTimetableData] = useState([]);
+  const [showAddEventForm, setShowAddEventForm] = useState(false);
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [eventText, setEventText] = useState('');
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedVenue, setSelectedVenue] = useState('Lab 01');
+  const [instructorEmail, setInstructorEmail] = useState('');
+  const [eventTextError, setEventTextError] = useState('');
+  const [instructorEmailError, setInstructorEmailError] = useState('');
 
-  const cellStyle = {
-    border: '1px solid #ddd',
-    padding: '19px',
-    textAlign: 'center',
-    fontSize: '16px',
-    width: '200px',
-    borderRadius: '8px',
-    cursor: 'pointer'
-  }
+  // User access level check
+  const userAccessLevel = JSON.parse(localStorage.getItem('userData')).accessLevel;
+  const shouldShowButtonsAndForms = userAccessLevel === 0;
 
-  const headerCellStyle = {
-    ...cellStyle,
-    backgroundColor: '#7468F0',
-    fontWeight: 'bold',
-    color: 'white'
-  }
-
-  const evenRowStyle = {
-    backgroundColor: '#fff'
-  }
-
-  const oddRowStyle = {
-    backgroundColor: '#f9f9f9'
-  }
-
-  const lunchBreakStyle = {
-    fontSize: '12px',
-    color: 'gray'
-  }
-
-  const inputStyle = {
-    width: '60%',
-    padding: '8px',
-    borderRadius: '4px',
-    border: '1px solid #ccc'
-  }
-
-  // Check user's access level and decide whether to show buttons and forms
-  const userAccessLevel = JSON.parse(localStorage.getItem('userData')).accessLevel
-  const shouldShowButtonsAndForms = userAccessLevel === 0
-
+  // Function to open the Add Event form
   const openAddEventForm = (day, time) => {
-    setSelectedDay(day)
-    setSelectedTime(time)
-    setShowAddEventForm(true)
-  }
+    setSelectedDay(day);
+    setSelectedTime(time);
+    setShowAddEventForm(true);
+  };
 
+  // Function to close the Add Event form and reset form fields
   const closeAddEventForm = () => {
-    setShowAddEventForm(false)
-    setSelectedDay('')
-    setSelectedTime('')
-    setEventText('')
-    setSelectedEvent(null) // Clear selected event
-    setSelectedVenue('Lab 01') // Reset venue selection
-    setStartTime('')
-    setEndTime('')
-    setInstructorEmail('')
-  }
+    setShowAddEventForm(false);
+    setSelectedDay('');
+    setSelectedTime('');
+    setEventText('');
+    setSelectedEvent(null);
+    setSelectedVenue('Lab 01');
+    setInstructorEmail('');
+    setEventTextError('');
+    setInstructorEmailError('');
+  };
 
+  // Function to handle adding an event
   const handleAddEvent = () => {
-    if (eventText.trim() !== '' && startTime.trim() !== '' && endTime.trim() !== '' && instructorEmail.trim() !== '') {
-      if (selectedEvent) {
-        // If a selected event exists, update it
-        const updatedData = timetableData.map(item =>
-          item.day === selectedEvent.day && item.time === selectedEvent.time ? { ...item, event: eventText } : item
-        )
-        setTimetableData(updatedData)
-      } else {
-        // Otherwise, add a new event
-        const updatedData = [
-          ...timetableData,
-          {
-            day: selectedDay,
-            time: selectedTime,
-            event: eventText,
-            venue: selectedVenue,
-            startTime,
-            endTime,
-            instructorEmail
-          }
-        ]
-        setTimetableData(updatedData)
-      }
+    // Reset error messages
+    setEventTextError('');
+    setInstructorEmailError('');
 
-      closeAddEventForm()
+    let isValid = true;
+
+    // Validation for event title (should not be empty)
+    if (!eventText.trim()) {
+      setEventTextError('Event Title is required');
+      isValid = false;
     }
-  }
 
-  const handleEditEvent = (day, time, event) => {
-    const selectedEventData = timetableData.find(item => item.day === day && item.time === time)
-    setSelectedDay(day)
-    setSelectedTime(time)
-    setEventText(event)
-    setSelectedEvent({ day, time })
-    setSelectedVenue(selectedEventData.venue)
-    setStartTime(selectedEventData.startTime)
-    setEndTime(selectedEventData.endTime)
-    setInstructorEmail(selectedEventData.instructorEmail)
-    setShowAddEventForm(true)
-  }
+    // Regular expression pattern for validating instructor's email
+    const emailPattern = /^[a-zA-Z0-9]+@gmail\.com$/;
 
-  const handleDeleteEvent = (day, time, event) => {
-    const updatedData = timetableData.filter(item => !(item.day === day && item.time === time))
-    setTimetableData(updatedData)
-    // Prevent the event from propagating to open the Add Event form
-    event.stopPropagation()
-  }
+    // Validation for instructor's email format
+    if (!instructorEmail.match(emailPattern)) {
+      setInstructorEmailError("Instructor's Email should be in the format: any number or letter + gmail.com");
+      isValid = false;
+    }
 
+    // If any validation fails, do not proceed with adding the event
+    if (!isValid) {
+      return;
+    }
+
+    // Event data to be added
+    const eventData = {
+      venue: selectedVenue,
+      date: selectedDay,
+      time: selectedTime,
+      email: instructorEmail,
+      event_title: eventText,
+    };
+
+    // Function to make an API call to add the event
+    const addEventData = async () => {
+      try {
+        const response = await apiDefinitions.addEvent(eventData);
+        console.log('add event response', response);
+      } catch (error) {
+        console.error('add event error', error);
+      }
+    };
+
+    // Call the function to add the event and close the form
+    addEventData();
+    closeAddEventForm();
+  };
+
+  // Render the timetable table with events and buttons
   return (
     <div className='timetable'>
       <table>
@@ -142,20 +114,21 @@ function Timetable() {
             <tr key={timeIndex} style={timeIndex % 2 === 0 ? evenRowStyle : oddRowStyle}>
               <td style={cellStyle}>{time}</td>
               {daysOfWeek.map((day, dayIndex) => {
-                const event = timetableData.find(item => item.day === day && item.time === time)
-                const cellHasEvent = event && event.event.trim() !== ''
+                const event = timetableData.find((item) => item.day === day && item.time === time);
+                const cellHasEvent = event && event.event.trim() !== '';
 
                 const cellStyleWithEvent = {
                   ...cellStyle,
                   backgroundColor: cellHasEvent ? '#E2E2E2 ' : undefined,
-                  color: cellHasEvent ? 'orange' : undefined
-                }
+                  color: cellHasEvent ? '#E35A0C' : undefined,
+                  fontWeight: 'bold',
+                };
 
                 return (
                   <td
                     key={dayIndex}
                     style={cellHasEvent ? cellStyleWithEvent : cellStyle}
-                    ref={cellRef => (cellRef ? (cellRef.style.cursor = 'pointer') : null)}
+                    ref={(cellRef) => (cellRef ? (cellRef.style.cursor = 'pointer') : null)}
                     onClick={() => openAddEventForm(day, time)}
                   >
                     {time === 'LUNCH BREAK' ? (
@@ -170,7 +143,7 @@ function Timetable() {
                             handleEditEvent(
                               day,
                               time,
-                              timetableData.find(item => item.day === day && item.time === time).event
+                              timetableData.find((item) => item.day === day && item.time === time).event
                             )
                           }
                           className='edit-button'
@@ -181,13 +154,13 @@ function Timetable() {
                             width: '50px',
                             height: '30px',
                             borderRadius: '8px',
-                            marginRight: '5px'
+                            marginRight: '5px',
                           }}
                         >
                           Edit
                         </button>
                         <button
-                          onClick={e => handleDeleteEvent(day, time, e)}
+                          onClick={(e) => handleDeleteEvent(day, time, e)}
                           className='delete-button'
                           style={{
                             backgroundColor: '#FF4343',
@@ -195,7 +168,7 @@ function Timetable() {
                             border: 'none',
                             height: '30px',
                             width: '50px',
-                            borderRadius: '8px'
+                            borderRadius: '8px',
                           }}
                         >
                           Delete
@@ -203,7 +176,7 @@ function Timetable() {
                       </div>
                     )}
                   </td>
-                )
+                );
               })}
             </tr>
           ))}
@@ -218,11 +191,11 @@ function Timetable() {
           style={{
             overlay: {
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 9999
+              zIndex: 9999,
             },
             content: {
               alignItems: 'center',
-              top: '13%',
+              top: '8%',
               right: '0',
               transform: 'translateX(0%)',
               width: '600px',
@@ -232,86 +205,85 @@ function Timetable() {
               boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
               position: 'fixed',
               height: '600px',
-              transition: 'transform 0.3s ease-in-out'
-            }
+              transition: 'transform 0.3s ease-in-out',
+            },
           }}
         >
           <div className='modal-header'>
             <h2>{selectedEvent ? 'Edit Event' : 'Add Event'}</h2>
           </div>
           <div className='modal-body'>
-            <p>Day: {selectedDay}</p>
-            <p>Time: {selectedTime}</p>
             <div style={{ marginBottom: '20px', marginTop: '-10px' }}>
               <input
                 type='text'
                 placeholder='Event Title'
                 value={eventText}
-                onChange={e => setEventText(e.target.value)}
+                onChange={(e) => setEventText(e.target.value)}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
                   height: '40px',
-                  width: '450px'
+                  width: '450px',
+                  borderColor: eventTextError ? 'red' : '',
                 }}
               />
+              <p style={{ color: 'red' }}>{eventTextError}</p>
             </div>
             <div style={{ marginBottom: '10px' }}>
               <select
                 value={selectedVenue}
-                onChange={e => setSelectedVenue(e.target.value)}
+                onChange={(e) => setSelectedVenue(e.target.value)}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
                   height: '40px',
-                  width: '450px'
+                  width: '450px',
                 }}
               >
                 <option value='Lab 01'>Lab 01</option>
-                <option value='Lab 02'>Lab 02</option>
               </select>
             </div>
             <div style={{ marginBottom: '20px' }}>
               <input
                 type='text'
-                placeholder='Start Time'
-                value={startTime}
-                onChange={e => setStartTime(e.target.value)}
+                disabled
+                value={selectedTime}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
                   height: '40px',
-                  width: '450px'
+                  width: '450px',
                 }}
               />
             </div>
             <div style={{ marginBottom: '20px' }}>
               <input
                 type='text'
-                placeholder='End Time'
-                value={endTime}
-                onChange={e => setEndTime(e.target.value)}
+                disabled
+                value={selectedDay}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
                   height: '40px',
-                  width: '450px'
+                  width: '450px',
                 }}
               />
             </div>
             <div style={{ marginBottom: '20px' }}>
               <input
                 type='text'
-                placeholder="Instructor's Email"
+                placeholder="Instructor's Email (e.g., john@gmail.com)"
                 value={instructorEmail}
-                onChange={e => setInstructorEmail(e.target.value)}
+                onChange={(e) => setInstructorEmail(e.target.value)}
                 style={{
                   ...inputStyle,
                   fontSize: '16px',
                   height: '40px',
-                  width: '450px'
+                  width: '450px',
+                  borderColor: instructorEmailError ? 'red' : '',
                 }}
               />
+              <p style={{ color: 'red' }}>{instructorEmailError}</p>
             </div>
             <div style={{ textAlign: 'center' }}>
               <button
@@ -326,7 +298,7 @@ function Timetable() {
                   borderRadius: '8px',
                   height: '42px',
                   width: '180px',
-                  marginRight: '20px'
+                  marginRight: '20px',
                 }}
               >
                 {selectedEvent ? 'Save Changes' : 'Add Event'}
@@ -342,7 +314,7 @@ function Timetable() {
                   height: '42px',
                   width: '180px',
                   color: 'white',
-                  marginRight: '25px'
+                  marginRight: '25px',
                 }}
               >
                 Cancel
@@ -352,7 +324,45 @@ function Timetable() {
         </Modal>
       )}
     </div>
-  )
+  );
 }
 
-export default Timetable
+// Styles for table and form elements
+const cellStyle = {
+  border: '1px solid #ddd',
+  padding: '19px',
+  textAlign: 'center',
+  fontSize: '16px',
+  width: '200px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+};
+
+const headerCellStyle = {
+  ...cellStyle,
+  backgroundColor: '#7468F0',
+  fontWeight: 'bold',
+  color: 'white',
+};
+
+const evenRowStyle = {
+  backgroundColor: '#fff',
+};
+
+const oddRowStyle = {
+  backgroundColor: '#f9f9f9',
+};
+
+const lunchBreakStyle = {
+  fontSize: '12px',
+  color: 'gray',
+};
+
+const inputStyle = {
+  width: '60%',
+  padding: '8px',
+  borderRadius: '4px',
+  border: '1px solid #ccc',
+};
+
+export default Timetable;

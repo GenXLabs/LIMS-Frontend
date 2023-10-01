@@ -1,241 +1,338 @@
-import React, { useState } from 'react'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
+import { Card, CardContent, CardHeader, Grid } from '@mui/material'
+import React, { Fragment, useEffect } from 'react'
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import { DataGrid } from '@mui/x-data-grid'
-import IconButton from '@mui/material/IconButton'
+import TableFilter from './TableFilter'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import { useState } from 'react'
 import Icon from 'src/@core/components/icon'
-import QuickSearchToolbar from './QuickSearchToolbar'
+import MenuItem from '@mui/material/MenuItem'
 
+// import FileUploaderRestrictions from './FileUploder'
 
-import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+
+// ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
-import { styled } from '@mui/material/styles'
+import apiDefinitions from 'src/api/apiDefinitions'
 
-import Swal from 'sweetalert2'
+import { useDropzone } from 'react-dropzone'
+import toast from 'react-hot-toast'
 
+const ViewInstrument = () => {
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => setOpen(true)
 
-const escapeRegExp = value => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
-}
+  const [refreshTable, setRefreshTable] = useState(false)
 
-// Styled component for the form
-const Form = styled('form')(({ theme }) => ({
-  maxWidth: 400,
-  padding: theme.spacing(12),
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.divider}`
-}))
+  const [moduleCategories, setModuleCategories] = useState([])
 
+  const handleClose = () => {
+    setOpen(false)
+    setTitle('')
+    setDescription('')
+    setModuleCategory('')
+    setFiles([])
 
-const TableStickyHeaderColumns = () => {
+    setTitleError(false)
+    setDescriptionError(false)
+    setModuleCategoryError(false)
+    setFileError(false)
 
-  const rows = [
-    {
-      id: '1',
-      module_name: 'Doument 1'
-    },
-    {
-      id: '2',
-      module_name: 'Doument 2'
-    },
-    {
-      id: '3',
-      module_name: 'Doument 3'
-    },
-    {
-      id: '4',
-      module_name: 'Doument 4'
-    },
-    {
-      id: '5',
-      module_name: 'Doument 5'
-    }
-  ]
-
-  const columns = [
-    {
-      flex: 0.1,
-      minWidth: 170,
-      headerName: 'Name',
-      field: 'module_name', // Use 'module_name' here to match your data
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.value}
-        </Typography>
-      )
-    },
-
-
-    {
-      flex: 0.1,
-      minWidth: 170,
-      field: 'actions',
-      headerName: 'Actions',
-      headerAlign: 'right',
-      align: 'right',
-      renderCell: params => {
-        return (
-          <div className='d-flex align-items-center'>
-            <IconButton color='Success' onClick={toggleDownloadAlert}>
-              <Icon icon='material-symbols:download' />
-            </IconButton>
-            <IconButton color='error' onClick={deleteSuccess}>
-              <Icon icon='lucide:trash-2' />
-            </IconButton>
-            <Button variant='contained' endIcon={<Icon icon='tabler:Edit' />} onClick={handleAddModuleClick}>
-              Edit
-            </Button>
-          </div>
-        )
-      }
-    }
-  ]
-
-  const handleAddModuleClick = () => {
-    setIsFormVisible(true);
-  };
-
-  const handleCloseForm = () => {
-    setIsFormVisible(false);
-  };
-
-
-  const editSuccess = () =>{
-    Swal.fire({
-      icon:'success',
-      title: 'Changes Saved Successfully...!',
-      showDenyButton: true,
-      confirmButtonText: 'Continue',
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        handleCloseForm();
-      } else if (result.isDenied) {
-        handleCloseForm();
-      }
-    })
+    setTitleErrorText('')
+    setDescriptionErrorText('')
+    setModuleCategoryErrorText('')
+    setFileErrorText('')
   }
 
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [moduleCategory, setModuleCategory] = useState('')
 
-  const deleteSuccess = () =>{
-    Swal.fire({
-      icon:'question',
-      title: 'Are you sure want to Delete?',
-      showDenyButton: true,
-      confirmButtonText: 'Yes',
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        Swal.fire('Deleted', '', 'success')
-      } else if (result.isDenied) {
-        Swal.fire('Not Deleted', '', 'error')
-      }
-    })
-  }
+  const userData = JSON.parse(localStorage.getItem('userData'))
 
-  const toggleDownloadAlert = () => {
-    // setShowDownloadAlert(true);
+  const [files, setFiles] = useState([])
 
-    // // Hide the alert after a delay (e.g., 3 seconds)
-    // setTimeout(() => {
-    //   setShowDownloadAlert(false);
-    // }, 3000); // 3000 milliseconds = 3 seconds
+  const [titleError, setTitleError] = useState(false)
+  const [descriptionError, setDescriptionError] = useState(false)
+  const [moduleCategoryError, setModuleCategoryError] = useState(false)
+  const [fileError, setFileError] = useState(false)
 
-    // // Add your download logic here
-    // // You can trigger the actual download process here
-    Swal.fire({
-      icon: 'success',
-      title: 'Successfully Downloaded',
-      text: 'Successfully Downloaded — check it out!',
-      confirmButtonText: 'Ok'
-    })
-  };
+  const [titleErrorText, setTitleErrorText] = useState('')
+  const [descriptionErrorText, setDescriptionErrorText] = useState('')
+  const [moduleCategoryErrorText, setModuleCategoryErrorText] = useState('')
+  const [fileErrorText, setFileErrorText] = useState('')
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [data] = useState(rows)
-  const [searchText, setSearchText] = useState('')
-  const [filteredData, setFilteredData] = useState([])
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5 })
-
-  const handleSearch = searchValue => {
-    setSearchText(searchValue)
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
-
-    const filteredRows = data.filter(row => {
-      return Object.keys(row).some(field => {
-        return searchRegex.test(row[field].toString())
+  // ** Hooks
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 1,
+    maxSize: 10000000,
+    accept: {
+      'application/pdf': ['.pdf']
+    },
+    onDrop: acceptedFiles => {
+      setFiles(acceptedFiles.map(file => Object.assign(file)))
+      onFilesUpload(acceptedFiles)
+    },
+    onDropRejected: () => {
+      toast.error('You can only upload 1 file & maximum size of 10 MB.', {
+        duration: 2000
       })
-    })
+    }
+  })
 
-    if (searchValue.length) {
-      setFilteredData(filteredRows)
+  const renderFilePreview = file => {
+    if (file.type.startsWith('image')) {
+      return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file)} />
     } else {
-      setFilteredData([])
+      return <Icon icon='tabler:file-description' />
     }
   }
+
+  const handleRemoveFile = file => {
+    const uploadedFiles = files
+    const filtered = uploadedFiles.filter(i => i.name !== file.name)
+    setFiles([...filtered])
+  }
+
+  const fileList = files.map(file => (
+    <ListItem key={file.name}>
+      <div className='file-details'>
+        <div className='file-preview'>{renderFilePreview(file)}</div>
+        <div>
+          <Typography className='file-name'>{file.name}</Typography>
+          <Typography className='file-size' variant='body2'>
+            {Math.round(file.size / 100) / 10 > 1000
+              ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
+              : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
+          </Typography>
+        </div>
+      </div>
+      <IconButton onClick={() => handleRemoveFile(file)}>
+        <Icon icon='tabler:x' fontSize={20} />
+      </IconButton>
+    </ListItem>
+  ))
+
+  const handleRemoveAllFiles = () => {
+    setFiles([])
+  }
+
+  const handleAddInstrument = () => {
+    let isValid = true
+
+    if (files.length === 0) {
+      setFileError(true)
+      setFileErrorText('Please upload a file.')
+      isValid = false
+    } else {
+      setFileError(false)
+      setFileErrorText('')
+    }
+
+    if (title === '') {
+      setTitleError(true)
+      setTitleErrorText('Please enter a title.')
+      isValid = false
+    } else {
+      setTitleError(false)
+      setTitleErrorText('')
+    }
+
+    if (description === '') {
+      setDescriptionError(true)
+      setDescriptionErrorText('Please enter a description.')
+      isValid = false
+    } else {
+      setDescriptionError(false)
+      setDescriptionErrorText('')
+    }
+
+    if (moduleCategory === '') {
+      setModuleCategoryError(true)
+      setModuleCategoryErrorText('Please select a module category.')
+      isValid = false
+    } else {
+      setModuleCategoryError(false)
+      setModuleCategoryErrorText('')
+    }
+
+    if (!isValid) {
+      // Exit the function if the form is not valid
+      console.error('Form is not valid. Please correct the errors.')
+
+      return
+    }
+
+    // Continue with form submission if the form is valid
+    const addInstrumentPayload = {
+      title: title,
+      description: description,
+      module_category: moduleCategory,
+      created_by: userData.id
+    }
+
+    const formData = new FormData()
+
+    formData.append('manual', new Blob([JSON.stringify(addInstrumentPayload)], { type: 'application/json' }))
+    formData.append('file', files[0]) // Append the first (and only) selected file
+
+    apiDefinitions
+      .addPracticalManual(formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => {
+        console.log('Manual created:', response.data)
+        toast.success('Manual created successfully!')
+        setRefreshTable(!refreshTable)
+        handleClose()
+      })
+      .catch(error => {
+        console.error('Error creating manual:', error)
+        toast.error('Error creating manual!')
+      })
+  }
+
+  useEffect(() => {
+    apiDefinitions
+      .getAllModuleCategories()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(category => category.deleted_at === null)
+        console.log(filteredData)
+        setModuleCategories(filteredData)
+      })
+      .catch(err => console.log(err))
+  }, [])
 
   return (
-
-        <div>
-        {isFormVisible ? (
-               <Card>
-               <CardHeader title='' />
-               <CardContent sx={{ minHeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <Form onSubmit={e => e.preventDefault()}>
-                   <Grid container spacing={5}>
-                     <Grid item xs={12}>
-                       <Typography variant='h5'>Edit Doument Name</Typography>
-                     </Grid>
-                     <Grid item xs={12}>
-                       <CustomTextField fullWidth label='' placeholder='Doument Name' />
-                     </Grid>
-
-
-                     <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(2)} !important` }}>
-                       <Button type='submit' variant='contained' sx={{ width: '100%' }} onClick={editSuccess}>
-                         Edit Doument name
-                       </Button>
-                     </Grid>
-                   </Grid>
-                 </Form>
-               </CardContent>
-             </Card>
-          ) : (
-            <Card>
-              <CardHeader title='Manage Document' action={<Button variant='contained'>View Module</Button>} />
-              <CardContent>
-                <DataGrid
-                  autoHeight
-                  columns={columns}
-                  pageSizeOptions={[1, 2, 3, 4, 5]}
-                  paginationModel={paginationModel}
-                  rows={filteredData.length ? filteredData : data}
-                  onPaginationModelChange={setPaginationModel}
-                  sx={{
-                    '& .MuiSvgIcon-root': {
-                      fontSize: '1.125rem'
-                    }
-                  }}
-                  slotProps={{
-                    baseButton: {
-                      size: 'medium',
-                      variant: 'outlined'
-                    },
-                    toolbar: {
-                      value: searchText,
-                      clearSearch: () => handleSearch(''),
-                      onChange: event => handleSearch(event.target.value)
-                    }
-                  }}
-                />
-              </CardContent>
-            </Card>
-          )}
-      </div>
+    <>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader
+              title='Practical Manuals'
+              action={
+                <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
+                  Upload Practical Manual
+                </Button>
+              }
+            ></CardHeader>
+            <CardContent>
+              <TableFilter refreshTable={refreshTable} />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Add Practical Manual</DialogTitle>
+        <DialogContent sx={{ minWidth: '550px' }}>
+          <Grid container spacing={6} rowSpacing={5}>
+            <Grid item xs={12}>
+              <CustomTextField
+                label='Title'
+                fullWidth
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                error={titleError ? titleError : null}
+                helperText={titleErrorText ? titleErrorText : null}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                select
+                defaultValue=''
+                label='Module Category'
+                id='custom-select'
+                fullWidth
+                value={moduleCategory}
+                onChange={e => setModuleCategory(e.target.value)}
+                error={moduleCategoryError ? moduleCategoryError : null}
+                helperText={moduleCategoryErrorText ? moduleCategoryErrorText : null}
+              >
+                {moduleCategories.map(moduleCategory => (
+                  <MenuItem key={moduleCategory.category_id} value={moduleCategory.category_id}>
+                    {moduleCategory.category_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                label='Description'
+                fullWidth
+                multiline
+                rows={2}
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                error={descriptionError ? descriptionError : null}
+                helperText={descriptionErrorText ? descriptionErrorText : null}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sx={{ p: 4, mt: 5, border: '1px solid #7367F0', borderRadius: '10px' }}>
+            <Fragment>
+              {files.length ? (
+                <Fragment>
+                  <List>{fileList}</List>
+                  <div className='buttons'>
+                    <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+                      Remove All
+                    </Button>
+                  </div>
+                </Fragment>
+              ) : (
+                <div {...getRootProps({ className: 'dropzone' })}>
+                  <input {...getInputProps()} />
+                  <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                    <Box
+                      sx={{
+                        width: 50,
+                        height: 50,
+                        display: 'flex',
+                        borderRadius: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: theme => `rgba({theme.palette.customColors.main}, 0.08)`
+                      }}
+                    >
+                      <Icon icon='tabler:upload' fontSize='2.5rem' />
+                    </Box>
+                    <Typography variant='h4' sx={{ mb: 2.5 }}>
+                      Drop files here or click to upload.
+                    </Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>Allowed *.pdf</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>Max 1 file and max size of 10 MB</Typography>
+                  </Box>
+                </div>
+              )}
+            </Fragment>
+          </Grid>
+          {fileError ? (
+            <Typography variant='body2' sx={{ mt: 2 }} color='error'>
+              {fileErrorText}
+            </Typography>
+          ) : null}
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense' sx={{ m: 4 }}>
+          <Button onClick={handleAddInstrument} variant='contained'>
+            Add
+          </Button>
+          <Button onClick={handleClose} variant='contained' color='error'>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 
-export default TableStickyHeaderColumns
+export default ViewInstrument

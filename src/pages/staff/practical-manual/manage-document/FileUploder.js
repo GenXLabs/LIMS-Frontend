@@ -12,17 +12,29 @@ import IconButton from '@mui/material/IconButton'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Third Party Imports
+// ** Third Party Components
+import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
 
-const FileUploaderMultiple = () => {
+const FileUploaderRestrictions = onFilesUpload => {
   // ** State
   const [files, setFiles] = useState([])
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 1,
+    maxSize: 10000000,
+    accept: {
+      'application/pdf': ['.pdf']
+    },
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles.map(file => Object.assign(file)))
+      onFilesUpload(acceptedFiles)
+    },
+    onDropRejected: () => {
+      toast.error('You can only upload 1 file & maximum size of 10 MB.', {
+        duration: 2000
+      })
     }
   })
 
@@ -65,31 +77,6 @@ const FileUploaderMultiple = () => {
 
   return (
     <Fragment>
-      <div {...getRootProps({ className: 'dropzone' })}>
-        <input {...getInputProps()} />
-        <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Box
-            sx={{
-              mb: 8.75,
-              width: 48,
-              height: 48,
-              display: 'flex',
-              borderRadius: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme => `rgba(${theme.palette.customColors.main}, 0.08)`
-            }}
-          >
-            <Icon icon='tabler:upload' fontSize='1.75rem' />
-          </Box>
-          <Typography variant='h4' sx={{ mb: 2.5 }}>
-            Drop files here or click to upload.
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>
-            (This is just a demo drop zone. Selected files are not actually uploaded.)
-          </Typography>
-        </Box>
-      </div>
       {files.length ? (
         <Fragment>
           <List>{fileList}</List>
@@ -97,12 +84,35 @@ const FileUploaderMultiple = () => {
             <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
-            <Button variant='contained'>Upload Files</Button>
           </div>
         </Fragment>
-      ) : null}
+      ) : (
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+          <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <Box
+              sx={{
+                width: 50,
+                height: 50,
+                display: 'flex',
+                borderRadius: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme => `rgba({theme.palette.customColors.main}, 0.08)`
+              }}
+            >
+              <Icon icon='tabler:upload' fontSize='2.5rem' />
+            </Box>
+            <Typography variant='h4' sx={{ mb: 2.5 }}>
+              Drop files here or click to upload.
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Allowed *.pdf</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Max 1 file and max size of 10 MB</Typography>
+          </Box>
+        </div>
+      )}
     </Fragment>
   )
 }
 
-export default FileUploaderMultiple
+export default FileUploaderRestrictions

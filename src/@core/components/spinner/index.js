@@ -2,6 +2,7 @@
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Typography } from '@mui/material'
 
 const FallbackSpinner = ({ sx }) => {
   // ** Hook
@@ -18,7 +19,7 @@ const FallbackSpinner = ({ sx }) => {
         ...sx
       }}
     >
-      <svg width={82} height={56.375} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      {/* <svg width={82} height={56.375} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
         <path
           fillRule='evenodd'
           clipRule='evenodd'
@@ -45,7 +46,10 @@ const FallbackSpinner = ({ sx }) => {
           fill={theme.palette.primary.main}
           d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
         />
-      </svg>
+      </svg> */}
+
+      <img src='/images/brandLogo.png' alt='logo' width={110} height='auto' />
+      <Typography variant='h1'>KIU LIMS</Typography>
       <CircularProgress disableShrink sx={{ mt: 6 }} />
     </Box>
   )
