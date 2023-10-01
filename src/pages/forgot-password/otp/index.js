@@ -99,34 +99,46 @@ const TwoStepsV2 = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   const router = useRouter()
 
   // ** Hooks
   const theme = useTheme()
 
-  console.log('email is', router.query.email)
-  axios
-    .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${router.query.email}`)
-    .then(res => {
-      console.log(res)
-      setPhoneNumber(res.data.phoneNumber)
-    })
-    .catch(err => {
-      console.error(err)
-    })
+  // console.log('email is', router.query.email)
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${router.query.email}`)
+      .then(res => {
+        console.log(res)
+        setPhoneNumber(res.data.phoneNumber)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }, [])
 
+  // generateOtp()
   const generateOtp = () => {
     const min = 100000 // Minimum six-digit number
     const max = 999999 // Maximum six-digit number
     const random = Math.floor(Math.random() * (max - min + 1)) + min
+    //  console.log('Generated OTP:', random)
     setOtp(random)
   }
-  // generateOtp()
 
-  useEffect(()=>{
-    console.log("otp is", otp)
-  },[otp])
+  useEffect(() => {
+    if (isMounted) {
+      generateOtp()
+    } else {
+      setIsMounted(true)
+    }
+  }, [isMounted])
+
+  // useEffect(()=>{
+
+  // },[otp])
 
   const handleOtp = () => {
     generateOtp()
@@ -134,8 +146,8 @@ const TwoStepsV2 = () => {
     console.log('otp is', otp)
     const smsMessage = `Your OTP for KIU LIMS password reset is ${otp}`
     // smsService.login().then(token => {
-    //   smsService.sendSMS(phoneNumber, smsMessage, token)
-    // })
+    //     smsService.sendSMS(phoneNumber, smsMessage, token)
+    //   })
   }
 
   const sendOTP = () => {
@@ -162,6 +174,8 @@ const TwoStepsV2 = () => {
   // ** Vars
   const errorsArray = Object.keys(errors)
 
+  const [combinedValue, setCombinedValue] = useState('')
+
   const handleChange = (event, onChange) => {
     if (!isBackspace) {
       onChange(event)
@@ -169,12 +183,28 @@ const TwoStepsV2 = () => {
       // @ts-ignore
       const form = event.target.form
       const index = [...form].indexOf(event.target)
-      if (form[index].value && form[index].value.length) {
+
+      if (form[index].value && form[index].value.length && form.elements[index + 1]) {
         form.elements[index + 1].focus()
       }
+
+      // Manually iterate through form elements to create the combined string
+      let updatedCombinedValue = ''
+      for (let i = 0; i < form.elements.length; i++) {
+        updatedCombinedValue += form.elements[i].value
+      }
+
+      // Update the state with the combined string
+      setCombinedValue(updatedCombinedValue)
+
       event.preventDefault()
     }
   }
+
+  useEffect(() => {
+    // Log the updated combinedValue when it changes
+    console.log(combinedValue)
+  }, [combinedValue])
 
   const handleKeyDown = event => {
     if (event.key === 'Backspace') {
@@ -192,7 +222,7 @@ const TwoStepsV2 = () => {
       setIsBackspace(false)
     }
   }
-
+  // inputs fields
   const renderInputs = () => {
     return Object.keys(defaultValues).map((val, index) => (
       <Controller
@@ -214,6 +244,17 @@ const TwoStepsV2 = () => {
         )}
       />
     ))
+  }
+
+  const handleVerifyOTP = () => {
+    console.log('OTP', otp)
+    console.log('combinedValue', combinedValue)
+
+    if (otp === combinedValue) {
+      console.log('Verify Success')
+    } else {
+      console.log('Verify Failure')
+    }
   }
 
   return (
@@ -281,7 +322,7 @@ const TwoStepsV2 = () => {
                 </FormHelperText>
               ) : null}
               {otpSent ? (
-                <Button fullWidth type='submit' variant='contained' sx={{ mt: 2 }}>
+                <Button fullWidth type='submit' variant='contained' sx={{ mt: 2 }} onClick={handleVerifyOTP}>
                   Verify My Account
                 </Button>
               ) : null}
