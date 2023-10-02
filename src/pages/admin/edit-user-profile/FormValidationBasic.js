@@ -86,7 +86,7 @@ const FormValidationBasic = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`); 
+        const response = await axios.get(`http://localhost:8082/api/v1/lims/user/${userId}`); 
         const data = response.data;
       
         console.log(data);
@@ -242,7 +242,7 @@ const FormValidationBasic = () => {
     
 
     const fetchUserDetails = async () => {
-      const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`)
+      const response = await axios.get(`http://localhost:8082/api/v1/lims/user/${userId}`)
       const data = response.data
       console.log(data)
       setFirstName(data.fullName.split(' ')[0])
