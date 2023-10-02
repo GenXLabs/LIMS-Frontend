@@ -124,6 +124,7 @@ const TwoStepsV2 = () => {
     const min = 100000 // Minimum six-digit number
     const max = 999999 // Maximum six-digit number
     const random = Math.floor(Math.random() * (max - min + 1)) + min
+
     //  console.log('Generated OTP:', random)
     setOtp(random)
   }
@@ -141,20 +142,22 @@ const TwoStepsV2 = () => {
   // },[otp])
 
   const handleOtp = () => {
-    generateOtp()
+   
 
     console.log('otp is', otp)
     const smsMessage = `Your OTP for KIU LIMS password reset is ${otp}`
+
     // smsService.login().then(token => {
     //     smsService.sendSMS(phoneNumber, smsMessage, token)
     //   })
   }
 
   const sendOTP = () => {
-    generateOtp()
+    
 
     console.log('otp is', otp)
     const smsMessage = `Your OTP for KIU LIMS password reset is ${otp}`
+
     // smsService.login().then(token => {
     //   smsService.sendSMS(phoneNumber, smsMessage, token)
     // })
@@ -222,7 +225,9 @@ const TwoStepsV2 = () => {
       setIsBackspace(false)
     }
   }
+  
   // inputs fields
+
   const renderInputs = () => {
     return Object.keys(defaultValues).map((val, index) => (
       <Controller
@@ -250,7 +255,7 @@ const TwoStepsV2 = () => {
     console.log('OTP', otp)
     console.log('combinedValue', combinedValue)
 
-    if (otp === combinedValue) {
+    if (otp == combinedValue) {
       console.log('Verify Success')
     } else {
       console.log('Verify Failure')

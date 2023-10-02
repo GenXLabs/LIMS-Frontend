@@ -69,6 +69,7 @@ const ForgotPassword = () => {
 
   // ** Vars
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
   const handleProceed = ()=>{
     console.log("email is ",email)
     router.push({
