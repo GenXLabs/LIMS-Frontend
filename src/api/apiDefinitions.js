@@ -136,5 +136,36 @@ export default {
 
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
-  }
+  },
+
+   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs Start */
+
+  getAllUsers: async function () {
+    return await api.get(`/user`)
+  },
+
+  deleteUser: async function (userID) {
+    return await api.delete(`/user/delete/${userID}`)
+  },
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/${userID}`)
+  },
+
+  updateUser: async function (userID, userPayload) {
+    return await api.put(`/user/update/${userID}`, userPayload)
+  },
+
+  getUserByEmail: async function (email) {
+    return await api.get(`user/getEmail?email=${email}`)
+  },
+
+  addUser: async function (userPayload) {
+    return await api.post(`/user/add`, userPayload)
+  },
+
+
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs End */
 }

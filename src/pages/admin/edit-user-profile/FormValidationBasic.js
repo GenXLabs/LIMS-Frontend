@@ -28,6 +28,9 @@ import { set } from 'nprogress'
 import axios from 'axios'
 import { t, use } from 'i18next'
 
+import apiDefinitions from 'src/api/apiDefinitions'
+import { api } from 'src/api/api'
+
 const defaultValues = {
   email: '',
   lastName: '',
@@ -67,33 +70,19 @@ const FormValidationBasic = () => {
     // get user id from the URL
     const { userId } = router.query
 
-    // Fetch user details based on the 'id' parameter from the URL
-    // const fetchUserDetails = async () => {
-    //   const response = await fetch(`http://localhost:8080/user/get?id=${userId}`)
-    //   const data = await response.json()
-    //   console.log(data)
-    //   setFirstName(data.fullName.split(' ')[0])
-    //   setLastName(data.fullName.split(' ')[1])
-    //   setEmail(data.email)
-    //   setNumber(data.phoneNumber)
-    // }
+    // get user by id
+    apiDefinitions.getUserById(userId)
+    .then(res => {
+      console.log(res)
+      setFirstName(res.data.fullName.split(' ')[0])
+      setLastName(res.data.fullName.split(' ')[1])
+      setEmail(res.data.email)
+      setNumber(res.data.phoneNumber)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-    const fetchUserDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8082/api/v1/lims/user/${userId}`)
-        const data = response.data
-
-        console.log(data)
-        setFirstName(data.fullName.split(' ')[0])
-        setLastName(data.fullName.split(' ')[1])
-        setEmail(data.email)
-        setNumber(data.phoneNumber)
-      } catch (error) {
-        console.error('Error fetching user details:', error)
-      }
-    }
-
-    fetchUserDetails()
   }, [])
 
   // ** Hooks
@@ -169,16 +158,15 @@ const FormValidationBasic = () => {
       console.log(newData)
 
       // update user details in the database
-      axios
-        .put(`http://localhost:8082/api/v1/lims/user/update/${userId}`, newData)
-        .then(response => {
-          console.log(response)
-          toast.success('Profile updated successfully')
-        })
-        .catch(error => {
-          console.log(error)
-          toast.error('Something went wrong')
-        })
+      apiDefinitions.updateUser(userId, newData)
+      .then(res => {
+        console.log(res)
+        toast.success('Profile updated successfully')
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Something went wrong')
+      })
 
 
       return
@@ -193,14 +181,13 @@ const FormValidationBasic = () => {
     }
 
     // update user details in the database
-    axios
-      .put(`http://localhost:8082/api/v1/lims/user/update/${userId}`, newData)
-      .then(response => {
-        console.log(response)
+    apiDefinitions.updateUser(userId, newData)
+      .then(res => {
+        console.log(res)
         toast.success('Profile updated successfully')
       })
-      .catch(error => {
-        console.log(error)
+      .catch(err => {
+        console.log(err)
         toast.error('Something went wrong')
       })
 
@@ -219,18 +206,14 @@ const FormValidationBasic = () => {
     const { userId } = router.query
 
     // Disable editing mode and reset form fields when canceled
-
-    const fetchUserDetails = async () => {
-      const response = await axios.get(`http://localhost:8082/api/v1/lims/user/${userId}`)
-      const data = response.data
-      console.log(data)
-      setFirstName(data.fullName.split(' ')[0])
-      setLastName(data.fullName.split(' ')[1])
-      setEmail(data.email)
-      setNumber(data.phoneNumber)
-    }
-
-    fetchUserDetails()
+    apiDefinitions.getUserById(userId)
+    .then(res => {
+      console.log(res)
+      setFirstName(res.data.fullName.split(' ')[0])
+      setLastName(res.data.fullName.split(' ')[1])
+      setEmail(res.data.email)
+      setNumber(res.data.phoneNumber)
+    })
 
     setPassword('')
     setNewPassword('')

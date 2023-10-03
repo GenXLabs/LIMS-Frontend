@@ -36,6 +36,8 @@ import axios from 'axios'
 
 import smsService from 'src/api/sendSMS'
 
+import apiDefinitions from 'src/api/apiDefinitions'
+
 // ** Styled Components
 const TwoStepsIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -108,15 +110,25 @@ const TwoStepsV2 = () => {
 
   // console.log('email is', router.query.email)
   useEffect(() => {
-    axios
-      .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${router.query.email}`)
-      .then(res => {
-        console.log(res)
-        setPhoneNumber(res.data.phoneNumber)
-      })
-      .catch(err => {
-        console.error(err)
-      })
+    // axios
+    //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${router.query.email}`)
+    //   .then(res => {
+    //     console.log(res)
+    //     setPhoneNumber(res.data.phoneNumber)
+    //   })
+    //   .catch(err => {
+    //     console.error(err)
+    //   })
+
+    apiDefinitions.getUserByEmail(router.query.email)
+    .then(res => {
+      console.log(res)
+      setPhoneNumber(res.data.phoneNumber)
+    }
+    ).catch(err => {
+      console.log(err)
+    })
+
   }, [])
 
   // generateOtp()

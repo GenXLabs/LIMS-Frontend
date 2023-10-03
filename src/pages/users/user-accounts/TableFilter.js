@@ -28,6 +28,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
+import apiDefinitions from 'src/api/apiDefinitions'
+
 
 
 // ** renders client column
@@ -76,17 +78,17 @@ const TableColumns = () => {
   const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('http://localhost:8082/api/v1/lims/user')
-        const data = response.data
-        setData(data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
+   
+    // gett all users
+    apiDefinitions.getAllUsers()
+    .then(res => {
+      console.log(res)
+      setData(res.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-    fetchData()
   }, [])
 
   useEffect(() => {
@@ -96,16 +98,17 @@ const TableColumns = () => {
 
   const handleDelete = () => {
     console.log('delete user')
-    axios
-      .delete(`http://localhost:8082/api/v1/lims/user/delete/${userIdToDelete}`)
-      .then(res => {
-        console.log(res)
 
-        setData(prevData => prevData.filter(item => item.id !== userIdToDelete));
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    // delete user
+    apiDefinitions.deleteUser(userIdToDelete)
+    .then(res => {
+      console.log(res)
+
+      setData(prevData => prevData.filter(item => item.id !== userIdToDelete));
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 
   const handleOpenDeleteDialog = (userId) => {
