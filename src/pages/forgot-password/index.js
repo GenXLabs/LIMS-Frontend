@@ -1,5 +1,6 @@
 // ** Next Import
 import Link from 'next/link'
+import { useState } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -19,6 +20,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+import { useRouter } from 'next/router'
 
 // Styled Components
 const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
@@ -60,8 +63,24 @@ const ForgotPassword = () => {
   // ** Hooks
   const theme = useTheme()
 
+  const router = useRouter()
+
+  const [email,setEmail] = useState('')
+
   // ** Vars
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+  const handleProceed = ()=>{
+    console.log("email is ",email)
+    router.push({
+      pathname: 'forgot-password/otp',
+      query: {
+        email: email
+      }
+    })
+  }
+
+  
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
@@ -78,10 +97,10 @@ const ForgotPassword = () => {
             margin: theme => theme.spacing(8, 0, 8, 8)
           }}
         >
-          {/* <ForgotPasswordIllustration
+          <ForgotPasswordIllustration
             alt='forgot-password-illustration'
             src={`/images/pages/auth-v2-forgot-password-illustration-${theme.palette.mode}.png`}
-          /> */}
+          />
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -96,46 +115,23 @@ const ForgotPassword = () => {
           }}
         >
           <Box sx={{ width: '100%', maxWidth: 400 }}>
-            {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                fill={theme.palette.primary.main}
-                d='M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z'
-              />
-              <path
-                fill='#161616'
-                opacity={0.06}
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z'
-              />
-              <path
-                fill='#161616'
-                opacity={0.06}
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z'
-              />
-              <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                fill={theme.palette.primary.main}
-                d='M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z'
-              />
-            </svg> */}
             <Box sx={{ my: 6 }}>
               <Typography sx={{ mb: 1.5, fontWeight: 500, fontSize: '1.625rem', lineHeight: 1.385 }}>
                 Forgot Password? 🔒
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>
-                Enter your email and we&prime;ll send you instructions to reset your password
-              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Enter your email to proceed</Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-              <CustomTextField fullWidth autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
-              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }}>
-                Send reset link
+              <CustomTextField
+                fullWidth
+                autoFocus
+                type='email'
+                label='Email'
+                sx={{ display: 'flex', mb: 4 }}
+                onChange={e => setEmail(e.target.value)}
+              />
+              <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleProceed}>
+                Proceed
               </Button>
               <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', '& svg': { mr: 1 } }}>
                 <LinkStyled href='/login'>

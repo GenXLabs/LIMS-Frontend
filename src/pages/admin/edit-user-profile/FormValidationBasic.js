@@ -2,8 +2,6 @@
 import { forwardRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-
-
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
@@ -28,7 +26,10 @@ import { set } from 'nprogress'
 
 // import axios
 import axios from 'axios'
-import { use } from 'i18next'
+import { t, use } from 'i18next'
+
+import apiDefinitions from 'src/api/apiDefinitions'
+import { api } from 'src/api/api'
 
 const defaultValues = {
   email: '',
@@ -46,11 +47,9 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 const FormValidationBasic = () => {
   // ** Router
   const router = useRouter()
-  
 
- // Access the 'id' query parameter from the URL
+  // Access the 'id' query parameter from the URL
 
-  
   // ** States
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -68,39 +67,22 @@ const FormValidationBasic = () => {
   const [numberErrorText, setNumberErrorText] = useState('')
 
   useEffect(() => {
-
     // get user id from the URL
-     const { userId } = router.query;
+    const { userId } = router.query
 
-  
-    // Fetch user details based on the 'id' parameter from the URL
-    // const fetchUserDetails = async () => {
-    //   const response = await fetch(`http://localhost:8080/user/get?id=${userId}`)
-    //   const data = await response.json()
-    //   console.log(data)
-    //   setFirstName(data.fullName.split(' ')[0])
-    //   setLastName(data.fullName.split(' ')[1])
-    //   setEmail(data.email)
-    //   setNumber(data.phoneNumber)
-    // }
+    // get user by id
+    apiDefinitions.getUserById(userId)
+    .then(res => {
+      console.log(res)
+      setFirstName(res.data.fullName.split(' ')[0])
+      setLastName(res.data.fullName.split(' ')[1])
+      setEmail(res.data.email)
+      setNumber(res.data.phoneNumber)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-    const fetchUserDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`); 
-        const data = response.data;
-      
-        console.log(data);
-        setFirstName(data.fullName.split(' ')[0]);
-        setLastName(data.fullName.split(' ')[1]);
-        setEmail(data.email);
-        setNumber(data.phoneNumber);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-
-    fetchUserDetails()
-   
   }, [])
 
   // ** Hooks
@@ -116,14 +98,12 @@ const FormValidationBasic = () => {
     setShowPassword(!showPassword)
   }
 
-  const handleSaveChange =   () => {
+  const handleSaveChange = () => {
     // Disable editing mode when the form is submitted
     setIsEditing(false)
     console.log('clicked')
 
-    const { userId } = router.query;
-
-
+    const { userId } = router.query
 
     // validate the form fields
     if (firstName === '') {
@@ -164,69 +144,56 @@ const FormValidationBasic = () => {
 
     // check if password,newPassword and confirmPassword are not null
 
-    if (password !== '' || newPassword !== '' || confirmPassword !== '') {
-      // check current password is correct or not
-      if (password !== 'avi') {
-        toast.error('Current password is incorrect')
+    if (password !== '' && newPassword !== '' && confirmPassword !== '') {
 
-        return
+      const newData = {
+        fullName: `${firstName} ${lastName}`,
+        email: email,
+        phoneNumber: number,
+        password,
+        newPassword,
+        confirmNewPassword:confirmPassword
       }
 
-      // check if newPassword and confirmPassword are same or not
-      if (newPassword !== confirmPassword) {
-        toast.error('New password and confirm password are not same')
+      console.log(newData)
 
-        return
-      }
+      // update user details in the database
+      apiDefinitions.updateUser(userId, newData)
+      .then(res => {
+        console.log(res)
+        toast.success('Profile updated successfully')
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Something went wrong')
+      })
 
-      // 3 fields must be filled
-      if (password !== '' && newPassword !== '' && confirmPassword !== '') {
-        // send data payload
-        const newData = {
-          fullName: `${firstName} ${lastName}`,
-          email: email,
-          phoneNumber: number,
-          password: newPassword
-        }
-
-
-        toast.success('Password changed successfully')
-        console.log(newData)
-
-        // clear password,newPassword and confirmPassword fields
-        setPassword('')
-        setNewPassword('')
-        setConfirmPassword('')
-
-        return
-      }
-
-      toast.error('New password and confirm password are required')
 
       return
     }
 
+    if(password === '' && newPassword === '' && confirmPassword === ''){
     // send data payload
     const newData = {
       fullName: `${firstName} ${lastName}`,
       email: email,
       phoneNumber: number
-
     }
 
     // update user details in the database
-    axios.put(`http://localhost:8082/api/v1/lims/user/update/${userId}`, newData)
-    .then(response => {
-      console.log(response)
-      toast.success('Profile updated successfully')
-    
-    })
-    .catch(error => {
-      console.log(error)
-    })
-   
-    
+    apiDefinitions.updateUser(userId, newData)
+      .then(res => {
+        console.log(res)
+        toast.success('Profile updated successfully')
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Something went wrong')
+      })
 
+    return
+  }
+    toast.error('something went wrong')
 
   }
 
@@ -235,23 +202,18 @@ const FormValidationBasic = () => {
     setIsEditing(true)
   }
 
-  const handleCancel =  () => {
-    const { userId } = router.query;
+  const handleCancel = () => {
+    const { userId } = router.query
 
     // Disable editing mode and reset form fields when canceled
-    
-
-    const fetchUserDetails = async () => {
-      const response = await axios.get(`http://localhost:8082/api/v1/lims/user/get?id=${userId}`)
-      const data = response.data
-      console.log(data)
-      setFirstName(data.fullName.split(' ')[0])
-      setLastName(data.fullName.split(' ')[1])
-      setEmail(data.email)
-      setNumber(data.phoneNumber)
-    }
-
-    fetchUserDetails()
+    apiDefinitions.getUserById(userId)
+    .then(res => {
+      console.log(res)
+      setFirstName(res.data.fullName.split(' ')[0])
+      setLastName(res.data.fullName.split(' ')[1])
+      setEmail(res.data.email)
+      setNumber(res.data.phoneNumber)
+    })
 
     setPassword('')
     setNewPassword('')

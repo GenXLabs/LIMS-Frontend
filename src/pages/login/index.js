@@ -249,16 +249,18 @@ const LoginPage = () => {
                   label='Remember Me'
                   control={<Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
                 /> */}
-                {/* <Typography component={LinkStyled} href='/forgot-password'>
+
+                <Typography component={LinkStyled} href='/forgot-password'>
                   Forgot Password?
-                </Typography> */}
-                <Typography
+                </Typography>
+                
+                {/* <Typography
                   component={LinkStyled}
                   href='http://systemsupport.kiu.lk/user/support/create_ticket'
                   target='_blank'
                 >
                   Having Trouble Logging In?
-                </Typography>
+                </Typography> */}
               </Box>
               {/* <Box
                 sx={{
