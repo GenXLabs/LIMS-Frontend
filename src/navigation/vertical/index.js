@@ -60,9 +60,24 @@ const navigation = () => {
       title: 'Admin Practical Manuals',
       icon: 'tabler:file-text'
     },
+
+    {
+      sectionTitle: 'New Inventory Management'
+    },
+    {
+      path: '/staff/New-Inventory-Management/Consumable',
+      title: 'Consumable',
+      icon: 'material-symbols:lab-research-outline'
+    },
+    {
+      path: '/staff/New-Inventory-Management/Non-Consumable',
+      title: 'Non Consumable',
+      icon: 'covid:virus-lab-research-microscope'
+    },
+   
     {
       sectionTitle: 'Inventory Management'
-    },
+    },/*
     {
       path: '/staff/Inventory-Management/Consumable',
       title: 'Consumable',
@@ -72,7 +87,7 @@ const navigation = () => {
       path: '/staff/Inventory-Management/Non-Consumable',
       title: 'Non Consumable',
       icon: 'covid:virus-lab-research-microscope'
-    },
+    },*/
     {
       sectionTitle: 'Quality assurance'
     },
