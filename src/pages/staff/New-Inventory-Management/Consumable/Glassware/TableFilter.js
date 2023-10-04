@@ -1,42 +1,56 @@
-import React, { useState } from 'react';
-import { Button, Grid } from '@mui/material';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-import Icon from 'src/@core/components/icon';
-import QuickSearchToolbar from './QuickSearchToolbar';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import CustomTextField from 'src/@core/components/mui/text-field';
+import React, { useEffect, useState } from 'react'
+import { Button, Grid } from '@mui/material'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { DataGrid } from '@mui/x-data-grid'
+import { IconButton } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import QuickSearchToolbar from './QuickSearchToolbar'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const escapeRegExp = value => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const inventoryData = [
-  {
-    id: '1',
-    inventory_no: 'INV001',
-    inventory_name: 'Inventory 1',
-    availability: 'Yes',
-    newly_arrivals: '5',
-    broken: '0',
-    return: '2',
-    balance: '3',
-  },
-  // Add more data for other rows as needed
-];
 
 const TableColumns = () => {
-  const [data] = useState(inventoryData);
-  const [searchText, setSearchText] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
-  const [editOpen, setEditOpen] = useState(false);
-  const [editData, setEditData] = useState({});
+  const [data,setData] = useState("")
+  const [searchText, setSearchText] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const [editOpen, setEditOpen] = useState(false)
+  const [editData, setEditData] = useState({})
+
+  useEffect(() => {
+    apiDefinitions.getAllGlasswares()
+    .then(res => {
+      // Add an 'id' property to each row with a unique value
+      const dataWithIds = res.data.map((row, index) => ({
+        ...row,
+        id: index + 1, 
+      }));
+      
+      console.log(dataWithIds);
+      setData(dataWithIds);
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }, [])
+
+  useEffect(() => {}, [data])
+  
+
+
+
+
+
+
   const [validationErrors, setValidationErrors] = useState({
     inventory_no: '',
     inventory_name: '',
@@ -44,11 +58,11 @@ const TableColumns = () => {
     newly_arrivals: '',
     broken: '',
     return: '',
-    balance: '',
-  });
+    balance: ''
+  })
 
   const handleEditOpen = row => {
-    setEditData(row);
+    setEditData(row)
     setValidationErrors({
       inventory_no: '',
       inventory_name: '',
@@ -56,14 +70,14 @@ const TableColumns = () => {
       newly_arrivals: '',
       broken: '',
       return: '',
-      balance: '',
-    });
-    setEditOpen(true);
+      balance: ''
+    })
+    setEditOpen(true)
   }
 
   const handleEditClose = () => {
-    setEditData({});
-    setEditOpen(false);
+    setEditData({})
+    setEditOpen(false)
   }
 
   const handleEditGlassware = () => {
@@ -75,57 +89,58 @@ const TableColumns = () => {
       newly_arrivals: '',
       broken: '',
       return: '',
-      balance: '',
-    });
+      balance: ''
+    })
 
     // Validate the form fields
-    let hasErrors = false;
-    const newErrors = { ...validationErrors };
+    let hasErrors = false
+    const newErrors = { ...validationErrors }
 
     if (!editData.inventory_no) {
-      newErrors.inventory_no = 'Inventory No is required';
-      hasErrors = true;
+      newErrors.inventory_no = 'Inventory No is required'
+      hasErrors = true
     }
 
     if (!editData.inventory_name) {
-      newErrors.inventory_name = 'Inventory Name is required';
-      hasErrors = true;
+      newErrors.inventory_name = 'Inventory Name is required'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.availability))) {
-      newErrors.availability = 'Availability must be a number';
-      hasErrors = true;
+      newErrors.availability = 'Availability must be a number'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.newly_arrivals))) {
-      newErrors.newly_arrivals = 'Newly Arrivals must be a number';
-      hasErrors = true;
+      newErrors.newly_arrivals = 'Newly Arrivals must be a number'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.broken))) {
-      newErrors.broken = 'Broken must be a number';
-      hasErrors = true;
+      newErrors.broken = 'Broken must be a number'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.return))) {
-      newErrors.return = 'Return must be a number';
-      hasErrors = true;
+      newErrors.return = 'Return must be a number'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.balance))) {
-      newErrors.balance = 'Balance must be a number';
-      hasErrors = true;
+      newErrors.balance = 'Balance must be a number'
+      hasErrors = true
     }
 
     // Display validation errors if there are any
     if (hasErrors) {
-      setValidationErrors(newErrors);
-      return;
+      setValidationErrors(newErrors)
+
+      return
     }
 
     // Implement edit logic here
-    console.log('Edit data:', editData);
-    handleEditClose();
+    console.log('Edit data:', editData)
+    handleEditClose()
   }
 
   const columns = [
@@ -136,7 +151,7 @@ const TableColumns = () => {
       field: 'inventory_no',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.inventory_no}
+          {params.row.inventory_id}
         </Typography>
       )
     },
@@ -169,7 +184,7 @@ const TableColumns = () => {
       field: 'newly_arrivals',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.newly_arrivals}
+          {params.row.newly}
         </Typography>
       )
     },
@@ -191,7 +206,7 @@ const TableColumns = () => {
       field: 'return',
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.return}
+          {params.row.returns}
         </Typography>
       )
     },
@@ -232,24 +247,24 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
           </Grid>
-        );
+        )
       }
     }
-  ];
+  ]
 
   const handleSearch = searchValue => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    setSearchText(searchValue)
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
+        return searchRegex.test(row[field].toString())
+      })
+    })
     if (searchValue.length) {
-      setFilteredData(filteredRows);
+      setFilteredData(filteredRows)
     } else {
-      setFilteredData([]);
+      setFilteredData([])
     }
   }
 
@@ -313,7 +328,7 @@ const TableColumns = () => {
                 value={editData.availability || ''}
                 onChange={e => setEditData({ ...editData, availability: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.availability}
                 helperText={validationErrors.availability}
               />
@@ -325,7 +340,7 @@ const TableColumns = () => {
                 value={editData.newly_arrivals || ''}
                 onChange={e => setEditData({ ...editData, newly_arrivals: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.newly_arrivals}
                 helperText={validationErrors.newly_arrivals}
               />
@@ -337,7 +352,7 @@ const TableColumns = () => {
                 value={editData.broken || ''}
                 onChange={e => setEditData({ ...editData, broken: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.broken}
                 helperText={validationErrors.broken}
               />
@@ -349,7 +364,7 @@ const TableColumns = () => {
                 value={editData.return || ''}
                 onChange={e => setEditData({ ...editData, return: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.return}
                 helperText={validationErrors.return}
               />
@@ -361,7 +376,7 @@ const TableColumns = () => {
                 value={editData.balance || ''}
                 onChange={e => setEditData({ ...editData, balance: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.balance}
                 helperText={validationErrors.balance}
               />
@@ -378,7 +393,7 @@ const TableColumns = () => {
         </DialogActions>
       </Dialog>
     </>
-  );
+  )
 }
 
-export default TableColumns;
+export default TableColumns

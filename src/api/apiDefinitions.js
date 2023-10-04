@@ -84,6 +84,7 @@ export default {
   editGlasswares: async function (id, dataPayload) {
     return await api.put(`/inventory-management/update/${id}`, dataPayload)
   },
+  
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
@@ -151,7 +152,7 @@ export default {
 
    /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs Start */
-  
+
   getAllUsers: async function () {
     return await api.get(`/user`)
   },

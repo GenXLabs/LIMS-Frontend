@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions';
 const Glassware = () => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
+
   const handleClose = () => {
     setOpen(false);
     setTitle('');
@@ -36,12 +37,17 @@ const Glassware = () => {
         title: title,
         description: description,
         availability: availability,
-        newly_arrivals: newlyArrivals,
+        newly: newlyArrivals,
         broken: broken,
-        return: returnVal,
+        returns: returnVal,
         balance: balance
       }
     ];
+
+    
+
+
+
     console.log(addInstrumentPayload);
     handleClose();
   };
