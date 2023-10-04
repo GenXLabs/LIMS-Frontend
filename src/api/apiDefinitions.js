@@ -56,6 +56,10 @@ export default {
     return await api.get(`/module-categories/get-by-id/${categoryID}`)
   },
 
+  deletePracticalManual: async function (manualID, payload) {
+    return await api.put(`/practical-manual/delete/${manualID}`, payload)
+  },
+
   getPDFByManualID: async function (manualID) {
     return await api.get(`/practical-manual/download-pdf/${manualID}`, {
       responseType: 'blob'
@@ -94,13 +98,10 @@ export default {
   deleteInstrumrnt: async function () {
     return await api.delete(`/instrument/delete`)
   },
+
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
-  },
-
-  // practical time table API
+  /* Practical Timetable APIs Start */
 
   addEvent: async function (eventPayload) {
     return await api.post(`/timetable-events`, eventPayload)
@@ -108,5 +109,74 @@ export default {
 
   getAllEvents: async function () {
     return await api.get(`/timetable-events`)
-  }
+  },
+
+  /* Practical Timetable APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
+
+  /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Research Management APIs Start */
+
+  getAllResearch: async function () {
+    return await api.get(`/research-management/get-all`)
+  },
+
+  addResearch: async function (researchPayload) {
+    return await api.post(`/research-management/create`, researchPayload)
+  },
+
+  updateResearch: async function (researchID, researchPayload) {
+    return await api.put(`/research-management/update/${researchID}`, researchPayload)
+  },
+
+  deleteResearch: async function (researchID) {
+    return await api.delete(`/research-management/delete/${researchID}`)
+  },
+
+  getResearchById: async function (researchID) {
+    return await api.get(`/research-management/get/${researchID}`)
+  },
+
+  /* Research Management APIs End */
+
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
+  },
+
+   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs Start */
+  
+  getAllUsers: async function () {
+    return await api.get(`/user`)
+  },
+
+  deleteUser: async function (userID) {
+    return await api.delete(`/user/delete/${userID}`)
+  },
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/${userID}`)
+  },
+
+  updateUser: async function (userID, userPayload) {
+    return await api.put(`/user/update/${userID}`, userPayload)
+  },
+
+  getUserByEmail: async function (email) {
+    return await api.get(`user/getEmail?email=${email}`)
+  },
+
+  addUser: async function (userPayload) {
+    return await api.post(`/user/add`, userPayload)
+  },
+
+
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs End */
 }

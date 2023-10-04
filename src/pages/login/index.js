@@ -142,7 +142,8 @@ const LoginPage = () => {
             margin: theme => theme.spacing(6, 0, 6, 6)
           }}
         >
-          <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} />
+          <LoginIllustration alt='login-illustration' src={`/images/pages/bg.png`}  sx={{width: '650px'}}/>
+          {/* <LoginIllustration alt='login-illustration' src={`/images/pages/${imageSource}-${theme.palette.mode}.png`} /> */}
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -248,16 +249,18 @@ const LoginPage = () => {
                   label='Remember Me'
                   control={<Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
                 /> */}
-                {/* <Typography component={LinkStyled} href='/forgot-password'>
+
+                <Typography component={LinkStyled} href='/forgot-password'>
                   Forgot Password?
-                </Typography> */}
-                <Typography
+                </Typography>
+                
+                {/* <Typography
                   component={LinkStyled}
                   href='http://systemsupport.kiu.lk/user/support/create_ticket'
                   target='_blank'
                 >
                   Having Trouble Logging In?
-                </Typography>
+                </Typography> */}
               </Box>
               {/* <Box
                 sx={{
@@ -279,13 +282,21 @@ const LoginPage = () => {
               <Button fullWidth type='submit' variant='contained' sx={{ my: 0 }}>
                 Login
               </Button>
-               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center',marginTop:'20px' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  marginTop: '20px'
+                }}
+              >
                 <Typography sx={{ color: 'text.secondary', mr: 2 }}>New on our platform?</Typography>
                 <Typography href='/register' component={LinkStyled}>
                   Create an account
                 </Typography>
-              </Box> 
-               {/* <Divider
+              </Box>
+              {/* <Divider
                 sx={{
                   color: 'text.disabled',
                   '& .MuiDivider-wrapper': { px: 6 },
