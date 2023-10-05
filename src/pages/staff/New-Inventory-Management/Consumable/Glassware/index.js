@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
 import Icon from 'src/@core/components/icon';
 import CustomTextField from 'src/@core/components/mui/text-field';
@@ -7,10 +7,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import apiDefinitions from 'src/api/apiDefinitions';
 
 const Glassware = () => {
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
+  const [isAddData, setIsAddData] = useState(false);  
+  const [tableData, setTableData] = useState([]);
 
   const handleClose = () => {
     setOpen(false);
@@ -21,6 +24,7 @@ const Glassware = () => {
     setBroken('');
     setReturnVal('');
     setBalance('');
+    setInventoryName('');
   };
 
   const [title, setTitle] = useState('');
@@ -30,27 +34,45 @@ const Glassware = () => {
   const [broken, setBroken] = useState('');
   const [returnVal, setReturnVal] = useState('');
   const [balance, setBalance] = useState('');
+  const[inventoryName, setInventoryName] = useState('');  
 
   const handleAddGlassware = () => {
-    const addInstrumentPayload = [
+    const addInstrumentPayload = 
       {
-        title: title,
-        description: description,
+        inventory_name: inventoryName,
         availability: availability,
         newly: newlyArrivals,
         broken: broken,
         returns: returnVal,
         balance: balance
       }
-    ];
+    
+
+    apiDefinitions.addGlasswares(addInstrumentPayload)
+    .then(res => {
+      console.log(res);
+      
+      // setTableData(prevData => [...prevData, res.data]); 
+      console.log(tableData);
+        handleClose();
+
+      // setIsAddData(true);
+      window.location.reload();
+    })
+    .catch(err => {
+      console.log(err);
+    })
 
     
+
+
 
 
 
     console.log(addInstrumentPayload);
     handleClose();
   };
+  
 
   return (
     <>
@@ -66,7 +88,7 @@ const Glassware = () => {
               }
             ></CardHeader>
             <CardContent>
-              <TableFilter />
+              <TableFilter tableData={tableData}/>
             </CardContent>
           </Card>
         </Grid>
@@ -75,11 +97,11 @@ const Glassware = () => {
         <DialogTitle id='form-dialog-title'>Add glassware details</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <CustomTextField label='Inventory NO' fullWidth value={title} onChange={e => setNo(e.target.value)} />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
-              <CustomTextField label='Inventory Name' fullWidth value={description} onChange={e => setName(e.target.value)} />
+              <CustomTextField label='Inventory Name' fullWidth value={inventoryName} onChange={e =>setInventoryName(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
               <CustomTextField label='Availability' fullWidth value={availability} onChange={e => setAvailability(e.target.value)} />
