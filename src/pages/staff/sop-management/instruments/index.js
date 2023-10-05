@@ -169,7 +169,7 @@ const ViewInstruments = () => {
     formData.append('file', files[0]) // Append the first (and only) selected file
 
     apiDefinitions
-      .addInstrument(formData, {
+      .addInstruments(formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

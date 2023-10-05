@@ -63,7 +63,7 @@ const TableColumns = refreshTable => {
 
   useEffect(() => {
     apiDefinitions
-      .getAllPracticalManuals()
+      .getAllInstruments()
       .then(res => {
         // Filter out records where "deleted_at" is not null
         const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
@@ -128,13 +128,13 @@ const TableColumns = refreshTable => {
     )
   }
 
-  const handleDeleteInstrument = row => {
-    const deleteBioPayload = {
+  const handleDeleteInstuments = row => {
+    const deletePayload = {
       deleted_by: userData.id
     }
 
     apiDefinitions
-      .deleteInstrumentPayload(row.manual_id, deleteBioPayload)
+      .deleteInstruments(row.manual_id, deletePayload)
       .then(res => {
         console.log(res)
         toast.success(' Deleted Successfully')
@@ -280,7 +280,7 @@ const TableColumns = refreshTable => {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error' onClick={() => handleDeleteBio(params.row)}>
+              <IconButton color='error' onClick={() => handleDeleteInstuments(params.row)}>
                 <Icon icon='lucide:trash-2' />
               </IconButton>
             </Grid>
