@@ -169,7 +169,7 @@ const ViewBiohazardDispose = () => {
     formData.append('file', files[0]) // Append the first (and only) selected file
 
     apiDefinitions
-      .addBiohazardPayload(formData, {
+      .addBiohazard(formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -220,7 +220,7 @@ const ViewBiohazardDispose = () => {
                 helperText={titleErrorText ? titleErrorText : null}
               />
             </Grid>
-           
+
             <Grid item xs={12}>
               <CustomTextField
                 label='Description'

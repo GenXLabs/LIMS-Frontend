@@ -63,7 +63,7 @@ const TableColumns = refreshTable => {
 
   useEffect(() => {
     apiDefinitions
-      .getAllPracticalManuals()
+      .getAllBiohazard()
       .then(res => {
         // Filter out records where "deleted_at" is not null
         const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
@@ -134,7 +134,7 @@ const TableColumns = refreshTable => {
     }
 
     apiDefinitions
-      .deleteBioPayload(row.manual_id, deleteBioPayload)
+      .deleteBiohazard(row.manual_id, deleteBioPayload)
       .then(res => {
         console.log(res)
         toast.success(' Deleted Successfully')
