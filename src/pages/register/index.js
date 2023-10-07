@@ -35,6 +35,8 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
 import axios from 'axios'
 
+import apiDefinitions from 'src/api/apiDefinitions'
+
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -148,44 +150,37 @@ const Register = () => {
         phoneNumber: phoneNumber,
         password: password
       }
-      console.log(userData)
+      
 
-      // localStorage.setItem('userData', JSON.stringify(userData))
+      apiDefinitions
+        .getUserByEmail(email)
+        .then(res => {
+          console.log(res.status)
+          if (res.status == 200) {
+            setIsUniqueEmail(false)
+            toast.error('Email already exists')
+            console.log('Email already exists')
+  
+          }
+        })
+        .catch(err => {
+          console.log('email not found ', err)
+        })
 
-      // user can register only if email is unique
-      // Check if the email already exists
-      // axios
-      //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-      //   .then(res => {
-      //     console.log(res.data)
+      if (isUniquEmail) {
+        apiDefinitions
+          .addUser(userData)
+          .then(res => {
+            console.log(res.data)
+            toast.success('Registration successful')
+            router.push('/login')
+          })
+          .catch(err => {
+            console.log(err)
+            toast.error('Registration failed')
+          })
 
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-      //   })
-      try {
-        const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-        console.log(res.data)
-        if (res.data !== null) {
-          setIsUniqueEmail(false)
-          toast.error('Email already exists')
-          console.log('Email already exists')
-
-          return
-        }
-      } catch (err) {
-        console.log('email not found ', err)
-      }
-
-      // if email is unique, register the user
-      try {
-        const res = await axios.post('http://localhost:8082/api/v1/lims/user/add', userData)
-        console.log(res.data)
-        toast.success('Registration successful')
-        router.push('/login')
-      } catch (err) {
-        console.log(err)
-        toast.error('Registration failed')
+        console.log('registration successful')
       }
     }
   }

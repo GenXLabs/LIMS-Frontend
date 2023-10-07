@@ -13,6 +13,7 @@ import CardHeader from '@mui/material/CardHeader'
 import TableFilter from './TableFilter'
 import { useRouter } from 'next/router'
 
+
 // import { co } from '@fullcalendar/core/internal-common'
 
 const UserAccounts = () => {
@@ -21,21 +22,20 @@ const UserAccounts = () => {
   const handleAdd = () => {
     console.log('add user')
     router.push('/admin/add-user')
-
-   
-
-
-
-
-
-
   }
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='User Accounts' action={<Button variant='contained' onClick={handleAdd}>Add user</Button>}></CardHeader>
+          <CardHeader
+            title='User Accounts'
+            action={
+              <Button variant='contained' onClick={handleAdd}>
+                Add user
+              </Button>
+            }
+          ></CardHeader>
           <CardContent>
             <TableFilter />
           </CardContent>
