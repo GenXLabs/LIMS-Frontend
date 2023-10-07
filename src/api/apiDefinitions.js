@@ -12,6 +12,10 @@ export default {
     return await api.post(`/lab-reservation/add/${userID}`, reservation)
   },
 
+  updateReservation: async function (reservation) {
+    return await api.put(`/lab-reservation/update`, reservation)
+  },
+
   updateReservationStatus: async function (reservationID, status) {
     return await api.put(`/lab-reservation/update-status/${reservationID}/${status}`)
   },
