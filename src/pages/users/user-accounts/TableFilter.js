@@ -23,8 +23,14 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import axios from 'axios'
 import { set } from 'nprogress'
 
-// ** Data Import
-// import { rows } from 'src/@fake-db/table/static-data'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+
+import apiDefinitions from 'src/api/apiDefinitions'
+
+
 
 // ** renders client column
 const renderClient = params => {
@@ -58,82 +64,61 @@ const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-// const rows = [
-//   {
-//     id: '1',
-//     user_id:'1',
-//     first_name: 'Dilshan',
-//     last_name: 'Fronando',
-//     email: 'dilshan@gmail.com',
-//     avatar: 'avatar-1.png',
-//     type: 'staff'
-//   },
-//   {
-//     id: '2',
-//     user_id:'2',
-//     first_name: 'Avishka',
-//     last_name: 'Nuwan',
-//     email: 'avishka@gmail.com',
-//     avatar: 'avatar-1.png',
-//     type: 'admin'
-//   },
-//   {
-//     id: '3',
-//     user_id:'3',
-//     first_name: 'Isum',
-//     last_name: 'Sandupa',
-//     email: 'isum@gmail.com',
-//     avatar: 'avatar-1.png',
-//     type: 'staff'
-//   },
-//   {
-//     id: '4',
-//     user_id:'4',
-//     first_name: 'Kaveeja',
-//     last_name: 'Perera',
-//     email: 'kaveeja@gmail.com',
-//     avatar: 'avatar-1.png',
-//     type: 'student'
-//   },
-//   {
-//     id: '5',
-//     user_id:'5',
-//     first_name: 'Sehana',
-//     last_name: 'Senanayaka',
-//     email: 'sehana@gmail.com',
-//     avatar: 'avatar-1.png',
-//     type: 'student'
-//   }
-// ]
+
 
 const TableColumns = () => {
   const router = useRouter()
-  
 
   // ** States
   const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get('http://localhost:8082/api/v1/lims/user')
-        const data = response.data
-        setData(data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
+   
+    // gett all users
+    apiDefinitions.getAllUsers()
+    .then(res => {
+      console.log(res)
+      setData(res.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 
-    fetchData()
   }, [])
 
   useEffect(() => {
     // This effect will run whenever `data` changes
-    console.log('Data has changed:', data);
-  }, [data]);
+    console.log('Data has changed:', data)
+  }, [data])
+
+  const handleDelete = () => {
+    console.log('delete user')
+
+    // delete user
+    apiDefinitions.deleteUser(userIdToDelete)
+    .then(res => {
+      console.log(res)
+
+      setData(prevData => prevData.filter(item => item.id !== userIdToDelete));
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
+  const handleOpenDeleteDialog = (userId) => {
+    setUserIdToDelete(userId);
+    setDeleteDialogOpen(true)
+  }
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false)
+  }
 
   const columns = [
     {
@@ -216,24 +201,17 @@ const TableColumns = () => {
           })
         }
 
-        const handleDelete = () => {
-          console.log('delete user')
-          axios.delete(`http://localhost:8082/api/v1/lims/user/delete/${params.row.id}`)
-          .then(res => {
-            console.log(res)
-            setData(data.filter(item => item.id !== params.row.id))
-          })
-          .catch(err => {
-            console.log(err)
-          })
-        }
-
         return (
           <Box className='d-flex align-items-center'>
             <IconButton color='primary' onClick={handleEditUser}>
               <Icon icon='fluent:edit-16-regular' />
             </IconButton>
-            <IconButton color='error' onClick={handleDelete}>
+            <IconButton
+              color='error'
+              onClick={() => {
+                handleOpenDeleteDialog(params.row.id)
+              }}
+            >
               <Icon icon='lucide:trash-2' />
             </IconButton>
           </Box>
@@ -249,10 +227,10 @@ const TableColumns = () => {
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
         // Check if the field value is null or undefined before calling toString
-        return row[field] != null && searchRegex.test(row[field].toString());
-      });
-    });
-    
+        return row[field] != null && searchRegex.test(row[field].toString())
+      })
+    })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -260,32 +238,58 @@ const TableColumns = () => {
     }
   }
 
+  
+
+
   return (
-    <DataGrid
-      autoHeight
-      columns={columns}
-      pageSizeOptions={[7, 10, 25, 50]}
-      paginationModel={paginationModel}
-      slots={{ toolbar: QuickSearchToolbar }}
-      onPaginationModelChange={setPaginationModel}
-      rows={filteredData.length ? filteredData : data}
-      sx={{
-        '& .MuiSvgIcon-root': {
-          fontSize: '1.125rem'
-        }
-      }}
-      slotProps={{
-        baseButton: {
-          size: 'medium',
-          variant: 'outlined'
-        },
-        toolbar: {
-          value: searchText,
-          clearSearch: () => handleSearch(''),
-          onChange: event => handleSearch(event.target.value)
-        }
-      }}
-    />
+    <>
+      <DataGrid
+        autoHeight
+        columns={columns}
+        pageSizeOptions={[7, 10, 25, 50]}
+        paginationModel={paginationModel}
+        slots={{ toolbar: QuickSearchToolbar }}
+        onPaginationModelChange={setPaginationModel}
+        rows={filteredData.length ? filteredData : data}
+        sx={{
+          '& .MuiSvgIcon-root': {
+            fontSize: '1.125rem'
+          }
+        }}
+        slotProps={{
+          baseButton: {
+            size: 'medium',
+            variant: 'outlined'
+          },
+          toolbar: {
+            value: searchText,
+            clearSearch: () => handleSearch(''),
+            onChange: event => handleSearch(event.target.value)
+          }
+        }}
+      />
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Delete User</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to delete this user?</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color='primary'>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleDelete()
+
+              handleCloseDeleteDialog()
+            }}
+            color='error'
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 

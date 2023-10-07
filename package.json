@@ -40,6 +40,7 @@
     "axios": "^1.4.0",
     "axios-mock-adapter": "1.21.4",
     "babel-eslint": "10.1.0",
+    "bcrypt": "^5.1.1",
     "bootstrap-icons": "1.10.5",
     "chart.js": "4.3.0",
     "cleave.js": "1.6.0",

@@ -56,6 +56,10 @@ export default {
     return await api.get(`/module-categories/get-by-id/${categoryID}`)
   },
 
+  deletePracticalManual: async function (manualID, payload) {
+    return await api.put(`/practical-manual/delete/${manualID}`, payload)
+  },
+
   getPDFByManualID: async function (manualID) {
     return await api.get(`/practical-manual/download-pdf/${manualID}`, {
       responseType: 'blob'
@@ -65,36 +69,103 @@ export default {
   /* Practical Manual and Module Category APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Inventory Management APIs Start */
-  getAllGlasswares: async function(){
+  getAllGlasswares: async function () {
     return await api.get(`/inventory-management/get-all`)
   },
+
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
-  getAllInstrument: async function(){
-  return await api.get(`/instrument/get-all`)
+  getAllInstrument: async function () {
+    return await api.get(`/instrument/get-all`)
   },
 
-  addInstrument: async function	(dataPayload){
-    return await api.post(`/instrument/create`,dataPayload)
+  addInstrument: async function (dataPayload) {
+    return await api.post(`/instrument/create`, dataPayload)
   },
 
-  deleteInstrumrnt : async function (){
+  deleteInstrumrnt: async function () {
     return await api.delete(`/instrument/delete`)
   },
+
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Practical Timetable APIs Start */
+
+  addEvent: async function (eventPayload) {
+    return await api.post(`/timetable-events`, eventPayload)
+  },
+
+  getAllEvents: async function () {
+    return await api.get(`/timetable-events`)
+  },
+
+  /* Practical Timetable APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
+
+  /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Research Management APIs Start */
+
+  getAllResearch: async function () {
+    return await api.get(`/research-management/get-all`)
+  },
+
+  addResearch: async function (researchPayload) {
+    return await api.post(`/research-management/create`, researchPayload)
+  },
+
+  updateResearch: async function (researchID, researchPayload) {
+    return await api.put(`/research-management/update/${researchID}`, researchPayload)
+  },
+
+  deleteResearch: async function (researchID) {
+    return await api.delete(`/research-management/delete/${researchID}`)
+  },
+
+  getResearchById: async function (researchID) {
+    return await api.get(`/research-management/get/${researchID}`)
+  },
+
+  /* Research Management APIs End */
+
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
   },
 
-  // practical time table API
+   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs Start */
 
-  addEvent: async function (eventPayload){
-    return await api.post(`/timetable-events`, eventPayload)
+  getAllUsers: async function () {
+    return await api.get(`/user`)
   },
 
-  getAllEvents: async function(){
-    return await api.get(`/timetable-events`)
+  deleteUser: async function (userID) {
+    return await api.delete(`/user/delete/${userID}`)
   },
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/${userID}`)
+  },
+
+  updateUser: async function (userID, userPayload) {
+    return await api.put(`/user/update/${userID}`, userPayload)
+  },
+
+  getUserByEmail: async function (email) {
+    return await api.get(`user/getEmail?email=${email}`)
+  },
+
+  addUser: async function (userPayload) {
+    return await api.post(`/user/add`, userPayload)
+  },
+
+
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* User Management APIs End */
 }
