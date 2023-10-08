@@ -91,7 +91,7 @@ const TableColumns = () => {
 
     // Validate the form fields
     // let hasErrors = false
-    // const newErrors = { ...validationErrors }
+    // const newErrors = { }
 
     // if (!editData.inventory_no) {
     //   newErrors.inventory_no = 'Inventory No is required'
@@ -149,10 +149,11 @@ const TableColumns = () => {
               ...row,
               inventory_name: editData.inventory_name,
               availability: editData.availability,
-              newly_arrivals: editData.newly_arrivals,
+              newly_arrivals: editData.newly,
               broken: editData.broken,
               returns: editData.return,
               balance: editData.balance,
+
             };
           }
 

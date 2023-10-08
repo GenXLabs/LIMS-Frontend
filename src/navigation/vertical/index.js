@@ -62,7 +62,7 @@ const navigation = () => {
     },
 
     {
-      sectionTitle: 'New Inventory Management'
+      sectionTitle: 'Inventory Management'
     },
     {
       path: '/staff/New-Inventory-Management/Consumable',
@@ -74,10 +74,12 @@ const navigation = () => {
       title: 'Non Consumable',
       icon: 'covid:virus-lab-research-microscope'
     },
-   
+
+    /*
     {
       sectionTitle: 'Inventory Management'
-    },/*
+    },
+
     {
       path: '/staff/Inventory-Management/Consumable',
       title: 'Consumable',

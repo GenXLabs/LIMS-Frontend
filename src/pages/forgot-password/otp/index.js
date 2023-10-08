@@ -120,15 +120,15 @@ const TwoStepsV2 = () => {
     //     console.error(err)
     //   })
 
-    apiDefinitions.getUserByEmail(router.query.email)
-    .then(res => {
-      console.log(res)
-      setPhoneNumber(res.data.phoneNumber)
-    }
-    ).catch(err => {
-      console.log(err)
-    })
-
+    apiDefinitions
+      .getUserByEmail(router.query.email)
+      .then(res => {
+        console.log(res)
+        setPhoneNumber('0764720123')
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }, [])
 
   // generateOtp()
@@ -154,25 +154,21 @@ const TwoStepsV2 = () => {
   // },[otp])
 
   const handleOtp = () => {
-   
-
     console.log('otp is', otp)
     const smsMessage = `Your OTP for KIU LIMS password reset is ${otp}`
 
-    // smsService.login().then(token => {
-    //     smsService.sendSMS(phoneNumber, smsMessage, token)
-    //   })
+    smsService.login().then(token => {
+      smsService.sendSMS(phoneNumber, smsMessage, token)
+    })
   }
 
   const sendOTP = () => {
-    
-
     console.log('otp is', otp)
     const smsMessage = `Your OTP for KIU LIMS password reset is ${otp}`
 
-    // smsService.login().then(token => {
-    //   smsService.sendSMS(phoneNumber, smsMessage, token)
-    // })
+    smsService.login().then(token => {
+      smsService.sendSMS(phoneNumber, smsMessage, token)
+    })
 
     setOtpSent(true)
   }
@@ -237,7 +233,7 @@ const TwoStepsV2 = () => {
       setIsBackspace(false)
     }
   }
-  
+
   // inputs fields
 
   const renderInputs = () => {
