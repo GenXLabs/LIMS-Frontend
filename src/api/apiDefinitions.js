@@ -80,17 +80,64 @@ export default {
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
-  getAllInstrument: async function () {
+
+  getAllInstruments: async function () {
     return await api.get(`/instrument/get-all`)
   },
 
-  addInstrument: async function (dataPayload) {
-    return await api.post(`/instrument/create`, dataPayload)
+  getInstrumentByID: async function (manualID) {
+    return await api.get(`/instrument/get-by-id/${manualID}`)
   },
 
-  deleteInstrumrnt: async function () {
-    return await api.delete(`/instrument/delete`)
+  addInstruments: async function (formData) {
+    return await api.post(`/instrument/create`, formData)
   },
+
+  updateInstruments: async function (manualID, payload) {
+    return await api.put(`/instrument/update/${manualID}`, payload)
+  },
+
+  deleteInstruments: async function (manualID, payload) {
+    return await api.put(`/instrument/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/instrument/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+
+  getAllBiohazard: async function () {
+    return await api.get(`/biohazard/get-all`)
+  },
+
+  getBiohazardByID: async function (manualID) {
+    return await api.get(`/biohazard/get-by-id/${manualID}`)
+  },
+
+  addBiohazard: async function (formData) {
+    return await api.post(`/biohazard/create`, formData)
+  },
+
+  updateBiohazard: async function (manualID, payload) {
+    return await api.put(`/biohazard/update/${manualID}`, payload)
+  },
+
+  deleteBiohazard: async function (manualID, payload) {
+    return await api.put(`/biohazard/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/biohazard/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+
+
+
+
 
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */

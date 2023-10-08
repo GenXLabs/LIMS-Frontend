@@ -16,22 +16,23 @@ import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
 
-const FileUploaderRestrictions = () => {
+const FileUploaderRestrictions = onFilesUpload => {
   // ** State
   const [files, setFiles] = useState([])
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
-    maxSize: 2000000,
+    maxFiles: 1,
+    maxSize: 10000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'application/pdf': ['.pdf']
     },
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles.map(file => Object.assign(file)))
+      onFilesUpload(acceptedFiles)
     },
     onDropRejected: () => {
-      toast.error('You can only upload 2 files & maximum size of 2 MB.', {
+      toast.error('You can only upload 1 file & maximum size of 10 MB.', {
         duration: 2000
       })
     }
@@ -58,9 +59,9 @@ const FileUploaderRestrictions = () => {
         <div>
           <Typography className='file-name'>{file.name}</Typography>
           <Typography className='file-size' variant='body2'>
-          {Math.round(file.size / 100) / 10 > 1000
-            ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-            : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
+            {Math.round(file.size / 100) / 10 > 1000
+              ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
+              : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
           </Typography>
         </div>
       </div>
@@ -76,30 +77,6 @@ const FileUploaderRestrictions = () => {
 
   return (
     <Fragment>
-      <div {...getRootProps({ className: 'dropzone' })}>
-        <input {...getInputProps()} />
-        <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Box
-            sx={{
-
-              width: 50,
-              height: 50,
-              display: 'flex',
-              borderRadius: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme => `rgba({theme.palette.customColors.main}, 0.08)`
-            }}
-          >
-            <Icon icon='tabler:upload' fontSize='2.5rem' />
-          </Box>
-          <Typography variant='h4' sx={{ mb: 2.5 }}>
-            Drop files here or click to upload.
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Allowed *.jpeg, *.jpg, *.png, *.gif</Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Max 2 files and max size of 2 MB</Typography>
-        </Box>
-      </div>
       {files.length ? (
         <Fragment>
           <List>{fileList}</List>
@@ -107,12 +84,36 @@ const FileUploaderRestrictions = () => {
             <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
-            <Button variant='contained'>Upload Files</Button>
           </div>
         </Fragment>
-      ) : null}
+      ) : (
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+          <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <Box
+              sx={{
+                width: 50,
+                height: 50,
+                display: 'flex',
+                borderRadius: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme => `rgba({theme.palette.customColors.main}, 0.08)`
+              }}
+            >
+              <Icon icon='tabler:upload' fontSize='2.5rem' />
+            </Box>
+            <Typography variant='h4' sx={{ mb: 2.5 }}>
+              Drop files here or click to upload.
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Allowed *.pdf</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Max 1 file and max size of 10 MB</Typography>
+          </Box>
+        </div>
+      )}
     </Fragment>
   )
 }
 
 export default FileUploaderRestrictions
+
