@@ -136,5 +136,35 @@ export default {
 
   sendEmail: async function (emailPayload) {
     return await api.post(`/email/send-email`, emailPayload)
-  }
+  },
+
+   /* Internal Quality Assurance start */
+
+  getAllInternalQualityAssurance: async function () {
+    return await api.get(`/internal-quality-assurance/get-all`)
+  },
+
+  getInternalQualityById: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/get-by-id/${manualID}`)
+  },
+
+  createInternalQualityAssurance: async function (formData) {
+    return await api.post(`/internal-quality-assurance/create`, formData)
+  },
+
+  updateInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/update/${manualID}`, payload)
+  },
+
+  deleteInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  }, 
+
+   /* Internal Quality Assurance end */
 }
