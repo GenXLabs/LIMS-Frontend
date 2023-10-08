@@ -77,6 +77,18 @@ export default {
     return await api.get(`/inventory-management/get-all`)
   },
 
+  addGlasswares: async function (dataPayload) {
+    return await api.post(`/inventory-management/create`, dataPayload)
+  },
+
+  deleteGlasswares: async function (id) {
+    return await api.delete(`/inventory-management/delete/${id}`)
+  },
+
+  editGlasswares: async function (id, dataPayload) {
+    return await api.put(`/inventory-management/update/${id}`, dataPayload)
+  },
+  
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
