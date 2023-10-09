@@ -88,7 +88,7 @@ export default {
   editGlasswares: async function (id, dataPayload) {
     return await api.put(`/inventory-management/update/${id}`, dataPayload)
   },
-  
+
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
@@ -119,7 +119,6 @@ export default {
     })
   },
 
-
   getAllBiohazard: async function () {
     return await api.get(`/biohazard/get-all`)
   },
@@ -146,11 +145,6 @@ export default {
     })
   },
 
-
-
-
-
-
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Practical Timetable APIs Start */
@@ -164,14 +158,6 @@ export default {
   },
 
   /* Practical Timetable APIs End */
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  /* User Management APIs Start */
-
-  getUserById: async function (userID) {
-    return await api.get(`/user/get?id=${userID}`)
-  },
-
-  /* User Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Research Management APIs Start */
 
@@ -196,12 +182,8 @@ export default {
   },
 
   /* Research Management APIs End */
-
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
-  },
-
-   /* Internal Quality Assurance start */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Internal Quality Assurance APIs Start */
 
   getAllInternalQualityAssurance: async function () {
     return await api.get(`/internal-quality-assurance/get-all`)
@@ -227,11 +209,15 @@ export default {
     return await api.get(`/internal-quality-assurance/download-pdf/${manualID}`, {
       responseType: 'blob'
     })
-  }, 
+  },
 
-   /* Internal Quality Assurance end */
-   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Internal Quality Assurance APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
 
   getAllUsers: async function () {
     return await api.get(`/user`)
@@ -257,7 +243,13 @@ export default {
     return await api.post(`/user/add`, userPayload)
   },
 
-
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Micellaneous APIs Start */
+
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
+  }
+
+  /* Micellaneous APIs End */
 }
