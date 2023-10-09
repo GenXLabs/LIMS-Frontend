@@ -219,7 +219,7 @@ const ViewInstrument = () => {
         <Grid item xs={12}>
           <Card>
             <CardHeader
-              title='Practical Manuals'
+              title='Audit Reports'
               action={
                 <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
                   Upload Audit Reports

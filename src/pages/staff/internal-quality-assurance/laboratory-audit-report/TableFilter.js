@@ -109,12 +109,12 @@ const TableColumns = refreshTable => {
       .updatePracticalManual(editManualID, editInstrumentPayload)
       .then(res => {
         console.log(res)
-        toast.success('Practical Manual Updated Successfully')
+        toast.success('Audit report Updated Successfully')
         setRefreshTable2(!refreshTable2)
       })
       .catch(err => {
         console.log(err)
-        toast.error('Error Updating Practical Manual')
+        toast.error('Error Updating Audit Report')
       })
 
     console.log(editInstrumentPayload)

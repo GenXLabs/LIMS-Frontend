@@ -348,7 +348,7 @@ const TableColumns = refreshTable => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Practical Manual</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Instrument Calibration Report</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>

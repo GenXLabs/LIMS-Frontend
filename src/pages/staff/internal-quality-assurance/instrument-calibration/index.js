@@ -159,12 +159,12 @@ const ViewInstrumentCallibrationReports = () => {
       description: description,
       created_by: userData.id
     }
-
+    console.log('addInternalQualityAssurancePayload:', addInternalQualityAssurancePayload)
     const formData = new FormData()
 
-    formData.append('', new Blob([JSON.stringify(addInternalQualityAssurancePayload)], { type: 'application/json' }))
+    formData.append('manual', new Blob([JSON.stringify(addInternalQualityAssurancePayload)], { type: 'application/json' }))
     formData.append('file', files[0]) // Append the first (and only) selected file
-
+    console.log('formData:', formData)
     apiDefinitions
       .createInternalQualityAssurance(formData, {
         headers: {
