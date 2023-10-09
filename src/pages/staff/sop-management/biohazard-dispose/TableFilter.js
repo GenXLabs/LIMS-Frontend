@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState, useEffect } from 'react'
-import { Button, Grid } from '@mui/material'
+import { Button, Grid, MenuItem } from '@mui/material'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -19,55 +19,35 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 
 import CustomTextField from 'src/@core/components/mui/text-field'
+import apiDefinitions from 'src/api/apiDefinitions'
+import toast from 'react-hot-toast'
 
 const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const rows = [
-  {
-    id: '1',
-    title: 'PDF1',
-    uploaded_by: 'ishum',
-    uploaded_date: '02/01/2022',
-    description: 'About the bio'
-  },
-  {
-    id: '2',
-    title: 'PDF2',
-    uploaded_by: 'sampath',
-    uploaded_date: '04/11/2022',
-    description: 'About the bio'
-  },
-  {
-    id: '3',
-    title: 'PDF3',
-    uploaded_by: 'samantha',
-    uploaded_date: '22/01/2023',
-    description: 'About the bio'
-  },
-  {
-    id: '4',
-    title: 'PDF4',
-    uploaded_by: 'kamal',
-    uploaded_date: '22/12/2023',
-    description: 'About the bio'
-  }
-]
-
-const TableColumns = () => {
+const TableColumns = refreshTable => {
   // ** States
-  const [data] = useState(rows)
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
 
+  const [refreshTable2, setRefreshTable2] = useState(false)
+
   const [editOpen, setEditOpen] = useState(false)
+
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
+  const [editManualID, setEditManualID] = useState('')
 
   const handleEditOpen = row => {
     setEditOpen(true)
     setEditTitle(row.title)
     setEditDescription(row.description)
+    setEditManualID(row.manual_id)
+
     console.log(editOpen)
   }
 
@@ -78,23 +58,125 @@ const TableColumns = () => {
     setEditOpen(false)
     setEditTitle('')
     setEditDescription('')
+    setEditManualID('')
   }
 
-  const handleEditBiohazard = () => {
-    const editBiohazardPayload = [
-      {
-        title: editTitle,
-        description: editDescription
-      }
-    ]
+  useEffect(() => {
+    apiDefinitions
+      .getAllBiohazard()
+      .then(res => {
+        // Filter out records where "deleted_at" is not null
+        const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
+
+        // Add an "id" field to each record
+        const dataWithId = filteredData.map((record, index) => ({
+          ...record,
+          id: index + 1 // You can replace this with the desired value for "id"
+        }))
+
+        console.log(dataWithId)
+        setData(dataWithId)
+      })
+      .catch(err => console.log(err))
+  }, [refreshTable, refreshTable2])
+
+  const handleEditBiohazardDispose = () => {
+    const editBiohazardPayload = {
+      title: editTitle,
+      description: editDescription,
+      updated_by: userData.id
+    }
+
+    apiDefinitions
+      .updateBiohazard(editManualID, editBiohazardPayload)
+      .then(res => {
+        console.log(res)
+        toast.success(' Updated Successfully')
+        setRefreshTable2(!refreshTable2)
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Updating ')
+      })
+
     console.log(editBiohazardPayload)
     handleEditClose()
   }
 
+  const UploadedByCell = ({ createdBy }) => {
+    // Define a state variable to store the full name
+    const [fullName, setFullName] = useState('')
+
+    // Use useEffect to make the API call and update the full name when the component mounts
+    useEffect(() => {
+      apiDefinitions
+        .getUserById(createdBy)
+        .then(response => {
+          // Assuming the API response contains a 'data' object with a 'fullName' property
+          const userFullName = response.data.fullName
+          setFullName(userFullName)
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error)
+        })
+    }, [createdBy])
+
+    return (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {fullName}
+      </Typography>
+    )
+  }
+
+  const handleDeleteBio = row => {
+    const deleteBioPayload = {
+      deleted_by: userData.id
+    }
+
+    apiDefinitions
+      .deleteBiohazard(row.manual_id, deleteBioPayload)
+      .then(res => {
+        console.log(res)
+        toast.success(' Deleted Successfully')
+        setRefreshTable2(!refreshTable2)
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Deleting ')
+      })
+  }
+
+  const handlePDFDownload = row => {
+    apiDefinitions
+      .getPDFByManualID(row.manual_id)
+      .then(res => {
+        console.log(res)
+        toast.success(' Downloaded Successfully')
+
+        // Create a URL for the blob data
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+
+        // Create a temporary link element and trigger a download
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${row.title}_manual_${row.manual_id}.pdf`)
+        document.body.appendChild(link)
+        link.click()
+
+        // Clean up
+        window.URL.revokeObjectURL(url)
+      })
+
+      .catch(err => {
+        console.log(err)
+        toast.error('Error Downloading ')
+      })
+  }
+
   const columns = [
     {
-      flex: 0.2,
-      minWidth: 250,
+      flex: 0.25,
+      minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: params => {
@@ -102,10 +184,18 @@ const TableColumns = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Icon icon='uiw:file-pdf' />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: '24px' }}>
-              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-                {params.row.id}
-              </Typography>
-              <Typography noWrap variant='caption'>
+              <Typography
+                noWrap
+                variant='body2'
+                sx={{
+                  color: 'text.primary',
+                  whiteSpace: 'pre-line',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  maxHeight: '3em',
+                  lineHeight: '1.5em'
+                }}
+              >
                 {params.row.title}
               </Typography>
             </Box>
@@ -113,46 +203,70 @@ const TableColumns = () => {
         )
       }
     },
+
     {
       flex: 0.2,
-      minWidth: 250,
+      minWidth: 220,
       headerName: 'Description',
       field: 'description',
 
       renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
           {params.row.description}
         </Typography>
       )
     },
     {
-      flex: 0.15,
-      minWidth: 120,
+      flex: 0.25,
+      minWidth: 200,
       headerName: 'Uploaded By',
-      field: 'uploaded_by',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.uploaded_by}
-        </Typography>
-      )
+      field: 'created_by',
+      renderCell: params => <UploadedByCell createdBy={params.row.created_by} />
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       type: 'date',
-      minWidth: 120,
-      headerName: 'Uploaded Date',
-      field: 'uploaded_date',
-      valueGetter: params => new Date(params.value),
+      minWidth: 100,
+      headerName: (
+        <Typography
+          variant='body2'
+          sx={{
+            color: 'text.primary',
+            whiteSpace: 'pre-line',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxHeight: '3em',
+            lineHeight: '1.5em'
+          }}
+        >
+          Uploaded Date
+        </Typography>
+      ),
+      field: 'created_at',
+      valueGetter: params => new Date(params.value), // Converts the number to a Date object
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.uploaded_date}
+          {new Date(params.row.created_at).toLocaleDateString()} {/* Adjust the formatting as needed */}
         </Typography>
       )
     },
+
     {
       flex: 0.2,
       minWidth: 250,
       field: 'actions',
+      sortable: false,
+      filterable: false,
       headerName: 'Actions',
       headerAlign: 'center',
       align: 'center',
@@ -166,12 +280,12 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='error'>
+              <IconButton color='error' onClick={() => handleDeleteBio(params.row)}>
                 <Icon icon='lucide:trash-2' />
               </IconButton>
             </Grid>
             <Grid item>
-              <IconButton color='success'>
+              <IconButton color='success' onClick={() => handlePDFDownload(params.row)}>
                 <Icon icon='material-symbols:download' />
               </IconButton>
             </Grid>
@@ -188,9 +302,14 @@ const TableColumns = () => {
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
         // @ts-ignore
-        return searchRegex.test(row[field].toString())
+        const fieldValue = row[field] ?? '' // Use an empty string as the default value
+        const isMatch = searchRegex.test(fieldValue.toString())
+        console.log(`Field: ${field}, Value: ${fieldValue}, Match: ${isMatch}`)
+
+        return isMatch
       })
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {
@@ -226,12 +345,13 @@ const TableColumns = () => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Biohazard Dispose</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Biohazard Disposes</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
               <CustomTextField label='Title' fullWidth value={editTitle} onChange={e => setEditTitle(e.target.value)} />
             </Grid>
+
             <Grid item xs={12}>
               <CustomTextField
                 label='Description'
@@ -245,7 +365,7 @@ const TableColumns = () => {
           </Grid>
         </DialogContent>
         <DialogActions className='dialog-actions-dense' sx={{ m: 4 }}>
-          <Button onClick={handleEditBiohazard} variant='contained'>
+          <Button onClick={handleEditBiohazardDispose} variant='contained'>
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>

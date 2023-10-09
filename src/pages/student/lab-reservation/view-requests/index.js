@@ -15,13 +15,13 @@ import QuickSearchToolbar from './QuickSearchToolbar'
 
 // ** Data Import
 // import { rows } from 'src/@fake-db/table/static-data'
-import { IconButton } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton } from '@mui/material'
 
 import Icon from 'src/@core/components/icon'
 
-import ApiDefinitions from 'src/api/apiDefinitions'
 import apiDefinitions from 'src/api/apiDefinitions'
 import toast from 'react-hot-toast'
+import CustomTextField from 'src/@core/components/mui/text-field'
 
 //10 mock data for below table
 // const rows = [
@@ -83,8 +83,60 @@ const TableColumns = () => {
   // ** Table data
   const [data, setData] = useState([])
 
-  const handleEditReservation = id => {
-    console.log('Edit Reservation', id)
+  const [open, setOpen] = useState(false)
+
+  const [editVenue, setEditVenue] = useState('')
+  const [editDate, setEditDate] = useState('')
+  const [editStartTime, setEditStartTime] = useState('')
+  const [editEndTime, setEditEndTime] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+
+  const [editDateError, setEditDateError] = useState(false)
+  const [editStartTimeError, setEditStartTimeError] = useState(false)
+  const [editEndTimeError, setEditEndTimeError] = useState(false)
+  const [editDescriptionError, setEditDescriptionError] = useState(false)
+
+  const [editDateErrorMessage, setEditDateErrorMessage] = useState('')
+  const [editStartTimeErrorMessage, setEditStartTimeErrorMessage] = useState('')
+  const [editEndTimeErrorMessage, setEditEndTimeErrorMessage] = useState('')
+  const [editDescriptionErrorMessage, setEditDescriptionErrorMessage] = useState('')
+
+  const [editReservationID, setEditReservationID] = useState('')
+
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
+  const handleEditReservation = row => {
+    console.log('Edit Reservation', row)
+
+    setEditVenue(row.venue)
+    setEditDate(row.date)
+    setEditStartTime(row.start_time)
+    setEditEndTime(row.end_time)
+    setEditDescription(row.description)
+
+    setEditReservationID(row.reservation_id)
+
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+
+    setEditVenue('')
+    setEditDate('')
+    setEditStartTime('')
+    setEditEndTime('')
+    setEditDescription('')
+
+    setEditDateError(false)
+    setEditStartTimeError(false)
+    setEditEndTimeError(false)
+    setEditDescriptionError(false)
+
+    setEditDateErrorMessage('')
+    setEditStartTimeErrorMessage('')
+    setEditEndTimeErrorMessage('')
+    setEditDescriptionErrorMessage('')
   }
 
   const handleDeleteReservation = id => {
@@ -114,6 +166,76 @@ const TableColumns = () => {
         toast.error('Something went wrong!')
       }
     })
+  }
+
+  const saveEditedReservation = () => {
+    console.log('Save Edited Reservation')
+
+    let isValid = true
+
+    if (editDate == '') {
+      setEditDateError(true)
+      setEditDateErrorMessage('Date is required')
+      isValid = false
+    }
+
+    if (editStartTime == '') {
+      setEditStartTimeError(true)
+      setEditStartTimeErrorMessage('Start Time is required')
+      isValid = false
+    }
+
+    if (editEndTime == '') {
+      setEditEndTimeError(true)
+      setEditEndTimeErrorMessage('End Time is required')
+      isValid = false
+    }
+
+    if (editDescription == '') {
+      setEditDescriptionError(true)
+      setEditDescriptionErrorMessage('Description is required')
+      isValid = false
+    }
+
+    if (isValid) {
+      const reservation = {
+        reservation_id: editReservationID,
+        date: editDate,
+        start_time: editStartTime,
+        end_time: editEndTime,
+        description: editDescription,
+        updated_by: userData.id
+      }
+
+      console.log(reservation)
+
+      apiDefinitions
+        .updateReservation(reservation)
+        .then(() => {
+          toast.success('Reservation Updated!')
+
+          apiDefinitions.getAllLabReservations().then(res => {
+            //add id to data
+            res.data.data.forEach((item, index) => {
+              item.id = index + 1
+            })
+
+            //add avatar if not available
+            res.data.data.forEach(item => {
+              if (!item.avatar) {
+                item.avatar = ''
+              }
+            })
+            setData(res.data.data)
+            console.log(res.data.data)
+          })
+
+          handleClose()
+        })
+        .catch(() => {
+          toast.error('Something went wrong!')
+        })
+    }
   }
 
   const columns = [
@@ -162,11 +284,21 @@ const TableColumns = () => {
       field: 'start_time',
       headerName: 'Start Time',
       sortable: true,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.start_time}
-        </Typography>
-      )
+      renderCell: params => {
+        // Parse the time string (assuming it's in 24-hour format)
+        const startTime = params.row.start_time
+        const [hours, minutes] = startTime.split(':')
+        const parsedHours = parseInt(hours, 10)
+        const ampm = parsedHours >= 12 ? 'PM' : 'AM'
+        const formattedHours = parsedHours % 12 || 12
+        const formattedTime = `${formattedHours}:${minutes} ${ampm}`
+
+        return (
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {formattedTime}
+          </Typography>
+        )
+      }
     },
     {
       flex: 0.15,
@@ -174,11 +306,21 @@ const TableColumns = () => {
       field: 'end_time',
       headerName: 'End Time',
       sortable: true,
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.end_time}
-        </Typography>
-      )
+      renderCell: params => {
+        // Parse the time string (assuming it's in 24-hour format)
+        const endTime = params.row.end_time
+        const [hours, minutes] = endTime.split(':')
+        const parsedHours = parseInt(hours, 10)
+        const ampm = parsedHours >= 12 ? 'PM' : 'AM'
+        const formattedHours = parsedHours % 12 || 12
+        const formattedTime = `${formattedHours}:${minutes} ${ampm}`
+
+        return (
+          <Typography variant='body2' sx={{ color: 'text.primary' }}>
+            {formattedTime}
+          </Typography>
+        )
+      }
     },
     {
       flex: 0.25,
@@ -213,7 +355,7 @@ const TableColumns = () => {
             <IconButton
               color='primary'
               disabled={params.row.status !== 1}
-              onClick={() => handleEditReservation(params.row.reservation_id)}
+              onClick={() => handleEditReservation(params.row)}
             >
               <Icon icon='fluent:edit-16-regular' />
             </IconButton>
@@ -230,10 +372,8 @@ const TableColumns = () => {
     }
   ]
 
-  const userData = JSON.parse(localStorage.getItem('userData'))
-
   useEffect(() => {
-    ApiDefinitions.getAllLabReservations().then(res => {
+    apiDefinitions.getAllLabReservations().then(res => {
       if (res.data.data) {
         // Filter the data based on requester_id matching userData.id
         const filteredData = res.data.data.filter(item => item.requester_id === userData.id)
@@ -260,16 +400,13 @@ const TableColumns = () => {
     const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
-      // Check if the search value matches the "Status" title
-      const statusTitle = statusObj[row.status].title.toLowerCase()
-      if (statusTitle.includes(searchValue.toLowerCase())) {
-        return true
-      }
-
-      // Check if the search value matches any other field
       return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
+        // Check if the field exists and is not null before calling toString()
+        if (row[field] !== null) {
+          return searchRegex.test(row[field].toString())
+        }
+
+        return false // Handle null or undefined values gracefully
       })
     })
 
@@ -281,34 +418,113 @@ const TableColumns = () => {
   }
 
   return (
-    <Card>
-      <CardHeader title='My Reservations' />
-      <DataGrid
-        autoHeight
-        columns={columns}
-        pageSizeOptions={[7, 10, 25, 50]}
-        paginationModel={paginationModel}
-        slots={{ toolbar: QuickSearchToolbar }}
-        onPaginationModelChange={setPaginationModel}
-        rows={filteredData.length ? filteredData : data}
-        sx={{
-          '& .MuiSvgIcon-root': {
-            fontSize: '1.125rem'
-          }
-        }}
-        slotProps={{
-          baseButton: {
-            size: 'medium',
-            variant: 'outlined'
-          },
-          toolbar: {
-            value: searchText,
-            clearSearch: () => handleSearch(''),
-            onChange: event => handleSearch(event.target.value)
-          }
-        }}
-      />
-    </Card>
+    <>
+      <Card>
+        <CardHeader title='My Reservations' />
+        <DataGrid
+          autoHeight
+          columns={columns}
+          pageSizeOptions={[7, 10, 25, 50]}
+          paginationModel={paginationModel}
+          slots={{ toolbar: QuickSearchToolbar }}
+          onPaginationModelChange={setPaginationModel}
+          rows={filteredData.length ? filteredData : data}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              fontSize: '1.125rem'
+            }
+          }}
+          slotProps={{
+            baseButton: {
+              size: 'medium',
+              variant: 'outlined'
+            },
+            toolbar: {
+              value: searchText,
+              clearSearch: () => handleSearch(''),
+              onChange: event => handleSearch(event.target.value)
+            }
+          }}
+        />
+      </Card>
+      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+        <DialogTitle id='form-dialog-title'>Edit Reservation</DialogTitle>
+        <DialogContent sx={{ minWidth: '550px' }}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <CustomTextField
+                fullWidth
+                id='outlined-basic'
+                label='Venue'
+                variant='outlined'
+                value={editVenue}
+                onChange={e => setEditVenue(e.target.value)}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                fullWidth
+                id='outlined-basic'
+                type='date'
+                label='Date'
+                variant='outlined'
+                value={editDate}
+                error={editDateError}
+                helperText={editDateErrorMessage}
+                onChange={e => setEditDate(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <CustomTextField
+                fullWidth
+                id='outlined-basic'
+                type='time'
+                label='Start Time'
+                variant='outlined'
+                value={editStartTime}
+                error={editStartTimeError}
+                helperText={editStartTimeErrorMessage}
+                onChange={e => setEditStartTime(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <CustomTextField
+                fullWidth
+                id='outlined-basic'
+                type='time'
+                label='End Time'
+                variant='outlined'
+                value={editEndTime}
+                error={editEndTimeError}
+                helperText={editEndTimeErrorMessage}
+                onChange={e => setEditEndTime(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                label='Description'
+                fullWidth
+                multiline
+                rows={3}
+                value={editDescription}
+                error={editDescriptionError}
+                helperText={editDescriptionErrorMessage}
+                onChange={e => setEditDescription(e.target.value)}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions className='dialog-actions-dense' sx={{ m: 4 }}>
+          <Button variant='contained' onClick={saveEditedReservation}>
+            Save
+          </Button>
+          <Button onClick={handleClose} variant='contained' color='error'>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 

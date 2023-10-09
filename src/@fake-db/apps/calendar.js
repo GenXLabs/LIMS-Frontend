@@ -7,37 +7,6 @@ const nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
 const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1) // Corrected
 const prevMonth = new Date(date.getFullYear(), date.getMonth() - 1, 1) // Corrected
 
-// const data = {
-//   events: [
-//     {
-//       id: 1,
-//       title: 'Test',
-//       batch: 'Batch 1',
-//       venue: 'LAB-01',
-//       start: '2023-09-17T09:00:00', // Updated date format to ISO 8601
-//       end: '2023-09-17T11:00:00', // Updated date format to ISO 8601
-//       description: 'Review meeting for project',
-//       extendedProps: {
-//         calendar: 'LAB-01'
-//       }
-//     },
-//     {
-//       id: 2,
-//       title: '2 Test',
-//       batch: 'Batch 1',
-//       venue: 'LAB-02',
-//       start: '2023-09-18T09:00:00', // Updated date format to ISO 8601
-//       end: '2023-09-18T11:00:00', // Updated date format to ISO 8601
-//       description: 'Review meeting for project',
-//       extendedProps: {
-//         calendar: 'LAB-02'
-//       }
-//     }
-
-//     // Add more events with the required fields here
-//   ]
-// }
-
 import apiDefinitions from 'src/api/apiDefinitions' // Import your API definitions
 
 const data = {
@@ -53,8 +22,11 @@ async function fetchCalendarEvents(calendars) {
       // Assuming that the event data is under the 'data' property
       const apiEvents = response.data.data
 
+      // Filter events where status is 2 or 3
+      const filteredEvents = apiEvents.filter(apiEvent => apiEvent.status === 2 || apiEvent.status === 3)
+
       // Convert API response format to data.events format
-      data.events = apiEvents.map(apiEvent => ({
+      data.events = filteredEvents.map(apiEvent => ({
         id: apiEvent.reservation_id,
         title: apiEvent.title,
         batch: apiEvent.batch,
@@ -68,7 +40,7 @@ async function fetchCalendarEvents(calendars) {
       }))
     }
 
-    console.log('Events:', data)
+    console.log('Filtered Events:', data.events)
   } catch (error) {
     console.error('Error fetching events:', error)
 
@@ -91,18 +63,58 @@ mock.onGet('/apps/calendar/events').reply(async config => {
 // ------------------------------------------------
 // POST: Add new event
 // ------------------------------------------------
-mock.onPost('/apps/calendar/add-event').reply(config => {
-  // Get event from post data
-  const { event } = JSON.parse(config.data).data
-  const { length } = data.events
-  let lastIndex = 0
-  if (length) {
-    lastIndex = data.events[length - 1].id
-  }
-  event.id = lastIndex + 1
-  data.events.push(event)
+mock.onPost('/apps/calendar/add-event').reply(async config => {
+  try {
+    // Get event from post data
+    const { event } = JSON.parse(config.data).data
 
-  return [201, { event }]
+    // Define the payload based on your provided data
+    const payload = {
+      batch: event.batch,
+      calendar: event.venue,
+      created_at: new Date().toISOString(), // Use ISO-8601 format for the current date and time
+      created_by: event.userID,
+      date: event.date,
+      description: event.description,
+      end_time: event.endTime,
+      requester_id: event.userID,
+      start_time: event.startTime,
+      status: 1,
+      title: event.title,
+      venue: event.venue
+    }
+
+    const createdMessageEmail = `
+  <p>Your reservation request for <strong>${event.venue}</strong> has been successfully created.</p>
+  <p>Date: <strong>${event.date}</strong></p>
+  <p>Time: <strong>${event.startTime} - ${event.endTime}</strong></p>
+`
+
+    const createdMessageSMS = `Your reservation request for ${event.venue} has been successfully created.\nDate: ${event.date}\nTime: ${event.startTime} - ${event.endTime}`
+
+    console.log('Payload:', payload)
+    console.log('Event:', event)
+
+    // Call your API to add the reservation with the payload
+    const response = await apiDefinitions.addReservation(event.userID, payload)
+
+    if (response.status === 201) {
+      // Add the new event to your data.events
+      const { reservation } = response.data
+      event.id = reservation.reservation_id // Use the ID from the response
+
+      // Push the new event to the data.events array
+      data.events.push(event)
+
+      return [201, { event }]
+    } else {
+      return [400, { error: 'Failed to add event' }]
+    }
+  } catch (error) {
+    console.error('Error adding event:', error)
+
+    return [500, { error: 'Internal Server Error' }]
+  }
 })
 
 // ------------------------------------------------
