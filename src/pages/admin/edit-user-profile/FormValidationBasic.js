@@ -83,7 +83,7 @@ const FormValidationBasic = () => {
       .catch(err => {
         console.log(err)
       })
-  }, [])
+  }, [router.query])
 
   // ** Hooks
   const {
@@ -254,7 +254,7 @@ const FormValidationBasic = () => {
                   onChange={e => {
                     setFirstName(e.target.value)
                     if (e.target.value === '') {
-                      setFirstNameErrorText('First name is required') 
+                      setFirstNameErrorText('First name is required')
                     }else{
                       setFirstNameErrorText('')
                     }
@@ -322,7 +322,7 @@ const FormValidationBasic = () => {
                     } else {
                       setNumberErrorText('')
                     }
-                    
+
                   }}
                 />
               </Grid>

@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Button, Grid } from '@mui/material';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-import Icon from 'src/@core/components/icon';
-import QuickSearchToolbar from './QuickSearchToolbar';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import CustomTextField from 'src/@core/components/mui/text-field';
+import React, { useState } from 'react'
+import { Button, Grid } from '@mui/material'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { DataGrid } from '@mui/x-data-grid'
+import { IconButton } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import QuickSearchToolbar from './QuickSearchToolbar'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import CustomTextField from 'src/@core/components/mui/text-field'
 
 const escapeRegExp = value => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 const inventoryData = [
@@ -24,7 +24,7 @@ const inventoryData = [
     serial_no: 'S001',
     date: '2023-10-04',
     time: '15:30',
-    done_by: 'John Doe',
+    done_by: 'John Doe'
   },
   {
     id: '2',
@@ -33,43 +33,43 @@ const inventoryData = [
     serial_no: 'S001',
     date: '2023-10-04',
     time: '15:30',
-    done_by: 'John Doe',
-  },
- 
-];
+    done_by: 'John Doe'
+  }
+]
 
 const TableColumns = () => {
-  const [data] = useState(inventoryData);
-  const [searchText, setSearchText] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
-  const [editOpen, setEditOpen] = useState(false);
-  const [editData, setEditData] = useState({});
+  const [data] = useState(inventoryData)
+  const [searchText, setSearchText] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const [editOpen, setEditOpen] = useState(false)
+  const [editData, setEditData] = useState({})
+
   const [validationErrors, setValidationErrors] = useState({
     inventory_no: '',
     inventory_name: '',
     serial_no: '',
     date: '',
     time: '',
-    done_by: '',
-  });
+    done_by: ''
+  })
 
   const handleEditOpen = row => {
-    setEditData(row);
+    setEditData(row)
     setValidationErrors({
       inventory_no: '',
       inventory_name: '',
       serial_no: '',
       date: '',
       time: '',
-      done_by: '',
-    });
-    setEditOpen(true);
+      done_by: ''
+    })
+    setEditOpen(true)
   }
 
   const handleEditClose = () => {
-    setEditData({});
-    setEditOpen(false);
+    setEditData({})
+    setEditOpen(false)
   }
 
   const handleEditGlassware = () => {
@@ -80,52 +80,53 @@ const TableColumns = () => {
       serial_no: '',
       date: '',
       time: '',
-      done_by: '',
-    });
+      done_by: ''
+    })
 
     // Validate the form fields
-    let hasErrors = false;
-    const newErrors = { ...validationErrors };
+    let hasErrors = false
+    const newErrors = { ...validationErrors }
 
     if (!editData.inventory_no) {
-      newErrors.inventory_no = 'Inventory No is required';
-      hasErrors = true;
+      newErrors.inventory_no = 'Inventory No is required'
+      hasErrors = true
     }
 
     if (!editData.inventory_name) {
-      newErrors.inventory_name = 'Inventory Name is required';
-      hasErrors = true;
+      newErrors.inventory_name = 'Inventory Name is required'
+      hasErrors = true
     }
 
     if (!editData.serial_no) {
-      newErrors.serial_no = 'Serial No is required';
-      hasErrors = true;
+      newErrors.serial_no = 'Serial No is required'
+      hasErrors = true
     }
 
     if (!editData.date) {
-      newErrors.date = 'Date is required';
-      hasErrors = true;
+      newErrors.date = 'Date is required'
+      hasErrors = true
     }
 
     if (!editData.time) {
-      newErrors.time = 'Time is required';
-      hasErrors = true;
+      newErrors.time = 'Time is required'
+      hasErrors = true
     }
 
     if (!editData.done_by) {
-      newErrors.done_by = 'Done By is required';
-      hasErrors = true;
+      newErrors.done_by = 'Done By is required'
+      hasErrors = true
     }
 
     // Display validation errors if there are any
     if (hasErrors) {
-      setValidationErrors(newErrors);
-      return;
+      setValidationErrors(newErrors)
+
+      return
     }
 
     // Implement edit logic here
-    console.log('Edit data:', editData);
-    handleEditClose();
+    console.log('Edit data:', editData)
+    handleEditClose()
   }
 
   const columns = [
@@ -221,24 +222,24 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
           </Grid>
-        );
+        )
       }
     }
-  ];
+  ]
 
   const handleSearch = searchValue => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    setSearchText(searchValue)
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
+        return searchRegex.test(row[field].toString())
+      })
+    })
     if (searchValue.length) {
-      setFilteredData(filteredRows);
+      setFilteredData(filteredRows)
     } else {
-      setFilteredData([]);
+      setFilteredData([])
     }
   }
 
@@ -351,7 +352,7 @@ const TableColumns = () => {
         </DialogActions>
       </Dialog>
     </>
-  );
+  )
 }
 
-export default TableColumns;
+export default TableColumns

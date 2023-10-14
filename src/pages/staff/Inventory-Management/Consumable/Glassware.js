@@ -51,7 +51,7 @@ const InventoryTable = () => {
   const [broken, setBroken] = useState('')
   const [returns, setReturns] = useState('')
   const [errors, setErrors] = useState({})
-  const [rowId, setRowId] = useState("")
+  const [rowId, setRowId] = useState('')
 
   const formData = {
     inventoryNo,
@@ -73,11 +73,13 @@ const InventoryTable = () => {
 
   const validateInventoryNo = value => {
     const regex = /^[iI]\d{3}$/
+
     return regex.test(value)
   }
 
   const validateNumeric = value => {
     const regex = /^\d+$/
+
     return regex.test(value)
   }
 
@@ -157,6 +159,7 @@ const InventoryTable = () => {
 
     if (!itemToEdit) {
       console.error(`Item with id ${id} not found.`)
+
       return
     }
 
@@ -174,33 +177,30 @@ const InventoryTable = () => {
     setEditItem(false) // Reset editItem when adding a new item
   }
 
-  const handleUpdate =()=> {
-     const updatedData = {
-       inventoryNo,
-       inventory_name: inventoryName,
-       availability,
-       newly: newlyArrivals,
-       broken,
-       returns
-     }
+  const handleUpdate = () => {
+    const updatedData = {
+      inventoryNo,
+      inventory_name: inventoryName,
+      availability,
+      newly: newlyArrivals,
+      broken,
+      returns
+    }
 
-     console.log(rowId, updatedData)
+    console.log(rowId, updatedData)
 
-     apiDefinitions
-       .editGlasswares(rowId, updatedData)
-       .then(res => {
-         console.log(res)
-         toast.success("updated successfully")
-       })
-       .catch(err => {
-         console.error(err)
-       })
+    apiDefinitions
+      .editGlasswares(rowId, updatedData)
+      .then(res => {
+        console.log(res)
+        toast.success('updated successfully')
+      })
+      .catch(err => {
+        console.error(err)
+      })
 
     setOpenForm(false)
-
   }
-
-
 
   useEffect(() => {
     apiDefinitions
@@ -227,6 +227,7 @@ const InventoryTable = () => {
   const filteredData = data
     ? data.filter(row => {
         const searchTextLower = searchText.toLowerCase()
+
         const isMatch =
           (row.inventoryNo && row.inventoryNo.toString().includes(searchTextLower)) ||
           (row.inventoryName && row.inventoryName.toLowerCase().includes(searchTextLower)) ||
@@ -414,7 +415,7 @@ const InventoryTable = () => {
                 submit
               </Button>
             ) : (
-              <Button variant='contained' color='primary' onClick={()=>handleUpdate()}>
+              <Button variant='contained' color='primary' onClick={() => handleUpdate()}>
                 update
               </Button>
             )}

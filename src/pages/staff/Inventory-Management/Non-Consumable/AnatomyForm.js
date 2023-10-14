@@ -32,6 +32,7 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
     // If there are errors, set them and return
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
+
       return
     }
 
@@ -68,14 +69,14 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
           error={Boolean(errors.modalName)}
           helperText={errors.modalName}
         />
-        <TextField 
-          label='Amount' 
-          fullWidth 
-          value={amount} 
-          onChange={e => setAmount(e.target.value)} 
-          margin='normal' 
-          error={Boolean(errors.amount)} 
-          helperText={errors.amount} 
+        <TextField
+          label='Amount'
+          fullWidth
+          value={amount}
+          onChange={e => setAmount(e.target.value)}
+          margin='normal'
+          error={Boolean(errors.amount)}
+          helperText={errors.amount}
         />
         <Button variant='contained' color='primary' onClick={handleSubmit}>
           {editItem ? 'Update' : 'Submit'}
@@ -86,4 +87,3 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
 }
 
 export default InventoryForm
-

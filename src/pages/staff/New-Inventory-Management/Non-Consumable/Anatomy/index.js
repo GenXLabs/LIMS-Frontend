@@ -1,35 +1,36 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
-import Icon from 'src/@core/components/icon';
-import CustomTextField from 'src/@core/components/mui/text-field';
-import TableFilter from './TableFilter';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import React, { useState } from 'react'
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import TableFilter from './TableFilter'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
 const Anatomy = () => {
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    setModalName('');
-    setAmount('');
-  };
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => setOpen(true)
 
-  const [modalName, setModalName] = useState('');
-  const [amount, setAmount] = useState('');
+  const handleClose = () => {
+    setOpen(false)
+    setModalName('')
+    setAmount('')
+  }
+
+  const [modalName, setModalName] = useState('')
+  const [amount, setAmount] = useState('')
 
   const handleAddAnatomy = () => {
     const addInstrumentPayload = [
       {
         modal_name: modalName,
-        amount: amount,
+        amount: amount
       }
-    ];
-    console.log(addInstrumentPayload);
-    handleClose();
-  };
+    ]
+    console.log(addInstrumentPayload)
+    handleClose()
+  }
 
   return (
     <>
@@ -55,7 +56,12 @@ const Anatomy = () => {
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
-              <CustomTextField label='Modal Name' fullWidth value={modalName} onChange={e => setModalName(e.target.value)} />
+              <CustomTextField
+                label='Modal Name'
+                fullWidth
+                value={modalName}
+                onChange={e => setModalName(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
               <CustomTextField label='Amount' fullWidth value={amount} onChange={e => setAmount(e.target.value)} />
@@ -72,7 +78,7 @@ const Anatomy = () => {
         </DialogActions>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default Anatomy;
+export default Anatomy

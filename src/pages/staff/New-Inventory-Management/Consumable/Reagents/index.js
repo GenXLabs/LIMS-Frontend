@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
-import Icon from 'src/@core/components/icon';
-import CustomTextField from 'src/@core/components/mui/text-field';
-import TableFilter from './TableFilter';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import React, { useState } from 'react'
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import TableFilter from './TableFilter'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
-const Reagents= () => {
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => setOpen(true);
+const Reagents = () => {
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => setOpen(true)
+
   const handleClose = () => {
-    setOpen(false);
-    setTitle('');
-    setType('');
-    setLocation('');
-    setHazardClass('');
-    setMaxQuantity('');
-    setBalance('');
-  };
+    setOpen(false)
+    setTitle('')
+    setType('')
+    setLocation('')
+    setHazardClass('')
+    setMaxQuantity('')
+    setBalance('')
+  }
 
-  const [title, setTitle] = useState('');
-  const [type, setType] = useState('');
-  const [location, setLocation] = useState('');
-  const [hazardClass, setHazardClass] = useState('');
-  const [maxQuantity, setMaxQuantity] = useState('');
-  const [balance, setBalance] = useState('');
+  const [title, setTitle] = useState('')
+  const [type, setType] = useState('')
+  const [location, setLocation] = useState('')
+  const [hazardClass, setHazardClass] = useState('')
+  const [maxQuantity, setMaxQuantity] = useState('')
+  const [balance, setBalance] = useState('')
 
-  const handleAddReagents= () => {
+  const handleAddReagents = () => {
     const addInstrumentPayload = [
       {
         title: title,
@@ -36,12 +37,12 @@ const Reagents= () => {
         MSDs_location: location,
         hazard_class: hazardClass,
         maximum_quantity: maxQuantity,
-        balance: balance,
-      },
-    ];
-    console.log(addInstrumentPayload);
-    handleClose();
-  };
+        balance: balance
+      }
+    ]
+    console.log(addInstrumentPayload)
+    handleClose()
+  }
 
   return (
     <>
@@ -73,13 +74,28 @@ const Reagents= () => {
               <CustomTextField label='Type' fullWidth value={type} onChange={e => setType(e.target.value)} />
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField label='MSDs Location' fullWidth value={location} onChange={e => setLocation(e.target.value)} />
+              <CustomTextField
+                label='MSDs Location'
+                fullWidth
+                value={location}
+                onChange={e => setLocation(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField label='Hazard Class' fullWidth value={hazardClass} onChange={e => setHazardClass(e.target.value)} />
+              <CustomTextField
+                label='Hazard Class'
+                fullWidth
+                value={hazardClass}
+                onChange={e => setHazardClass(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
-              <CustomTextField label='Maximum Quantity' fullWidth value={maxQuantity} onChange={e => setMaxQuantity(e.target.value)} />
+              <CustomTextField
+                label='Maximum Quantity'
+                fullWidth
+                value={maxQuantity}
+                onChange={e => setMaxQuantity(e.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
               <CustomTextField label='Balance' fullWidth value={balance} onChange={e => setBalance(e.target.value)} />
@@ -96,7 +112,7 @@ const Reagents= () => {
         </DialogActions>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default Reagents;
+export default Reagents

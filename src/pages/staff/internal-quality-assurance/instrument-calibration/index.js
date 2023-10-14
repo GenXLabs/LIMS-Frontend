@@ -162,7 +162,10 @@ const ViewInstrumentCallibrationReports = () => {
     console.log('addInternalQualityAssurancePayload:', addInternalQualityAssurancePayload)
     const formData = new FormData()
 
-    formData.append('manual', new Blob([JSON.stringify(addInternalQualityAssurancePayload)], { type: 'application/json' }))
+    formData.append(
+      'manual',
+      new Blob([JSON.stringify(addInternalQualityAssurancePayload)], { type: 'application/json' })
+    )
     formData.append('file', files[0]) // Append the first (and only) selected file
     console.log('formData:', formData)
     apiDefinitions
@@ -182,6 +185,7 @@ const ViewInstrumentCallibrationReports = () => {
         toast.error('Error creating manual!')
       })
   }
+
   return (
     <>
       <Grid container spacing={6}>

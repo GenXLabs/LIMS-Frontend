@@ -22,47 +22,51 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
     }
   }, [editItem])
 
-  const validateType = (value) => {
-    const regex = /^[a-zA-Z]$/;
-    return regex.test(value);
+  const validateType = value => {
+    const regex = /^[a-zA-Z]$/
+
+    return regex.test(value)
   }
 
-  const validateHazardClass = (value) => {
-    const regex = /^[a-zA-Z]$/;
-    return regex.test(value);
+  const validateHazardClass = value => {
+    const regex = /^[a-zA-Z]$/
+
+    return regex.test(value)
   }
 
-  const validateNumeric = (value) => {
-    const regex = /^\d+$/;
-    return regex.test(value);
+  const validateNumeric = value => {
+    const regex = /^\d+$/
+
+    return regex.test(value)
   }
 
   const handleSubmit = () => {
-    const newErrors = {};
+    const newErrors = {}
 
     // Validate type
     if (!validateType(type)) {
-      newErrors.type = 'Type should be one English letter only.';
+      newErrors.type = 'Type should be one English letter only.'
     }
 
     // Validate hazard class
     if (!validateHazardClass(hazardClass)) {
-      newErrors.hazardClass = 'Hazard class should be one English letter only.';
+      newErrors.hazardClass = 'Hazard class should be one English letter only.'
     }
 
     // Validate max quantity and balance
     if (!validateNumeric(maxQuantity)) {
-      newErrors.maxQuantity = 'Maximum quantity should be numbers only.';
+      newErrors.maxQuantity = 'Maximum quantity should be numbers only.'
     }
 
     if (!validateNumeric(balance)) {
-      newErrors.balance = 'Balance should be numbers only.';
+      newErrors.balance = 'Balance should be numbers only.'
     }
 
     // If there are errors, set them and return
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+      setErrors(newErrors)
+
+      return
     }
 
     // Create an object with the form data
@@ -156,4 +160,3 @@ const InventoryForm = ({ open, onClose, onSubmit, editItem }) => {
 }
 
 export default InventoryForm
-

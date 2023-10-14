@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Button, Grid } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
-import Icon from 'src/@core/components/icon';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import CustomTextField from 'src/@core/components/mui/text-field';
-import QuickSearchToolbar from './QuickSearchToolbar';
+import React, { useState } from 'react'
+import { Button, Grid } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import { DataGrid } from '@mui/x-data-grid'
+import { IconButton } from '@mui/material'
+import Icon from 'src/@core/components/icon'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import CustomTextField from 'src/@core/components/mui/text-field'
+import QuickSearchToolbar from './QuickSearchToolbar'
 
 const escapeRegExp = value => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 const inventoryData = [
@@ -23,43 +23,45 @@ const inventoryData = [
     MSDs_location: 'Location X',
     hazard_class: 'Class 1',
     maximum_quantity: '10',
-    balance: '3',
-  },
+    balance: '3'
+  }
+
   // Add more data for other rows as needed
-];
+]
 
 const TableColumns = () => {
-  const [data] = useState(inventoryData);
-  const [searchText, setSearchText] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
-  const [editOpen, setEditOpen] = useState(false);
-  const [editData, setEditData] = useState({});
+  const [data] = useState(inventoryData)
+  const [searchText, setSearchText] = useState('')
+  const [filteredData, setFilteredData] = useState([])
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const [editOpen, setEditOpen] = useState(false)
+  const [editData, setEditData] = useState({})
+
   const [validationErrors, setValidationErrors] = useState({
     chemical_name: '',
     type: '',
     MSDs_location: '',
     hazard_class: '',
     maximum_quantity: '',
-    balance: '',
-  });
+    balance: ''
+  })
 
   const handleEditOpen = row => {
-    setEditData(row);
+    setEditData(row)
     setValidationErrors({
       chemical_name: '',
       type: '',
       MSDs_location: '',
       hazard_class: '',
       maximum_quantity: '',
-      balance: '',
-    });
-    setEditOpen(true);
+      balance: ''
+    })
+    setEditOpen(true)
   }
 
   const handleEditClose = () => {
-    setEditData({});
-    setEditOpen(false);
+    setEditData({})
+    setEditOpen(false)
   }
 
   const handleEditGlassware = () => {
@@ -69,49 +71,50 @@ const TableColumns = () => {
       MSDs_location: '',
       hazard_class: '',
       maximum_quantity: '',
-      balance: '',
-    });
+      balance: ''
+    })
 
-    let hasErrors = false;
-    const newErrors = { ...validationErrors };
+    let hasErrors = false
+    const newErrors = { ...validationErrors }
 
     if (!editData.chemical_name) {
-      newErrors.chemical_name = 'Chemical Name is required';
-      hasErrors = true;
+      newErrors.chemical_name = 'Chemical Name is required'
+      hasErrors = true
     }
 
     if (!editData.type) {
-      newErrors.type = 'Type is required';
-      hasErrors = true;
+      newErrors.type = 'Type is required'
+      hasErrors = true
     }
 
     if (!editData.MSDs_location) {
-      newErrors.MSDs_location = 'MSDs location is required';
-      hasErrors = true;
+      newErrors.MSDs_location = 'MSDs location is required'
+      hasErrors = true
     }
 
     if (!editData.hazard_class) {
-      newErrors.hazard_class = 'Hazard class is required';
-      hasErrors = true;
+      newErrors.hazard_class = 'Hazard class is required'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.maximum_quantity))) {
-      newErrors.maximum_quantity = 'Maximum quantity must be a number';
-      hasErrors = true;
+      newErrors.maximum_quantity = 'Maximum quantity must be a number'
+      hasErrors = true
     }
 
     if (isNaN(Number(editData.balance))) {
-      newErrors.balance = 'Balance must be a number';
-      hasErrors = true;
+      newErrors.balance = 'Balance must be a number'
+      hasErrors = true
     }
 
     if (hasErrors) {
-      setValidationErrors(newErrors);
-      return;
+      setValidationErrors(newErrors)
+
+      return
     }
 
-    console.log('Edit data:', editData);
-    handleEditClose();
+    console.log('Edit data:', editData)
+    handleEditClose()
   }
 
   const columns = [
@@ -207,24 +210,24 @@ const TableColumns = () => {
               </IconButton>
             </Grid>
           </Grid>
-        );
+        )
       }
     }
-  ];
+  ]
 
   const handleSearch = searchValue => {
-    setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+    setSearchText(searchValue)
+    const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        return searchRegex.test(row[field].toString());
-      });
-    });
+        return searchRegex.test(row[field].toString())
+      })
+    })
     if (searchValue.length) {
-      setFilteredData(filteredRows);
+      setFilteredData(filteredRows)
     } else {
-      setFilteredData([]);
+      setFilteredData([])
     }
   }
 
@@ -310,7 +313,7 @@ const TableColumns = () => {
                 value={editData.maximum_quantity || ''}
                 onChange={e => setEditData({ ...editData, maximum_quantity: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.maximum_quantity}
                 helperText={validationErrors.maximum_quantity}
               />
@@ -322,7 +325,7 @@ const TableColumns = () => {
                 value={editData.balance || ''}
                 onChange={e => setEditData({ ...editData, balance: e.target.value })}
                 required
-                type="number"
+                type='number'
                 error={!!validationErrors.balance}
                 helperText={validationErrors.balance}
               />
@@ -339,7 +342,7 @@ const TableColumns = () => {
         </DialogActions>
       </Dialog>
     </>
-  );
+  )
 }
 
-export default TableColumns;
+export default TableColumns

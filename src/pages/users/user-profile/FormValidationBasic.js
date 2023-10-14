@@ -63,7 +63,7 @@ const FormValidationBasic = () => {
     setLastName(name[1])
     setEmail(userDetails.email)
     setNumber(userDetails.phoneNumber)
-  }, [])
+  }, [userDetails.email, userDetails.fullName, userDetails.phoneNumber])
 
   // ** Hooks
   const {
