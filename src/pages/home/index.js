@@ -1,44 +1,44 @@
 // ** MUI Imports
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import ApexAreaChart from './ApexAreaChart'
+import ReservationTable from './all'
 
 const data = [
   {
     stats: '230',
     title: 'Available',
     color: 'primary',
-    icon: 'tabler:chart-pie-2'
-  },
-  {
-    color: 'info',
-    stats: '30',
-    title: 'Broken',
-    icon: 'tabler:users'
+    icon: 'fluent:presence-available-10-regular'
   },
   {
     color: 'error',
+    stats: '30',
+    title: 'Broken',
+    icon: 'mdi:glass-broken'
+  },
+  {
+    color: 'info',
     stats: '62',
     title: 'Newly Arrival',
-    icon: 'tabler:shopping-cart'
+    icon: 'mdi:new-box'
   },
   {
     stats: '25',
     color: 'success',
     title: 'Return',
-    icon: 'tabler:currency-dollar'
+    icon: 'ph:key-return-fill'
   }
 ]
 
@@ -93,13 +93,15 @@ const Home = () => {
       </Grid> */}
       <Grid container spacing={6}>
         <Grid item xs={4}>
-          <Card sx={{ position: 'relative', minHeight:"100%" }}>
+          <Card sx={{ position: 'relative', minHeight: '100%' }}>
             <CardContent>
-              <Typography variant='h4' sx={{ mb: 0.6 }}>
-                Welcome Back
+              <Typography variant='h4' sx={{ mb: 2, mt: 8 }}>
+                Welcome Back!
               </Typography>
-              <Typography sx={{ mb: 2, color: 'text.secondary' }}>John Doe</Typography>
-              <Typography variant='h4' sx={{ mb: 11, color: 'primary.main' }}></Typography>
+              <Typography sx={{ mb: 2, color: 'text.secondary' }} variant='h2'>
+                John Doe
+              </Typography>
+              <Typography variant='h4' sx={{ mb: 3, color: 'primary.main' }}></Typography>
               {/* <Button variant='contained'>View Sales</Button> */}
               <Illustration width={116} alt='congratulations john' src='/images/cards/congratulations-john.png' />
             </CardContent>
@@ -112,7 +114,7 @@ const Home = () => {
               sx={{ '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}
               action={
                 <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                  Updated 1 month ago
+                  Updated Just Now
                 </Typography>
               }
             />
@@ -125,8 +127,16 @@ const Home = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={4}>
-          
+        <Grid item xs={7}>
+          <Card sx={{ minHeight: '100%' }}>
+            <CardHeader title='Upcoming Reservation' />
+            <CardContent>
+              <ReservationTable />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={5}>
+          <ApexAreaChart />
         </Grid>
       </Grid>
     </>
