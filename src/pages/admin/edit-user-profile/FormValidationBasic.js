@@ -71,18 +71,18 @@ const FormValidationBasic = () => {
     const { userId } = router.query
 
     // get user by id
-    apiDefinitions.getUserById(userId)
-    .then(res => {
-      console.log(res)
-      setFirstName(res.data.fullName.split(' ')[0])
-      setLastName(res.data.fullName.split(' ')[1])
-      setEmail(res.data.email)
-      setNumber(res.data.phoneNumber)
-    })
-    .catch(err => {
-      console.log(err)
-    })
-
+    apiDefinitions
+      .getUserById(userId)
+      .then(res => {
+        console.log(res)
+        setFirstName(res.data.fullName.split(' ')[0])
+        setLastName(res.data.fullName.split(' ')[1])
+        setEmail(res.data.email)
+        setNumber(res.data.phoneNumber)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }, [])
 
   // ** Hooks
@@ -105,31 +105,37 @@ const FormValidationBasic = () => {
 
     const { userId } = router.query
 
+    let count = 0
+
     // validate the form fields
     if (firstName === '') {
       setFirstNameErrorText('First name is required')
+      count++
     }
     if (lastName === '') {
       setLastNameErrorText('Last name is required')
+      count++
     }
     if (email === '') {
       setEmailErrorText('Email is required')
+      count++
     }
     if (number === '') {
       setNumberErrorText('Phone number is required')
+      count++
     }
 
-    // phone number must be 10 digits
-    if (number.length !== 10) {
-      setNumberErrorText('Phone number must be 10 digits')
+    if (number.length !== 10 || !number.startsWith('07') || isNaN(number)) {
+      setNumberErrorText('Enter valid number')
+      count++
     }
 
-    // phone number only contains digits
     if (number !== '') {
       const regex = /^[0-9]*$/
 
       if (!regex.test(number)) {
         setNumberErrorText('Phone number must contain only digits')
+        count++
       }
     }
 
@@ -139,62 +145,67 @@ const FormValidationBasic = () => {
 
       if (!regex.test(email)) {
         setEmailErrorText('Email is not valid')
+        count++
       }
     }
 
     // check if password,newPassword and confirmPassword are not null
 
     if (password !== '' && newPassword !== '' && confirmPassword !== '') {
-
       const newData = {
         fullName: `${firstName} ${lastName}`,
         email: email,
         phoneNumber: number,
         password,
         newPassword,
-        confirmNewPassword:confirmPassword
+        confirmNewPassword: confirmPassword
       }
 
       console.log(newData)
 
       // update user details in the database
-      apiDefinitions.updateUser(userId, newData)
-      .then(res => {
-        console.log(res)
-        toast.success('Profile updated successfully')
-      })
-      .catch(err => {
-        console.log(err)
-        toast.error('Something went wrong')
-      })
-
+      apiDefinitions
+        .updateUser(userId, newData)
+        .then(res => {
+          console.log(res)
+          toast.success('Profile updated successfully')
+          router.push('/users/user-accounts')
+        })
+        .catch(err => {
+          console.log(err)
+          toast.error('Something went wrong')
+        })
 
       return
     }
 
-    if(password === '' && newPassword === '' && confirmPassword === ''){
-    // send data payload
-    const newData = {
-      fullName: `${firstName} ${lastName}`,
-      email: email,
-      phoneNumber: number
+    if (password === '' && newPassword === '' && confirmPassword === '') {
+      // send data payload
+
+      if (count == 0) {
+        const newData = {
+          fullName: `${firstName} ${lastName}`,
+          email: email,
+          phoneNumber: number
+        }
+
+        // update user details in the database
+        apiDefinitions
+          .updateUser(userId, newData)
+          .then(res => {
+            console.log(res)
+            toast.success('Profile updated successfully')
+            router.push('/users/user-accounts')
+          })
+          .catch(err => {
+            console.log(err)
+            toast.error('Something went wrong')
+          })
+
+        return
+      }
     }
-
-    // update user details in the database
-    apiDefinitions.updateUser(userId, newData)
-      .then(res => {
-        console.log(res)
-        toast.success('Profile updated successfully')
-      })
-      .catch(err => {
-        console.log(err)
-        toast.error('Something went wrong')
-      })
-
-    return
-  }
     toast.error('something went wrong')
-
   }
 
   const handleEditinfo = () => {
@@ -206,8 +217,7 @@ const FormValidationBasic = () => {
     const { userId } = router.query
 
     // Disable editing mode and reset form fields when canceled
-    apiDefinitions.getUserById(userId)
-    .then(res => {
+    apiDefinitions.getUserById(userId).then(res => {
       console.log(res)
       setFirstName(res.data.fullName.split(' ')[0])
       setLastName(res.data.fullName.split(' ')[1])
@@ -241,7 +251,14 @@ const FormValidationBasic = () => {
                   label='First Name'
                   helperText={firstNameErrorText}
                   error={firstNameErrorText !== ''}
-                  onChange={e => setFirstName(e.target.value)}
+                  onChange={e => {
+                    setFirstName(e.target.value)
+                    if (e.target.value === '') {
+                      setFirstNameErrorText('First name is required') 
+                    }else{
+                      setFirstNameErrorText('')
+                    }
+                  }}
                   InputProps={{ readOnly: !isEditing }}
                 />
               </Grid>
@@ -252,7 +269,14 @@ const FormValidationBasic = () => {
                   label='Last Name'
                   helperText={lastNameErrorText}
                   error={lastNameErrorText !== ''}
-                  onChange={e => setLastName(e.target.value)}
+                  onChange={e => {
+                    setLastName(e.target.value)
+                    if (e.target.value === '') {
+                      setLastNameErrorText('Last name is required')
+                    }else{
+                      setLastNameErrorText('')
+                    }
+                  }}
                   InputProps={{ readOnly: !isEditing }}
                 />
               </Grid>
@@ -266,7 +290,20 @@ const FormValidationBasic = () => {
                   helperText={emailErrorText}
                   error={emailErrorText !== ''}
                   InputProps={{ readOnly: !isEditing }}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={e => {
+                    setEmail(e.target.value)
+                    if (
+                      e.target.value === '' ||
+                      !e.target.value.includes('@') ||
+                      !e.target.value.includes('.') ||
+                      e.target.value.endsWith('.') ||
+                      e.target.value.endsWith('@')
+                    ) {
+                      setEmailErrorText('Valid email is required')
+                    } else {
+                      setEmailErrorText('')
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -278,7 +315,15 @@ const FormValidationBasic = () => {
                   helperText={numberErrorText}
                   error={numberErrorText !== ''}
                   InputProps={{ readOnly: !isEditing }}
-                  onChange={e => setNumber(e.target.value)}
+                  onChange={e => {
+                    setNumber(e.target.value)
+                    if (e.target.value.length !== 10 || !e.target.value.startsWith('07') || isNaN(e.target.value)) {
+                      setNumberErrorText('Valid phone number is required')
+                    } else {
+                      setNumberErrorText('')
+                    }
+                    
+                  }}
                 />
               </Grid>
             </Grid>

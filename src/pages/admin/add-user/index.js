@@ -107,6 +107,8 @@ const AddUser = () => {
   const [passwordErrorText, setPasswordErrorText] = useState('')
   const [confirmPasswordErrorText, setConfirmPasswordErrorText] = useState('')
 
+
+  
   // sign up handling
   const handleAdd = async () => {
     console.log('sign up')
@@ -216,7 +218,14 @@ const AddUser = () => {
                 label='First Name'
                 placeholder='john'
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={e => {
+                  setFirstName(e.target.value)
+                  if (e.target.value === '') {
+                    setFirstNameErrorText('First name is required')
+                  } else {
+                    setFirstNameErrorText('')
+                  }
+                }} 
               />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -230,7 +239,14 @@ const AddUser = () => {
                 label='Last Name'
                 placeholder='doe'
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={e => {
+                  setLastName(e.target.value)
+                  if (e.target.value === '') {
+                    setLastNameErrorText('Last name is required')
+                  } else {
+                    setLastNameErrorText('')
+                  }
+                }}
               />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -245,7 +261,20 @@ const AddUser = () => {
                 sx={{ mb: 4 }}
                 placeholder='user@email.com'
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value)
+                  if (
+                    e.target.value === '' ||
+                    !e.target.value.includes('@') ||
+                    !e.target.value.includes('.') ||
+                    e.target.value.endsWith('.') ||
+                    e.target.value.endsWith('@')
+                  ) {
+                    setEmailErrorText('Valid email is required')
+                  } else {
+                    setEmailErrorText('')
+                  }
+                }}
               />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -260,7 +289,14 @@ const AddUser = () => {
                 placeholder='0774567890'
                 sx={{ mb: 4 }}
                 value={phoneNumber}
-                onChange={e => setPhoneNumber(e.target.value)}
+                onChange={e => {
+                  setPhoneNumber(e.target.value)
+                  if (e.target.value.length !== 10 || !e.target.value.startsWith('07') || isNaN(e.target.value)) {
+                    setPhoneNumberErrorText('Valid phone number is required')
+                  } else {
+                    setPhoneNumberErrorText('')
+                  }
+                }}
               />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -276,7 +312,14 @@ const AddUser = () => {
                 placeholder='**********'
                 sx={{ mb: 4 }}
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => {
+                  setPassword(e.target.value)
+                  if (e.target.value === '' || e.target.value.length < 6) {
+                    setPasswordErrorText('Password must be at least 6 characters')
+                  } else {
+                    setPasswordErrorText('')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -304,7 +347,16 @@ const AddUser = () => {
                 placeholder='**********'
                 sx={{ mb: 4 }}
                 value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
+                onChange={e => {
+                  setConfirmPassword(e.target.value)
+                  if (e.target.value === '') {
+                    setConfirmPasswordErrorText('Confirm password is required')
+                  } else if (e.target.value !== password) {
+                    setConfirmPasswordErrorText('Passwords do not match')
+                  } else {
+                    setConfirmPasswordErrorText('')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
