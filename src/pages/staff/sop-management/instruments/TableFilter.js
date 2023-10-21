@@ -148,7 +148,7 @@ const TableColumns = refreshTable => {
 
   const handlePDFDownload = row => {
     apiDefinitions
-      .getPDFByManualID(row.manual_id)
+      .getPDFByInstrumentID(row.manual_id)
       .then(res => {
         console.log(res)
         toast.success(' Downloaded Successfully')

@@ -97,7 +97,7 @@ export default {
     return await api.put(`/instrument/delete/${manualID}`, payload)
   },
 
-  getPDFByManualID: async function (manualID) {
+  getPDFByInstrumentID: async function (manualID) {
     return await api.get(`/instrument/download-pdf/${manualID}`, {
       responseType: 'blob'
     })
@@ -124,7 +124,7 @@ export default {
     return await api.put(`/biohazard/delete/${manualID}`, payload)
   },
 
-  getPDFByManualID: async function (manualID) {
+  getPDFByBiohazardID: async function (manualID) {
     return await api.get(`/biohazard/download-pdf/${manualID}`, {
       responseType: 'blob'
     })
