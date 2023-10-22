@@ -4,13 +4,10 @@ import { useState, useEffect, forwardRef, useCallback, Fragment } from 'react'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import Switch from '@mui/material/Switch'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
 
 // ** Custom Component Import
 import CustomTextField from 'src/@core/components/mui/text-field'
@@ -28,15 +25,22 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 // ** Custom Component Imports
 import CustomInput from './PickersCustomInput'
 
-const capitalize = string => string && string[0].toUpperCase() + string.slice(1)
+import smsService from 'src/api/sendSMS'
+
+import apiDefinitions from 'src/api/apiDefinitions'
 
 const defaultState = {
   description: '',
   calendar: 'LAB-01',
-  startDate: new Date()
+  startDate: new Date(),
+  title: '',
+  startTime: new Date(),
+  endTime: new Date()
 }
 
 const AddEventSidebar = props => {
+  const userData = JSON.parse(localStorage.getItem('userData'))
+
   // ** Props
   const {
     store,
@@ -57,6 +61,9 @@ const AddEventSidebar = props => {
   const [startTime, setStartTime] = useState(new Date())
   const [endTime, setEndTime] = useState(new Date())
 
+  const emailID = 'sandupa.isum@gmail.com'
+  const smsNumber = '767912651'
+
   const {
     control,
     setValue,
@@ -73,31 +80,82 @@ const AddEventSidebar = props => {
   }
 
   const onSubmit = data => {
+    // Convert startTime and endTime to hh:mm:ss format in 24-hour clock format
+    const startTimeFormatted = startTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
+    const endTimeFormatted = endTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    })
+
     const modifiedEvent = {
       title: data.title,
-      batch: data.batch,
-      venue: data.venue,
-      date: values.date,
-      startTime: values.startTime,
-      endTime: values.endTime,
-      description: data.description
+      batch: data.batch || 'Test Batch', // Include batch (you can change the default value as needed)
+      venue: values.calendar, // Use values.calendar as the venue
+      date: values.startDate.toISOString().split('T')[0], // Extract date in ISO-8601 format
+      startTime: startTimeFormatted, // Use formatted start time
+      endTime: endTimeFormatted, // Use formatted end time
+      description: values.description,
+      userID: userData.id
     }
+
     if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
       dispatch(addEvent(modifiedEvent))
     } else {
       dispatch(updateEvent({ id: store.selectedEvent.id, ...modifiedEvent }))
     }
     calendarApi.refetchEvents()
-    handleSidebarClose()
-  }
 
-  const handleDeleteEvent = () => {
-    if (store.selectedEvent) {
-      dispatch(deleteEvent(store.selectedEvent.id))
+    const createdMessageEmail = `
+  <p>Your reservation request for <strong>${modifiedEvent.venue}</strong> has been successfully created.</p>
+  <p>Date: <strong>${modifiedEvent.date}</strong></p>
+  <p>Time: <strong>${modifiedEvent.startTime} - ${modifiedEvent.endTime}</strong></p>
+`
+
+    const createdMessageSMS = `Your reservation request for ${modifiedEvent.venue} has been successfully created.\nDate: ${modifiedEvent.date}\nTime: ${modifiedEvent.startTime} - ${modifiedEvent.endTime}`
+
+    smsService
+      .login()
+      .then(token => {
+        console.log('Login successful. Token:', token)
+
+        smsService
+          .sendSMS(smsNumber, createdMessageSMS, token)
+          .then(response => {
+            console.log('SMS sent successfully:', response)
+          })
+          .catch(error => {
+            console.error('Error sending SMS:', error)
+          })
+      })
+      .catch(error => {
+        console.error('Login failed:', error)
+      })
+
+    const emailPayload = {
+      recipient: emailID,
+      subject: 'Lab Reservation Created - KIU LIMS',
+      content: createdMessageEmail
     }
 
-    // calendarApi.getEventById(store.selectedEvent.id).remove()
+    apiDefinitions
+      .sendEmail(emailPayload)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     handleSidebarClose()
+
+    // window.location.reload()
   }
 
   const handleStartDate = date => {
@@ -157,17 +215,6 @@ const AddEventSidebar = props => {
           </Button>
         </Fragment>
       )
-    } else {
-      return (
-        <Fragment>
-          <Button type='submit' variant='contained' sx={{ mr: 4 }}>
-            Update
-          </Button>
-          <Button variant='tonal' color='secondary' onClick={resetToStoredValues}>
-            Reset
-          </Button>
-        </Fragment>
-      )
     }
   }
 
@@ -188,10 +235,10 @@ const AddEventSidebar = props => {
         }}
       >
         <Typography variant='h5'>
-          {store.selectedEvent !== null && store.selectedEvent.title.length ? 'Update Event' : 'Add Event'}
+          {store.selectedEvent !== null && store.selectedEvent.title.length ? 'Event Details' : 'Add Event'}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {store.selectedEvent !== null && store.selectedEvent.title.length ? (
+          {/* {store.selectedEvent !== null && store.selectedEvent.title.length ? (
             <IconButton
               size='small'
               onClick={handleDeleteEvent}
@@ -199,7 +246,7 @@ const AddEventSidebar = props => {
             >
               <Icon icon='tabler:trash' fontSize='1.25rem' />
             </IconButton>
-          ) : null}
+          ) : null} */}
           <IconButton
             size='small'
             onClick={handleSidebarClose}
@@ -232,6 +279,7 @@ const AddEventSidebar = props => {
                   sx={{ mb: 4 }}
                   onChange={onChange}
                   placeholder='Event Title'
+                  disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
                   error={Boolean(errors.title)}
                   {...(errors.title && { helperText: 'This field is required' })}
                 />
@@ -242,10 +290,13 @@ const AddEventSidebar = props => {
               fullWidth
               sx={{ mb: 4 }}
               label='Venue'
+              disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
               SelectProps={{
                 value: values.calendar,
                 onChange: e => setValues({ ...values, calendar: e.target.value })
               }}
+              error={Boolean(errors.calendar)}
+              {...(errors.calendar && { helperText: 'This field is required' })}
             >
               <MenuItem value='LAB-01'>LAB-01</MenuItem>
               <MenuItem value='LAB-02'>LAB-02</MenuItem>
@@ -254,11 +305,14 @@ const AddEventSidebar = props => {
               <DatePicker
                 selectsStart
                 id='event-start-date'
+                disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
                 selected={values.startDate}
                 dateFormat={'yyyy-MM-dd'}
                 customInput={<PickersComponent label='Date' registername='startDate' />}
                 onChange={date => setValues({ ...values, startDate: new Date(date) })}
                 onSelect={handleStartDate}
+                error={errors.startDate}
+                {...(errors.startDate && { helperText: 'This field is required' })}
               />
             </Box>
 
@@ -267,11 +321,14 @@ const AddEventSidebar = props => {
                 showTimeSelect
                 selected={startTime}
                 timeIntervals={15}
+                disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
                 showTimeSelectOnly
                 dateFormat='h:mm aa'
                 id='time-only-picker'
                 onChange={date => setStartTime(date)}
                 customInput={<CustomInput label='Start Time' />}
+                error={errors.startTime}
+                {...(errors.startTime && { helperText: 'This field is required' })}
               />
             </Box>
 
@@ -280,11 +337,14 @@ const AddEventSidebar = props => {
                 showTimeSelect
                 selected={endTime}
                 timeIntervals={15}
+                disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
                 showTimeSelectOnly
                 dateFormat='h:mm aa'
                 id='time-only-picker'
                 onChange={date => setEndTime(date)}
                 customInput={<CustomInput label='End Time' />}
+                error={errors.endTime}
+                {...(errors.endTime && { helperText: 'This field is required' })}
               />
             </Box>
 
@@ -293,10 +353,13 @@ const AddEventSidebar = props => {
               multiline
               fullWidth
               sx={{ mb: 6.5 }}
+              disabled={store.selectedEvent !== null && store.selectedEvent.title.length ? true : false}
               label='Description'
               id='event-description'
               value={values.description}
               onChange={e => setValues({ ...values, description: e.target.value })}
+              error={errors.description}
+              {...(errors.description && { helperText: 'This field is required' })}
             />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />

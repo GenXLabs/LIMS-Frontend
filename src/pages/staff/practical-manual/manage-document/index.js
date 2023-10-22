@@ -25,7 +25,7 @@ import apiDefinitions from 'src/api/apiDefinitions'
 import { useDropzone } from 'react-dropzone'
 import toast from 'react-hot-toast'
 
-const ViewInstrument = () => {
+const ManageDocument = () => {
   const [open, setOpen] = useState(false)
   const handleClickOpen = () => setOpen(true)
 
@@ -335,4 +335,4 @@ const ViewInstrument = () => {
   )
 }
 
-export default ViewInstrument
+export default ManageDocument

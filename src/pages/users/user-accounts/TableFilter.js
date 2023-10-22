@@ -123,9 +123,9 @@ const TableColumns = () => {
   const columns = [
     {
       flex: 0.1,
-      minWidth: 290,
-      field: 'id',
-      headerName: 'ID',
+      minWidth: 80,
+      field: 'user',
+      headerName: '',
       renderCell: params => {
         const { row } = params
 
@@ -133,13 +133,24 @@ const TableColumns = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(params)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+              {/* <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
                 {row.id}
-              </Typography>
+              </Typography> */}
             </Box>
           </Box>
         )
       }
+    },
+    {
+      flex: 0.1,
+      field: 'id',
+      minWidth: 80,
+      headerName: 'ID',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.id}
+        </Typography>
+      )
     },
     {
       flex: 0.1,
@@ -184,6 +195,17 @@ const TableColumns = () => {
       renderCell: params => (
         <Typography variant='body2' sx={{ color: 'text.primary' }}>
           {params.row.email}
+        </Typography>
+      )
+    },
+    {
+      flex: 0.125,
+      field: 'phone',
+      minWidth: 80,
+      headerName: 'Phone Number',
+      renderCell: params => (
+        <Typography variant='body2' sx={{ color: 'text.primary' }}>
+          {params.row.phoneNumber}
         </Typography>
       )
     },

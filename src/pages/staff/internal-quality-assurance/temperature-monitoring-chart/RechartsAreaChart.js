@@ -10,12 +10,8 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 
-// ** Custom Component Import
-import CustomTextField from 'src/@core/components/mui/text-field'
 
 // ** Third Party Imports
-import format from 'date-fns/format'
-import DatePicker from 'react-datepicker'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 // ** Icon Imports
@@ -128,86 +124,9 @@ const CustomTooltip = data => {
 
 const RechartsAreaChart = ({ direction }) => {
   // ** States
-  const [endDate, setEndDate] = useState(null)
-  const [startDate, setStartDate] = useState(null)
-
-  const CustomInput = forwardRef((props, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <CustomTextField
-        {...props}
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon fontSize='1.25rem' icon='tabler:calendar-event' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon fontSize='1.25rem' icon='tabler:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
-
-  const handleOnChange = dates => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
-  }
-
   return (
     <Card>
-      {/* <CardHeader
-        title='Website Data'
-        sx={{
-          flexDirection: ['column', 'row'],
-          alignItems: ['flex-start', 'center'],
-          '& .MuiCardHeader-action': { mb: 0 },
-          '& .MuiCardHeader-content': { mb: [2, 0] }
-        }}
-        action={
-          <DatePicker
-            selectsRange
-            endDate={endDate}
-            id='recharts-area'
-            selected={startDate}
-            startDate={startDate}
-            onChange={handleOnChange}
-            placeholderText='Click to select a date'
-            customInput={<CustomInput start={startDate} end={endDate} />}
-          />
-        }
-      /> */}
       <CardContent>
-        <Box sx={{ display: 'flex', mb: 4 }}>
-          {/* <Box sx={{ mr: 6, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'rgb(115, 103, 240)' } }}>
-            <Icon icon='mdi:circle' fontSize='0.75rem' />
-            <Typography variant='body2'>Click</Typography>
-          </Box> */}
-          {/* <Box
-            sx={{
-              mr: 6,
-              display: 'flex',
-              alignItems: 'center',
-              '& svg': { mr: 1.5, color: 'rgba(115, 103, 240, .5)' }
-            }}
-          >
-            <Icon icon='mdi:circle' fontSize='0.75rem' />
-            <Typography variant='body2'>Sales</Typography>
-          </Box> */}
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'rgba(115, 103, 240, .2)' } }}>
-            <Icon icon='mdi:circle' fontSize='0.75rem' />
-            <Typography variant='body2'>Visits</Typography>
-          </Box> */}
-        </Box>
         <Box sx={{ height: 350 }}>
           <ResponsiveContainer>
             <AreaChart height={350} data={data} style={{ direction }} margin={{ left: -20 }}>
@@ -215,9 +134,9 @@ const RechartsAreaChart = ({ direction }) => {
               <XAxis dataKey='name' reversed={direction === 'rtl'} />
               <YAxis orientation={direction === 'rtl' ? 'right' : 'left'} />
               <Tooltip content={CustomTooltip} />
-              {/* <Area dataKey='Clicks' stackId='Clicks' stroke='0' fill='rgb(115, 103, 240)' />
+              <Area dataKey='Clicks' stackId='Clicks' stroke='0' fill='rgb(115, 103, 240)' />
               <Area dataKey='Sales' stackId='Sales' stroke='0' fill='rgba(115, 103, 240, .5)' />
-              <Area dataKey='Visits' stackId='Visits' stroke='0' fill='rgba(115, 103, 240, .2)' /> */}
+              <Area dataKey='Visits' stackId='Visits' stroke='0' fill='rgba(115, 103, 240, .2)' />
             </AreaChart>
           </ResponsiveContainer>
         </Box>

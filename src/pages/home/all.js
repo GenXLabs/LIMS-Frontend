@@ -113,17 +113,6 @@ const TableColumns = () => {
     {
       flex: 0.1,
       minWidth: 110,
-      field: 'batch',
-      headerName: 'Batch',
-      renderCell: params => (
-        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-          {params.row.batch}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 110,
       field: 'venue',
       headerName: 'Venue',
       renderCell: params => (
@@ -155,73 +144,37 @@ const TableColumns = () => {
           {params.row.start_time} - {params.row.end_time}
         </Typography>
       )
-    },
-    {
-      flex: 0.2,
-      minWidth: 140,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: params => {
-        const status = statusObj[params.row.status]
-
-        return (
-          <CustomChip
-            rounded
-            size='small'
-            skin='light'
-            color={status.color}
-            label={status.title}
-            sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-          />
-        )
-      }
-    },
-    {
-      flex: 0.15,
-      minWidth: 140,
-      field: 'actions',
-      headerName: 'Actions',
-      sortable: false,
-      filterable: false,
-      renderCell: params => {
-        return (
-          <Grid container columnSpacing={5} rowSpacing={2} sx={{ mt: 2, mb: 2 }}>
-            <Grid item>
-              <Button variant='outlined' onClick={() => handleViewMore(params.row)}>
-                View More
-              </Button>
-            </Grid>
-          </Grid>
-        )
-      }
     }
   ]
 
   // ** States
   const [data, setData] = useState([])
 
-  // ** Get data
   useEffect(() => {
     apiDefinitions.getAllLabReservations().then(res => {
-      //add id to data
-      res.data.data.forEach((item, index) => {
+      // Filter the data to include only items with status = 0
+      const filteredData = res.data.data.filter(item => item.status === 2)
+
+      // Add an 'id' to data
+      filteredData.forEach((item, index) => {
         item.id = index + 1
       })
 
-      //add avatar if not available
-      res.data.data.forEach(item => {
+      // Add 'avatar' if not available
+      filteredData.forEach(item => {
         if (!item.avatar) {
           item.avatar = ''
         }
       })
-      setData(res.data.data)
-      console.log(res.data.data)
+
+      setData(filteredData)
+      console.log(filteredData)
     })
   }, [])
 
   const [searchText, setSearchText] = useState('')
   const [filteredData, setFilteredData] = useState([])
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 })
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
 
   const handleSearch = searchValue => {
     setSearchText(searchValue)
@@ -415,7 +368,6 @@ const TableColumns = () => {
         getRowHeight={() => 'auto'}
         pageSizeOptions={[7, 10, 25, 50]}
         paginationModel={paginationModel}
-        slots={{ toolbar: QuickSearchToolbar }}
         onPaginationModelChange={setPaginationModel}
         rows={filteredData.length ? filteredData : data}
         sx={{
@@ -427,11 +379,6 @@ const TableColumns = () => {
           baseButton: {
             size: 'medium',
             variant: 'outlined'
-          },
-          toolbar: {
-            value: searchText,
-            clearSearch: () => handleSearch(''),
-            onChange: event => handleSearch(event.target.value)
           }
         }}
       />

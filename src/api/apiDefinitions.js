@@ -12,6 +12,10 @@ export default {
     return await api.post(`/lab-reservation/add/${userID}`, reservation)
   },
 
+  updateReservation: async function (reservation) {
+    return await api.put(`/lab-reservation/update`, reservation)
+  },
+
   updateReservationStatus: async function (reservationID, status) {
     return await api.put(`/lab-reservation/update-status/${reservationID}/${status}`)
   },
@@ -73,6 +77,18 @@ export default {
     return await api.get(`/inventory-management/get-all`)
   },
 
+  addGlasswares: async function (dataPayload) {
+    return await api.post(`/inventory-management/create`, dataPayload)
+  },
+
+  deleteGlasswares: async function (id) {
+    return await api.delete(`/inventory-management/delete/${id}`)
+  },
+
+  editGlasswares: async function (id, dataPayload) {
+    return await api.put(`/inventory-management/update/${id}`, dataPayload)
+  },
+
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
@@ -103,7 +119,6 @@ export default {
     })
   },
 
-
   getAllBiohazard: async function () {
     return await api.get(`/biohazard/get-all`)
   },
@@ -130,11 +145,6 @@ export default {
     })
   },
 
-
-
-
-
-
   /* SOP Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Practical Timetable APIs Start */
@@ -148,14 +158,6 @@ export default {
   },
 
   /* Practical Timetable APIs End */
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  /* User Management APIs Start */
-
-  getUserById: async function (userID) {
-    return await api.get(`/user/get?id=${userID}`)
-  },
-
-  /* User Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Research Management APIs Start */
 
@@ -180,13 +182,42 @@ export default {
   },
 
   /* Research Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Internal Quality Assurance APIs Start */
 
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
+  getAllInternalQualityAssurance: async function () {
+    return await api.get(`/internal-quality-assurance/get-all`)
   },
 
-   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  getInternalQualityById: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/get-by-id/${manualID}`)
+  },
+
+  createInternalQualityAssurance: async function (formData) {
+    return await api.post(`/internal-quality-assurance/create`, formData)
+  },
+
+  updateInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/update/${manualID}`, payload)
+  },
+
+  deleteInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+  /* Internal Quality Assurance APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
 
   getAllUsers: async function () {
     return await api.get(`/user`)
@@ -212,7 +243,13 @@ export default {
     return await api.post(`/user/add`, userPayload)
   },
 
-
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Micellaneous APIs Start */
+
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
+  }
+
+  /* Micellaneous APIs End */
 }
