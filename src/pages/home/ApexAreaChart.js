@@ -150,7 +150,7 @@ const ApexAreaChart = () => {
   }
 
   return (
-    <Card>
+    <Card sx={{ minHeight: '100%' }}>
       <CardHeader
         title='Temperature Monitoring Chart'
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
@@ -176,7 +176,7 @@ const ApexAreaChart = () => {
         //   </DatePickerWrapper>
         // }
       />
-      <CardContent>
+      <CardContent sx={{ minHeight: '100%' }}>
         <ReactApexcharts type='area' height={260} options={options} series={series} />
       </CardContent>
     </Card>

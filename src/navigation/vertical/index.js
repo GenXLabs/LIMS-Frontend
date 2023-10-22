@@ -25,6 +25,11 @@ const navigation = () => {
       icon: 'mdi:table-cog'
     },
     {
+      path: '/staff/lab-reservation/reservation-reports',
+      title: 'Reservation Reports',
+      icon: 'tabler:file-report'
+    },
+    {
       sectionTitle: 'User Management'
     },
     {
