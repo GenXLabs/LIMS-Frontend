@@ -194,28 +194,28 @@ const ViewInstruments = () => {
   }
 
   const handlePrint = () => {
-    const doc = new jsPDF()
-    const tableColumn = ['TITLE', 'DESCRIPTION', 'UPLOADED BY ', 'UPLOADED DATE']
-    const tableRows = []
-    reportData.forEach(item => {
-      const row = [item.title, item.description, item.created_by, new Date(item.created_at).toISOString()]
+    const doc = new jsPDF();
+    const tableColumn = ['TITLE', 'DESCRIPTION', 'UPLOADED BY', 'UPLOADED DATE'];
+    const tableRows = [];
 
-      tableRows.push(row)
-    })
+    reportData.forEach(item => {
+      const uploadedDate = new Date(item.created_at).toLocaleDateString(); // Format the date
+      const row = [item.title, item.description, item.created_by, uploadedDate];
+      tableRows.push(row);
+    });
 
     // startY is basically margin-top
-    doc.autoTable(tableColumn, tableRows, { startY: 20 })
-    const date = Date().split(' ')
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    const date = new Date();
+    const dateStr = date.toISOString().split('T')[0]; // Format the filename date
 
-    // we use a date string to generate our filename.
-    const dateStr = date[0] + date[1] + date[2] + date[3] + date[4]
+    // Ticket title and margin-top + margin-left
+    doc.text('INSTRUMENT REPORT', 14, 15);
 
-    // ticket title. and margin-top + margin-left
-    doc.text('INSTRUMENT REPORT.', 14, 15)
-
-    // we define the name of our PDF file.
-    doc.save(`report_${dateStr}.pdf`)
+    // Define the name of the PDF file
+    doc.save(`report_${dateStr}.pdf`);
   }
+
 
   return (
     <>
