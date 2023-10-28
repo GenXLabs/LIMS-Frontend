@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal'
 import apiDefinitions from 'src/api/apiDefinitions'
+import toast from 'react-hot-toast'
 
 // Constants for days of the week and time slots
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
