@@ -30,9 +30,11 @@ const FormLayoutsSeparator = () => {
   const [time, setTime] = useState(new Date())
 
   const router = useRouter()
+
   const handleUploadRedirect = () => {
     router.push('/staff/internal-quality-assurance/temperature-monitoring-chart/RechartsAreaChart')
   }
+
   return (
     <Card>
       <CardHeader title='Temperature Monitoring Form' />
@@ -48,28 +50,28 @@ const FormLayoutsSeparator = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerWrapper>
-              <DatePicker
-                selected={date}
-                showYearDropdown
-                showMonthDropdown
-                placeholderText='MM-DD-YYYY'
-                customInput={<CustomInput />}
-                id='form-layouts-separator-date'
-                onChange={date => setDate(date)}
-              />
+                <DatePicker
+                  selected={date}
+                  showYearDropdown
+                  showMonthDropdown
+                  placeholderText='MM-DD-YYYY'
+                  customInput={<CustomInput />}
+                  id='form-layouts-separator-date'
+                  onChange={date => setDate(date)}
+                />
               </DatePickerWrapper>
             </Grid>
             <Grid item xs={12} sm={6}>
-            <DatePicker
-              showTimeSelect
-              selected={time}
-              timeIntervals={15}
-              showTimeSelectOnly
-              dateFormat='h:mm aa'
-              id='time-only-picker'
-              onChange={date => setTime(date)}
-              customInput={<CustomInput label='Time Only' />}
-            />
+              <DatePicker
+                showTimeSelect
+                selected={time}
+                timeIntervals={15}
+                showTimeSelectOnly
+                dateFormat='h:mm aa'
+                id='time-only-picker'
+                onChange={date => setTime(date)}
+                customInput={<CustomInput label='Time Only' />}
+              />
             </Grid>
           </Grid>
         </CardContent>

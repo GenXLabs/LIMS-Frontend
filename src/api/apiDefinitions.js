@@ -12,6 +12,10 @@ export default {
     return await api.post(`/lab-reservation/add/${userID}`, reservation)
   },
 
+  updateReservation: async function (reservation) {
+    return await api.put(`/lab-reservation/update`, reservation)
+  },
+
   updateReservationStatus: async function (reservationID, status) {
     return await api.put(`/lab-reservation/update-status/${reservationID}/${status}`)
   },
@@ -73,19 +77,72 @@ export default {
     return await api.get(`/inventory-management/get-all`)
   },
 
+  addGlasswares: async function (dataPayload) {
+    return await api.post(`/inventory-management/create`, dataPayload)
+  },
+
+  deleteGlasswares: async function (id) {
+    return await api.delete(`/inventory-management/delete/${id}`)
+  },
+
+  editGlasswares: async function (id, dataPayload) {
+    return await api.put(`/inventory-management/update/${id}`, dataPayload)
+  },
+
   /* Inventory Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* SOP Management APIs Start */
-  getAllInstrument: async function () {
+
+  getAllInstruments: async function () {
     return await api.get(`/instrument/get-all`)
   },
 
-  addInstrument: async function (dataPayload) {
-    return await api.post(`/instrument/create`, dataPayload)
+  getInstrumentByID: async function (manualID) {
+    return await api.get(`/instrument/get-by-id/${manualID}`)
   },
 
-  deleteInstrumrnt: async function () {
-    return await api.delete(`/instrument/delete`)
+  addInstruments: async function (formData) {
+    return await api.post(`/instrument/create`, formData)
+  },
+
+  updateInstruments: async function (manualID, payload) {
+    return await api.put(`/instrument/update/${manualID}`, payload)
+  },
+
+  deleteInstruments: async function (manualID, payload) {
+    return await api.put(`/instrument/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/instrument/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+  getAllBiohazard: async function () {
+    return await api.get(`/biohazard/get-all`)
+  },
+
+  getBiohazardByID: async function (manualID) {
+    return await api.get(`/biohazard/get-by-id/${manualID}`)
+  },
+
+  addBiohazard: async function (formData) {
+    return await api.post(`/biohazard/create`, formData)
+  },
+
+  updateBiohazard: async function (manualID, payload) {
+    return await api.put(`/biohazard/update/${manualID}`, payload)
+  },
+
+  deleteBiohazard: async function (manualID, payload) {
+    return await api.put(`/biohazard/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/biohazard/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
   },
 
   /* SOP Management APIs End */
@@ -101,14 +158,6 @@ export default {
   },
 
   /* Practical Timetable APIs End */
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-  /* User Management APIs Start */
-
-  getUserById: async function (userID) {
-    return await api.get(`/user/get?id=${userID}`)
-  },
-
-  /* User Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Research Management APIs Start */
 
@@ -133,13 +182,42 @@ export default {
   },
 
   /* Research Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Internal Quality Assurance APIs Start */
 
-  sendEmail: async function (emailPayload) {
-    return await api.post(`/email/send-email`, emailPayload)
+  getAllInternalQualityAssurance: async function () {
+    return await api.get(`/internal-quality-assurance/get-all`)
   },
 
-   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  getInternalQualityById: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/get-by-id/${manualID}`)
+  },
+
+  createInternalQualityAssurance: async function (formData) {
+    return await api.post(`/internal-quality-assurance/create`, formData)
+  },
+
+  updateInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/update/${manualID}`, payload)
+  },
+
+  deleteInternalQualityAssurance: async function (manualID, payload) {
+    return await api.put(`/internal-quality-assurance/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/internal-quality-assurance/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+  /* Internal Quality Assurance APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs Start */
+
+  getUserById: async function (userID) {
+    return await api.get(`/user/get?id=${userID}`)
+  },
 
   getAllUsers: async function () {
     return await api.get(`/user`)
@@ -165,7 +243,13 @@ export default {
     return await api.post(`/user/add`, userPayload)
   },
 
-
-  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* User Management APIs End */
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* Micellaneous APIs Start */
+
+  sendEmail: async function (emailPayload) {
+    return await api.post(`/email/send-email`, emailPayload)
+  }
+
+  /* Micellaneous APIs End */
 }

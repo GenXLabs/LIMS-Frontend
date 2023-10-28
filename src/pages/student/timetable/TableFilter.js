@@ -95,10 +95,8 @@ const EventTable = () => {
         </Box>
         <Paper elevation={0}>
           {filteredData.length === 0 ? (
-            // Render "No results found" message when filteredData is empty
             <Typography variant='body1'>No results found.</Typography>
           ) : (
-            // Render the table when there are matches
             <Table style={tableStyle}>
               <TableHead>
                 <TableRow>

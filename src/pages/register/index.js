@@ -36,6 +36,7 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import axios from 'axios'
 
 import apiDefinitions from 'src/api/apiDefinitions'
+import { el } from 'date-fns/locale'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -264,7 +265,14 @@ const Register = () => {
                 label='First Name'
                 placeholder='john'
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={e => {
+                  setFirstName(e.target.value)
+                  if (e.target.value === '') {
+                    setFirstNameErrorText('First name is required')
+                  }else{
+                    setFirstNameErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 autoFocus
@@ -276,7 +284,14 @@ const Register = () => {
                 label='Last Name'
                 placeholder='doe'
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={e => {
+                  setLastName(e.target.value)
+                  if (e.target.value === '') {
+                    setLastNameErrorText('Last name is required')
+                  }else{
+                    setLastNameErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 fullWidth
@@ -288,7 +303,16 @@ const Register = () => {
                 sx={{ mb: 4 }}
                 placeholder='user@email.com'
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value)
+                  if (e.target.value === '') {
+                    setEmailErrorText('Email is required')
+                  }else if (!e.target.value.includes('@') || !e.target.value.includes('.') || e.target.value.endsWith('.') || e.target.value.endsWith('@')) {
+                    setEmailErrorText('Valid email is required')
+                  }else{
+                    setEmailErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 fullWidth
@@ -298,10 +322,20 @@ const Register = () => {
                 helperText={phoneNumberErrorText}
                 error={phoneNumberErrorText !== ''}
                 type='tel'
-                placeholder='0774567890'
+                placeholder='07XXXXXXXX'
                 sx={{ mb: 4 }}
                 value={phoneNumber}
-                onChange={e => setPhoneNumber(e.target.value)}
+                onChange={e => {
+                  setPhoneNumber(e.target.value)
+                  if (e.target.value === '') {
+                    setPhoneNumberErrorText('Phone number is required')
+                  }else if (e.target.value.length !== 10 || !e.target.value.startsWith('07') || isNaN(e.target.value)) {
+                    setPhoneNumberErrorText('Valid phone number is required')
+                  }else{
+                    setPhoneNumberErrorText('') 
+
+                  }
+                }}
               />
               {/* <CustomTextField
                 fullWidth
@@ -340,7 +374,17 @@ const Register = () => {
                 placeholder='**********'
                 sx={{ mb: 2 }} // Reduce the margin to create space for the label
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => {
+                  setPassword(e.target.value)
+                  if (e.target.value === '') {
+                    setPasswordErrorText('Password is required')
+                  }else if (e.target.value.length < 6) {
+                    setPasswordErrorText('Password must be at least 6 characters')
+                  }else{
+                    setPasswordErrorText('')
+                    setIsPasswordEdited(true)
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -355,19 +399,7 @@ const Register = () => {
                   )
                 }}
               />
-              {/* Conditionally render the password requirements label if password has characters */}
-              {password.length > 0 && (
-                <Typography variant='body2' sx={{ color: 'green' }}>
-                  Password must be at least 6 characters long.
-                </Typography>
-              )}
-
-              {/* Password requirements label */}
-              {isPasswordEdited && (
-                <Typography variant='body2' sx={{ color: 'green' }}>
-                  Password must be at least 6 characters long.
-                </Typography>
-              )}
+              
 
               <CustomTextField
                 fullWidth
@@ -380,7 +412,17 @@ const Register = () => {
                 placeholder='**********'
                 sx={{ mb: 4 }}
                 value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
+                onChange={e => {
+                  setConfirmPassword(e.target.value)
+                  if (e.target.value === '') {
+                    setConfirmPasswordErrorText('Confirm password is required')
+                  }else if (e.target.value !== password) {
+                    setConfirmPasswordErrorText('Passwords do not match')
+                  }
+                  else{
+                    setConfirmPasswordErrorText('')
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
