@@ -245,6 +245,36 @@ export default {
 
   /* User Management APIs End */
   /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+  /* IQA Audit report APIs Start*/
+
+  getAllAudit: async function () {
+    return await api.get(`/audit/get-all`)
+  },
+
+  getAuditById: async function (manualID) {
+    return await api.get(`/audit/get-by-id/${manualID}`)
+  },
+
+  createAudit: async function (formData) {
+    return await api.post(`/audit/create`, formData)
+  },
+
+  updateAudit: async function (manualID, payload) {
+    return await api.put(`/audit/update/${manualID}`, payload)
+  },
+
+  deleteAudit: async function (manualID, payload) {
+    return await api.put(`/audit/delete/${manualID}`, payload)
+  },
+
+  getPDFByManualID: async function (manualID) {
+    return await api.get(`/audit/download-pdf/${manualID}`, {
+      responseType: 'blob'
+    })
+  },
+
+  /* IQA Audit report APIs End*/
+  /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
   /* Micellaneous APIs Start */
 
   sendEmail: async function (emailPayload) {

@@ -37,10 +37,6 @@ const TableColumns = refreshTable => {
 
   const [editOpen, setEditOpen] = useState(false)
 
-  const [moduleCategories, setModuleCategories] = useState([])
-
-  const [selectedModuleCategory, setSelectedModuleCategory] = useState('')
-
   const userData = JSON.parse(localStorage.getItem('userData'))
 
   const [editManualID, setEditManualID] = useState('')
@@ -49,7 +45,6 @@ const TableColumns = refreshTable => {
     setEditOpen(true)
     setEditTitle(row.title)
     setEditDescription(row.description)
-    setSelectedModuleCategory(row.module_category)
     setEditManualID(row.manual_id)
 
     console.log(editOpen)
@@ -62,25 +57,12 @@ const TableColumns = refreshTable => {
     setEditOpen(false)
     setEditTitle('')
     setEditDescription('')
-    setSelectedModuleCategory('')
     setEditManualID('')
   }
 
   useEffect(() => {
     apiDefinitions
-      .getAllModuleCategories()
-      .then(res => {
-        // Filter out records where "deleted_at" is not null
-        const filteredData = res.data.data.filter(category => category.deleted_at === null)
-        console.log(filteredData)
-        setModuleCategories(filteredData)
-      })
-      .catch(err => console.log(err))
-  }, [])
-
-  useEffect(() => {
-    apiDefinitions
-      .getAllPracticalManuals()
+      .getAllAudit()
       .then(res => {
         // Filter out records where "deleted_at" is not null
         const filteredData = res.data.data.filter(manual => manual.deleted_at === null)
@@ -97,16 +79,15 @@ const TableColumns = refreshTable => {
       .catch(err => console.log(err))
   }, [refreshTable, refreshTable2])
 
-  const handleEditInstrument = () => {
-    const editInstrumentPayload = {
+  const handleEditAudit = () => {
+    const editAuditPayload = {
       title: editTitle,
       description: editDescription,
-      module_category: selectedModuleCategory,
       updated_by: userData.id
     }
 
     apiDefinitions
-      .updatePracticalManual(editManualID, editInstrumentPayload)
+      .updateAudit(editManualID, editAuditPayload)
       .then(res => {
         console.log(res)
         toast.success('Audit report Updated Successfully')
@@ -117,14 +98,9 @@ const TableColumns = refreshTable => {
         toast.error('Error Updating Audit Report')
       })
 
-    console.log(editInstrumentPayload)
+    console.log(editAuditPayload)
     handleEditClose()
   }
-
-  const moduleCategoryMapping = {}
-  moduleCategories.forEach(category => {
-    moduleCategoryMapping[category.category_id] = category.category_name
-  })
 
   const UploadedByCell = ({ createdBy }) => {
     // Define a state variable to store the full name
@@ -157,15 +133,15 @@ const TableColumns = refreshTable => {
     }
 
     apiDefinitions
-      .deletePracticalManual(row.manual_id, deleteManualPayload)
+      .deleteAudit(row.manual_id, deleteManualPayload)
       .then(res => {
         console.log(res)
-        toast.success('Practical Manual Deleted Successfully')
+        toast.success('Audit report Deleted Successfully')
         setRefreshTable2(!refreshTable2)
       })
       .catch(err => {
         console.log(err)
-        toast.error('Error Deleting Practical Manual')
+        toast.error('Error Deleting Audit report')
       })
   }
 
@@ -174,7 +150,7 @@ const TableColumns = refreshTable => {
       .getPDFByManualID(row.manual_id)
       .then(res => {
         console.log(res)
-        toast.success('Practical Manual Downloaded Successfully')
+        toast.success('Audit report Downloaded Successfully')
 
         // Create a URL for the blob data
         const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -192,7 +168,7 @@ const TableColumns = refreshTable => {
 
       .catch(err => {
         console.log(err)
-        toast.error('Error Downloading Practical Manual')
+        toast.error('Error Downloading Audit report')
       })
   }
 
@@ -367,7 +343,7 @@ const TableColumns = refreshTable => {
         }}
       />
       <Dialog open={editOpen} onClose={handleEditClose} aria-labelledby='form-dialog-title'>
-        <DialogTitle id='form-dialog-title'>Edit Practical Manual</DialogTitle>
+        <DialogTitle id='form-dialog-title'>Edit Audit report</DialogTitle>
         <DialogContent sx={{ minWidth: '550px' }}>
           <Grid container spacing={6} rowSpacing={5}>
             <Grid item xs={12}>
@@ -386,7 +362,7 @@ const TableColumns = refreshTable => {
           </Grid>
         </DialogContent>
         <DialogActions className='dialog-actions-dense' sx={{ m: 4 }}>
-          <Button onClick={handleEditInstrument} variant='contained'>
+          <Button onClick={handleEditAudit} variant='contained'>
             Update
           </Button>
           <Button onClick={handleEditClose} variant='contained' color='error'>

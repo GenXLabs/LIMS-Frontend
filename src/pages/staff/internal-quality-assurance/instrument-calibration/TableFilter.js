@@ -95,12 +95,12 @@ const TableColumns = refreshTable => {
       .updateInternalQualityAssurance(editManualID, editInstrumentCalibrationReportPayload)
       .then(res => {
         console.log(res)
-        toast.success('Practical Manual Updated Successfully')
+        toast.success('Report Updated Successfully')
         setRefreshTable2(!refreshTable2)
       })
       .catch(err => {
         console.log(err)
-        toast.error('Error Updating Practical Manual')
+        toast.error('Error Updating Report')
       })
 
     console.log(editInstrumentCalibrationReportPayload)
