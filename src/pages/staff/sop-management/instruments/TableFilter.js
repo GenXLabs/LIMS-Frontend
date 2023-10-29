@@ -26,7 +26,7 @@ const escapeRegExp = value => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
-const TableColumns = refreshTable => {
+const TableColumns = ({refreshTable,setTableData}) => {
   // ** States
   const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
@@ -79,6 +79,10 @@ const TableColumns = refreshTable => {
       })
       .catch(err => console.log(err))
   }, [refreshTable, refreshTable2])
+
+  useEffect(() =>{
+     setTableData(data)
+  },[data])
 
   const handleEditInstruments = () => {
     const editInstrumentPayload = {

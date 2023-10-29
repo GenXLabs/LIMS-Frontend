@@ -10,6 +10,10 @@ import { useState } from 'react'
 import Icon from 'src/@core/components/icon'
 import MenuItem from '@mui/material/MenuItem'
 
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import { format } from 'date-fns'
+
 // import FileUploaderRestrictions from './FileUploder'
 
 import Box from '@mui/material/Box'
@@ -31,7 +35,6 @@ const ViewInstruments = () => {
 
   const [refreshTable, setRefreshTable] = useState(false)
 
-
   const handleClose = () => {
     setOpen(false)
     setTitle('')
@@ -49,7 +52,6 @@ const ViewInstruments = () => {
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-
 
   const userData = JSON.parse(localStorage.getItem('userData'))
 
@@ -148,7 +150,6 @@ const ViewInstruments = () => {
       setDescriptionErrorText('')
     }
 
-
     if (!isValid) {
       // Exit the function if the form is not valid
       console.error('Form is not valid. Please correct the errors.')
@@ -185,6 +186,35 @@ const ViewInstruments = () => {
         toast.error('Error creating !')
       })
   }
+  const [reportData, setReportData] = useState([])
+
+  const setTableData = data => {
+    console.log('setTableData', data)
+    setReportData(data)
+  }
+
+  const handlePrint = () => {
+    const doc = new jsPDF();
+    const tableColumn = ['TITLE', 'DESCRIPTION', 'UPLOADED BY', 'UPLOADED DATE'];
+    const tableRows = [];
+
+    reportData.forEach(item => {
+      const uploadedDate = new Date(item.created_at).toLocaleDateString(); // Format the date
+      const row = [item.title, item.description, item.created_by, uploadedDate];
+      tableRows.push(row);
+    });
+
+    // startY is basically margin-top
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    const date = new Date();
+    const dateStr = date.toISOString().split('T')[0]; // Format the filename date
+
+    // Ticket title and margin-top + margin-left
+    doc.text('INSTRUMENT REPORT', 14, 15);
+
+    // Define the name of the PDF file
+    doc.save(`report_${dateStr}.pdf`);
+  }
 
 
   return (
@@ -195,13 +225,18 @@ const ViewInstruments = () => {
             <CardHeader
               title='Instruments'
               action={
-                <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
-                  Upload Instruments
-                </Button>
+                <div>
+                  <Button variant='contained' onClick={handleClickOpen} startIcon={<Icon icon='uil:plus' />}>
+                    Upload Instruments
+                  </Button>
+                  <Button variant='outlined' onClick={handlePrint} startIcon={<Icon icon='fa-solid:print' />}>
+                    PDF
+                  </Button>
+                </div>
               }
             ></CardHeader>
             <CardContent>
-              <TableFilter refreshTable={refreshTable} />
+              <TableFilter refreshTable={refreshTable} setTableData={setTableData} />
             </CardContent>
           </Card>
         </Grid>
