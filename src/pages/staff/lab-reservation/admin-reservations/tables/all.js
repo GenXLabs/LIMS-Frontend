@@ -88,7 +88,7 @@ const TableColumns = () => {
 
   const columns = [
     {
-      flex: 0.15,
+      flex: 0.25,
       minWidth: 180,
       field: 'full_name',
       headerName: 'Requested By',
@@ -229,10 +229,15 @@ const TableColumns = () => {
 
     const filteredRows = data.filter(row => {
       return Object.keys(row).some(field => {
-        // @ts-ignore
-        return searchRegex.test(row[field].toString())
+        // Check if the field exists and is not null before calling toString()
+        if (row[field] !== null) {
+          return searchRegex.test(row[field].toString())
+        }
+
+        return false // Handle null or undefined values gracefully
       })
     })
+
     if (searchValue.length) {
       setFilteredData(filteredRows)
     } else {

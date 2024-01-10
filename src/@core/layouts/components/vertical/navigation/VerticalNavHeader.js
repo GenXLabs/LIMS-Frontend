@@ -78,7 +78,7 @@ const VerticalNavHeader = props => {
           <img
             src='/images/KIU-LOGO.png'
             alt='brandLogo'
-            style={{ width: '75%', height: 'auto', margin: '10px 15px 10px 0px' }}
+            style={{ width: '75%', height: 'auto', margin: '40px 15px 40px 0px' }}
           />
           {/* <svg width={34} viewBox='0 0 32 22' fill='none' xmlns='http://www.w3.org/2000/svg'>
             <path

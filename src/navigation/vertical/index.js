@@ -25,6 +25,11 @@ const navigation = () => {
       icon: 'mdi:table-cog'
     },
     {
+      path: '/staff/lab-reservation/reservation-reports',
+      title: 'Reservation Reports',
+      icon: 'tabler:file-report'
+    },
+    {
       sectionTitle: 'User Management'
     },
     {
@@ -39,7 +44,7 @@ const navigation = () => {
     {
       path: '/student/timetable',
       title: 'Practical Timetable',
-      icon: 'simple-line-icons:calender'
+      icon: 'mdi:timetable'
     },
 
     {
@@ -48,33 +53,48 @@ const navigation = () => {
     {
       path: '/staff/practical-manual/module-category',
       title: 'Module Category',
-      icon: 'tabler:file-text'
+      icon: 'carbon:category-new-each'
     },
     {
-      path: '/student/document-retrieval',
-      title: 'Document Retrieval',
-      icon: 'tabler:file-text'
+      path: '/student/practical-manual',
+      title: 'Practical Manuals',
+      icon: 'material-symbols:book-outline'
     },
     {
       path: '/staff/practical-manual/manage-document',
-      title: 'Manage Document',
-      icon: 'tabler:file-text'
-    },
-
-    {
-      path: '/student/document-file',
-      title: 'Document File',
-      icon: 'tabler:file-text'
+      title: 'Admin Practical Manuals',
+      icon: 'mdi:book-cog-outline'
     },
 
     {
       sectionTitle: 'Inventory Management'
     },
     {
-      path: '/staff/inventory-management',
-      title: 'Inventory Management',
-      icon: 'material-symbols:lab-research-outline-sharp'
+      path: '/staff/New-Inventory-Management/Consumable',
+      title: 'Consumable',
+      icon: 'material-symbols:lab-research-outline'
     },
+    {
+      path: '/staff/New-Inventory-Management/Non-Consumable',
+      title: 'Non Consumable',
+      icon: 'covid:virus-lab-research-microscope'
+    },
+
+    /*
+    {
+      sectionTitle: 'Inventory Management'
+    },
+
+    {
+      path: '/staff/Inventory-Management/Consumable',
+      title: 'Consumable',
+      icon: 'material-symbols:lab-research-outline'
+    },
+    {
+      path: '/staff/Inventory-Management/Non-Consumable',
+      title: 'Non Consumable',
+      icon: 'covid:virus-lab-research-microscope'
+    },*/
     {
       sectionTitle: 'Quality assurance'
     },
@@ -86,7 +106,7 @@ const navigation = () => {
     {
       path: '/staff/internal-quality-assurance/instrument-calibration',
       title: 'Instrument Calibration',
-      icon: 'carbon:report'
+      icon: 'guidance:medical-laboratory'
     },
     {
       path: '/staff/internal-quality-assurance/temperature-monitoring-chart',
@@ -99,7 +119,7 @@ const navigation = () => {
     },
     {
       title: 'Instruments',
-      icon: 'arcticons:pslab',
+      icon: 'ion:flask-outline',
       path: '/staff/sop-management/instruments'
     },
     {
@@ -108,12 +128,17 @@ const navigation = () => {
       path: '/staff/sop-management/biohazard-dispose'
     },
     {
-      sectionTitle: 'Research Management'
+      sectionTitle: 'Research Work Management'
     },
     {
-      title: 'Research Management',
-      icon: ' ',
-      path: '/staff/sop-management/instruments'
+      title: 'Research Work',
+      icon: 'ph:student-light',
+      path: '/student/research'
+    },
+    {
+      title: 'Manage Research Work',
+      icon: 'fluent:book-search-20-regular',
+      path: '/staff/research'
     }
   ]
 }

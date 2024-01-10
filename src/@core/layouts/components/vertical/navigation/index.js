@@ -105,11 +105,11 @@ const Navigation = props => {
         // @ts-ignore
         if (!shadowRef.current.classList.contains('scrolled')) {
           // @ts-ignore
-          shadowRef.current.classList.add('scrolled')
+          // shadowRef.current.classList.add('scrolled')
         }
       } else {
         // @ts-ignore
-        shadowRef.current.classList.remove('scrolled')
+        // shadowRef.current.classList.remove('scrolled')
       }
     }
   }
@@ -145,7 +145,7 @@ const Navigation = props => {
             {userNavMenuContent ? (
               userNavMenuContent(navMenuContentProps)
             ) : (
-              <List className='nav-items' sx={{ pt: 0, '& > :first-child': { mt: '0' } }}>
+              <List className='nav-items' sx={{ pt: 0, '& > :first-of-type': { mt: '0' } }}>
                 <VerticalNavItems
                   navHover={navHover}
                   groupActive={groupActive}

@@ -35,6 +35,9 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
 import axios from 'axios'
 
+import apiDefinitions from 'src/api/apiDefinitions'
+import { el } from 'date-fns/locale'
+
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -84,7 +87,8 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const[isUniquEmail, setIsUniqueEmail] = useState(true)
+  const [isUniquEmail, setIsUniqueEmail] = useState(true)
+  const [isPasswordEdited, setIsPasswordEdited] = useState(false)
 
   // ** Hooks
   const theme = useTheme()
@@ -147,49 +151,38 @@ const Register = () => {
         phoneNumber: phoneNumber,
         password: password
       }
-      console.log(userData)
-
-      // localStorage.setItem('userData', JSON.stringify(userData))
-
-      // user can register only if email is unique
-      // Check if the email already exists
-      // axios
-      //   .get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-      //   .then(res => {
-      //     console.log(res.data)
-  
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-      //   })
-      try {
-      const res = await axios.get(`http://localhost:8082/api/v1/lims/user/getEmail?email=${email}`)
-      console.log(res.data)
-      if (res.data !== null) {
-        setIsUniqueEmail(false)
-        toast.error('Email already exists')
-        console.log('Email already exists')
-
-        return
-      }
       
-      } catch (err) {
-        console.log("email not found ",err)
-      }
 
-      // if email is unique, register the user
-      try {
-        const res = await axios.post('http://localhost:8082/api/v1/lims/user/add', userData)
-        console.log(res.data)
-        toast.success('Registration successful')
-        router.push('/login')
-      } catch (err) {
-        console.log(err)
-        toast.error('Registration failed')
-      }
-        
+      apiDefinitions
+        .getUserByEmail(email)
+        .then(res => {
+          console.log(res.status)
+          if (res.status == 200) {
+            setIsUniqueEmail(false)
+            toast.error('Email already exists')
+            console.log('Email already exists')
+  
+          }
+        })
+        .catch(err => {
+          console.log('email not found ', err)
+        })
 
-          
+      if (isUniquEmail) {
+        apiDefinitions
+          .addUser(userData)
+          .then(res => {
+            console.log(res.data)
+            toast.success('Registration successful')
+            router.push('/login')
+          })
+          .catch(err => {
+            console.log(err)
+            toast.error('Registration failed')
+          })
+
+        console.log('registration successful')
+      }
     }
   }
 
@@ -212,6 +205,7 @@ const Register = () => {
             alt='register-illustration'
             src={`/images/pages/${imageSource}-${theme.palette.mode}.png`}
           /> */}
+          <RegisterIllustration alt='register-illustration' src={`/images/pages/bg.png`} sx={{ width: '650px' }} />
           <FooterIllustrationsV2 />
         </Box>
       ) : null}
@@ -271,7 +265,14 @@ const Register = () => {
                 label='First Name'
                 placeholder='john'
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={e => {
+                  setFirstName(e.target.value)
+                  if (e.target.value === '') {
+                    setFirstNameErrorText('First name is required')
+                  }else{
+                    setFirstNameErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 autoFocus
@@ -283,7 +284,14 @@ const Register = () => {
                 label='Last Name'
                 placeholder='doe'
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={e => {
+                  setLastName(e.target.value)
+                  if (e.target.value === '') {
+                    setLastNameErrorText('Last name is required')
+                  }else{
+                    setLastNameErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 fullWidth
@@ -295,7 +303,16 @@ const Register = () => {
                 sx={{ mb: 4 }}
                 placeholder='user@email.com'
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value)
+                  if (e.target.value === '') {
+                    setEmailErrorText('Email is required')
+                  }else if (!e.target.value.includes('@') || !e.target.value.includes('.') || e.target.value.endsWith('.') || e.target.value.endsWith('@')) {
+                    setEmailErrorText('Valid email is required')
+                  }else{
+                    setEmailErrorText('')
+                  }
+                }}
               />
               <CustomTextField
                 fullWidth
@@ -305,12 +322,22 @@ const Register = () => {
                 helperText={phoneNumberErrorText}
                 error={phoneNumberErrorText !== ''}
                 type='tel'
-                placeholder='0774567890'
+                placeholder='07XXXXXXXX'
                 sx={{ mb: 4 }}
                 value={phoneNumber}
-                onChange={e => setPhoneNumber(e.target.value)}
+                onChange={e => {
+                  setPhoneNumber(e.target.value)
+                  if (e.target.value === '') {
+                    setPhoneNumberErrorText('Phone number is required')
+                  }else if (e.target.value.length !== 10 || !e.target.value.startsWith('07') || isNaN(e.target.value)) {
+                    setPhoneNumberErrorText('Valid phone number is required')
+                  }else{
+                    setPhoneNumberErrorText('') 
+
+                  }
+                }}
               />
-              <CustomTextField
+              {/* <CustomTextField
                 fullWidth
                 label='Password'
                 id='auth-login-v2-password'
@@ -335,19 +362,29 @@ const Register = () => {
                     </InputAdornment>
                   )
                 }}
-              />
+              /> */}
               <CustomTextField
                 fullWidth
-                label='Confirm Password'
+                label='Password'
                 id='auth-login-v2-password'
                 required
-                helperText={confirmPasswordErrorText}
-                error={confirmPasswordErrorText !== ''}
+                helperText={passwordErrorText}
+                error={passwordErrorText !== ''}
                 type={showPassword ? 'text' : 'password'}
                 placeholder='**********'
-                sx={{ mb: 4 }}
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
+                sx={{ mb: 2 }} // Reduce the margin to create space for the label
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value)
+                  if (e.target.value === '') {
+                    setPasswordErrorText('Password is required')
+                  }else if (e.target.value.length < 6) {
+                    setPasswordErrorText('Password must be at least 6 characters')
+                  }else{
+                    setPasswordErrorText('')
+                    setIsPasswordEdited(true)
+                  }
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position='end'>
@@ -362,7 +399,45 @@ const Register = () => {
                   )
                 }}
               />
-              <FormControlLabel
+              
+
+              <CustomTextField
+                fullWidth
+                label='Confirm Password'
+                id='auth-login-v2-password'
+                required
+                helperText={confirmPasswordErrorText}
+                error={confirmPasswordErrorText !== ''}
+                type={showPassword ? 'text' : 'password'}
+                placeholder='**********'
+                sx={{ mb: 4 }}
+                value={confirmPassword}
+                onChange={e => {
+                  setConfirmPassword(e.target.value)
+                  if (e.target.value === '') {
+                    setConfirmPasswordErrorText('Confirm password is required')
+                  }else if (e.target.value !== password) {
+                    setConfirmPasswordErrorText('Passwords do not match')
+                  }
+                  else{
+                    setConfirmPasswordErrorText('')
+                  }
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        edge='end'
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        <Icon fontSize='1.25rem' icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+              {/* <FormControlLabel
                 control={<Checkbox />}
                 sx={{ mb: 4, mt: 1.5, '& .MuiFormControlLabel-label': { fontSize: theme.typography.body2.fontSize } }}
                 label={
@@ -373,7 +448,7 @@ const Register = () => {
                     </Typography>
                   </Box>
                 }
-              />
+              /> */}
               <Button fullWidth type='submit' variant='contained' sx={{ mb: 4 }} onClick={handleSignUp}>
                 Sign up
               </Button>
